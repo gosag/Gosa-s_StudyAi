@@ -1,7 +1,8 @@
 import  mongoose from "mongoose";
 const connectDB=async()=>{
     try{
-        await mongoose.connect("mongodb://localhost:27017/echolearn")
+        const MONGO_URI=process.env.MONGO_URI!
+        await mongoose.connect(MONGO_URI)
         console.log("Database Connected succesfully")
     }
     catch(error){
