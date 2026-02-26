@@ -14,5 +14,6 @@ const errorHandler=(err:requestError,req:Request,res:Response,next:NextFunction)
     if(err.name==="ValidationError"){
         return res.status(409).json({error:err.message})
     }
+    return res.status(500).json({message:"Internal Server Error"})
 }
 export default errorHandler;

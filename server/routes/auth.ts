@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken"
 import type { Request ,Response ,NextFunction} from "express";
 import bcrypt from "bcryptjs"
 import type { Types } from "mongoose";
+import protector from "../middleware/authMiddleware";
 const authRouter=express.Router();
 interface RequestError extends Error{
     status?:number,
@@ -15,7 +16,7 @@ const tokenGenerator=(id:Types.ObjectId)=>{
     return jwt.sign({id:id.toString()},SECRET,{expiresIn:"30d"})
 }
 authRouter.post("/api/auth/register",asyncHandler(async(req:Request,res:Response)=>{
-    const {email,password,savedMaterials}=req.body;
+    const {email,password}=req.body;
     const userExists=await User.findOne({email})
     if(userExists){
         const error= new Error("user withthis email already exists") as RequestError;
@@ -25,8 +26,7 @@ authRouter.post("/api/auth/register",asyncHandler(async(req:Request,res:Response
     const hashedPassword=await bcrypt.hash(password,10)
     const user=new User({
         email,
-        password:hashedPassword,
-        savedMaterials
+        password:hashedPassword
     })
     await user.save()
     if(!user){
@@ -34,26 +34,38 @@ authRouter.post("/api/auth/register",asyncHandler(async(req:Request,res:Response
         error.status=400;
         throw error
     }
-    res.json(user)
+    res.json({user})
 }))
-authRouter.post("api/auth/login",asyncHandler(async(req:Request,res:Response)=>{
+interface userIF{
+    email?:string,
+    password?:string,
+    _id?:Types.ObjectId 
+}
+authRouter.post("/api/auth/login",asyncHandler(async(req:Request,res:Response)=>{
     const {email,password}=req.body;
-    const user=await User.findOne({email:email});
-    const userPassword=user?.password!
-    const isMatch=await bcrypt.compare(password,userPassword)
-    if(!user || !isMatch){
-        const error=new Error("user with this email not found") as RequestError;
+    const user=await User.findOne({email:email}) as userIF;
+    if(!user){
+        const error=new Error("user with this email is not found") as RequestError
         error.status=404;
+        throw error;
+    }
+    const isMatch=await bcrypt.compare(password,user.password!)
+    if(!isMatch){
+        const error=new Error("password doesn't match") as RequestError;
+        error.status=401;
         throw error
     }
-
-    res.json({user,token:tokenGenerator(user._id)})
+    const id=user._id;
+    if(!id){
+        return 
+    }
+    res.json({user,token:tokenGenerator(id)})
 }))
-authRouter.get("/api/auth/me",asyncHandler(async(req:Request,res:Response)=>{
- const {email}=req.body
- const user=await User.findOne({email})
+authRouter.get("/api/auth/:id",protector,asyncHandler(async(req:Request,res:Response)=>{
+const id=req.params.id;
+const user=await User.findById(id)
     if(!user){
-        const error=new Error("user with this email not found") as RequestError;
+        const error=new Error("user with this id not found") as RequestError;
         error.status=404;
         throw error
     }

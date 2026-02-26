@@ -1,33 +1,32 @@
 {
   "compilerOptions": {
-    /* Basic Options */
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
     "lib": ["ESNext"],
-    "types": ["node"],
-    "jsx": "react-jsx", /* Only needed if you have JSX in the server, otherwise safe to keep */
+    "jsx": "react-jsx",
+    "typeRoots": ["./node_modules/@types", "./src/types"],
 
-    /* Module Interop */
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "verbatimModuleSyntax": true,
     "isolatedModules": true,
 
-    /* Strictness & Quality */
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "skipLibCheck": true,
     "moduleDetection": "force",
 
-    /* Output Options */
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
     "outDir": "./dist",
-    "rootDir": "./" 
+    "rootDir": "./"
   },
+
+  "include": ["src"],
+
   "ts-node": {
     "esm": true,
     "experimentalSpecifierResolution": "node"
