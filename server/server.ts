@@ -1,11 +1,8 @@
-import  mongoose from "mongoose";
-const connectDB=async()=>{
-    try{
-        await mongoose.connect("mongodb://localhost:27017")
-        console.log("Connected to DB")
-    }
-    catch(error){
-        console.log(error)
-    }
-}
+import app from "./app.js";
+import connectDB from "./config/db.js";
+import dotenv from "dotenv"
+dotenv.config();
 connectDB()
+app.listen(3000,()=>{
+    console.log("Server started")
+})
