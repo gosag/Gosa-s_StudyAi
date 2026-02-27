@@ -1,11 +1,8 @@
-import type { IUser } from "../../models/userSchema"
+// src/types/express.d.ts
+import { IUser } from "../../models/userSchema";
 
-declare global {
-  namespace Express {
-    interface Request {
-      user?: IUser
-    }
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: IUser;
   }
 }
-
-export {}

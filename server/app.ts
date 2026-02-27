@@ -1,6 +1,7 @@
 import express from "express"
 import authRouter from "./routes/auth";
 import errorHandler from "./middleware/error";
+
 const app=express()
 //parsers
 app.use(express.json());

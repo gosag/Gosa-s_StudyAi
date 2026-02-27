@@ -1,5 +1,5 @@
 import {Schema,Document,Types,model} from "mongoose"
-interface IUser extends Document {
+ export interface IUser extends Document {
   email: string;
   password?: string; 
   savedMaterials: Types.ObjectId[];

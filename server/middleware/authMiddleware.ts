@@ -1,5 +1,5 @@
 import type {Request,Response, NextFunction } from "express"
-import User from "../models/userSchema";
+import User, { IUser } from "../models/userSchema";
 import jwt from "jsonwebtoken";
 interface requestError extends Error{
     status?:number
@@ -7,9 +7,12 @@ interface requestError extends Error{
 interface JwtPayload {
     id: string;
 }
-const protector=async(req:Request,res:Response,next:NextFunction)=>{
+interface AuthenticatedRequest extends Request {
+    user?: IUser;
+}
+const protector=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>{
     try{
-    if(!req.headers.authorization || !req.headers.authorization?.startsWith("Bearel")){
+    if(!req.headers.authorization || !req.headers.authorization?.startsWith("Bearer")){
         const error=new Error("no token, not authenticated") as requestError;
         error.status=401;
         throw error
@@ -23,7 +26,7 @@ const protector=async(req:Request,res:Response,next:NextFunction)=>{
         error.status=404;
         throw error
     }
-    req.user=user;
+    req.user=user as IUser;
     next()
 }
 catch(error){
