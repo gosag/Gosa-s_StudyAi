@@ -1,17 +1,23 @@
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import z from "zod"
+const loginSchema=z.object({
+    email:z.string().email(),
+    password:z.string().min(6,"at least 6 characters are required"),
+    confirmPassword:z.string()
+}).refine((data)=>data.password===data.confirmPassword,{
+    message:"password must match",
+    path:["confirmPassword"]
+})
+type typeloginSchema=z.infer<typeof loginSchema>
 function Login(){
-interface formData{
-    email:string,
-    password:string,
-    confirmPassword:string
-}
     const {
      register,
      handleSubmit,
      getValues,
      reset,
      formState:{errors}
-    }=useForm<formData>()
+    }=useForm<typeloginSchema>({resolver:zodResolver(loginSchema)})
     const onSubmit=()=>{
         alert("submitted")
         reset()
@@ -19,8 +25,8 @@ interface formData{
     return(
         <>
         <form onSubmit={handleSubmit(onSubmit)}>
-            <input type="email"
-                {...register("email",{required:"email is required"})}
+            <input
+                {...register("email")}
                 placeholder="example@email.com"
              />
              <br/>
