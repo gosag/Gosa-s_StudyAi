@@ -14,9 +14,24 @@ function Login(){
         formState:{errors},
         reset
     }=useForm<TloginSchema>({resolver:zodResolver(loginSchema)})
-    const submitHandler=()=>{
-        alert("succesfull login");
+    const submitHandler=async(data:TloginSchema)=>{
+      try{
+        const res=await fetch("http://localhost:8000/api/auth/login",{
+          method:"POST",
+          headers:{"Content-Type":"application/json"},
+          body:JSON.stringify(data)
+        })
+        const result=await res.json()
+        if(!res.ok){
+          throw new Error(result.message||"something went wrong")
+        }
+        console.log(result.user)
+        alert(JSON.stringify(result.user, null, 2))
         reset()
+      }
+        catch(error){
+          console.error(error)
+        }
     }
     return (
   <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500 px-4">

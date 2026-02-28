@@ -33,7 +33,6 @@ function SignUp(){
           throw new Error (returnedData.message|| "something went wrong sending data to the server")
         }
         console.log(returnedData.user)
-        console.log("succedes")
         alert(JSON.stringify(returnedData.user, null, 2))
         reset()
       }
