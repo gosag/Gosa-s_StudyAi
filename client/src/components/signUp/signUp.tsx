@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {Link} from "react-router-dom"
-import z from "zod"
+import {z} from "zod"
 const signUpSchema=z.object({
     email:z.string().email(),
     password:z.string().min(6,"at least 6 characters are required"),
@@ -28,12 +28,13 @@ function SignUp(){
           body:JSON.stringify(data)
 
         })
-        if(!res.ok){
-          throw new Error ("something went wrong sending data to the server")
-        }
         const returnedData=await res.json()
-        console.log(returnedData)
-        alert(returnedData)
+        if(!res.ok){
+          throw new Error (returnedData.message|| "something went wrong sending data to the server")
+        }
+        console.log(returnedData.user)
+        console.log("succedes")
+        alert(JSON.stringify(returnedData.user, null, 2))
         reset()
       }
     catch(error){
