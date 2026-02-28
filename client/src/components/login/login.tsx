@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import {z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Link } from "react-router-dom";
 const loginSchema=z.object({
     email:z.string().email(),
     password:z.string().min(6,"at least 6 characters are required")
@@ -79,7 +80,7 @@ function Login(){
           type="submit"
           className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 active:scale-95"
         >
-          Login
+          LogiIn
         </button>
       </form>
 
@@ -87,7 +88,7 @@ function Login(){
       <p className="text-center text-sm text-gray-500">
         Don’t have an account?{" "}
         <span className="text-indigo-600 font-medium cursor-pointer hover:underline">
-          Sign Up
+          <Link to="/">Sign Up</Link>
         </span>
       </p>
 

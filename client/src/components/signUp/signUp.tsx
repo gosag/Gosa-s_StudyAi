@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {Link} from "react-router-dom"
 import z from "zod"
 const signUpSchema=z.object({
     email:z.string().email(),
@@ -103,7 +104,7 @@ function SignUp(){
           type="submit"
           className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 active:scale-95"
         >
-          Sign Up
+          SignUp
         </button>
       </form>
 
@@ -111,7 +112,10 @@ function SignUp(){
       <p className="text-center text-sm text-gray-500">
         Already have an account?{" "}
         <span className="text-indigo-600 font-medium cursor-pointer hover:underline">
-          Login
+          <Link to="login">
+            Login
+          </Link>
+          
         </span>
       </p>
     </div>
