@@ -6,6 +6,8 @@ import type { Request ,Response ,NextFunction} from "express";
 import bcrypt from "bcryptjs"
 import type { Types } from "mongoose";
 import protector from "../middleware/authMiddleware";
+import validate from "../middleware/validator"
+import { loginSchema ,signUpSchema} from "../models/zodSchema";
 const authRouter=express.Router();
 interface RequestError extends Error{
     status?:number,
@@ -15,7 +17,7 @@ const tokenGenerator=(id:Types.ObjectId)=>{
     const SECRET=process.env.SECRET!
     return jwt.sign({id:id.toString()},SECRET,{expiresIn:"30d"})
 }
-authRouter.post("/api/auth/register",asyncHandler(async(req:Request,res:Response)=>{
+authRouter.post("/api/auth/register",validate(signUpSchema,"body"),asyncHandler(async(req:Request,res:Response)=>{
     const {email,password}=req.body;
     const userExists=await User.findOne({email})
     if(userExists){
@@ -41,7 +43,7 @@ interface userIF{
     password?:string,
     _id?:Types.ObjectId 
 }
-authRouter.post("/api/auth/login",asyncHandler(async(req:Request,res:Response)=>{
+authRouter.post("/api/auth/login",validate(loginSchema,"body"),asyncHandler(async(req:Request,res:Response)=>{
     const {email,password}=req.body;
     const user=await User.findOne({email:email}) as userIF;
     if(!user){
