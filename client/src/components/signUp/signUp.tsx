@@ -18,11 +18,29 @@ function SignUp(){
      reset,
      formState:{errors}
     }=useForm<typesignUpSchema>({resolver:zodResolver(signUpSchema)})
-    const onSubmit=()=>{
-        alert("submitted")
+    const onSubmit=async (data:typesignUpSchema)=>{
+        try{
+        const res=await fetch("http://localhost:8000/api/auth/register",{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json"
+          },
+          body:JSON.stringify(data)
+
+        })
+        if(!res.ok){
+          throw new Error ("something went wrong sending data to the server")
+        }
+        const returnedData=await res.json()
+        console.log(returnedData)
+        alert(returnedData)
         reset()
-    }
-    return (
+      }
+    catch(error){
+      console.error(error);
+      alert(error)
+    }}   
+  return (
   <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500 px-4">
     <div className="w-full max-w-md bg-white rounded-2xl shadow-2xlc p-8 space-y-6">
       
