@@ -2,38 +2,13 @@ import SignUp from "./components/signUp"
 import Login from "./components/login"
 import MainOutLet from "./components/outlet/MainOutlet"
 import { Routes, Route } from "react-router-dom"
-import { Button } from "./components/ui/button"
-import { Card, CardContent, CardFooter ,CardHeader, CardTitle } from "./components/ui/card"
+import Home from "./components/home"
 function App() {
   return (
     <Routes>
       <Route path="/" element={<MainOutLet/>}>
-        <Route index element={<Card className="w-87.5">
-        <CardHeader>
-          <CardTitle>Your AI Study Dashboard</CardTitle>
-        </CardHeader>
-
-        <CardContent>
-          Summarize materials, generate quizzes, and review flashcards smarter.
-        </CardContent>
-
-        <CardFooter className="flex justify-end">
-          <Button className="bg-blue-500 hover:bg-blue-600">Start Studying</Button>
-        </CardFooter>
-      </Card>}/>
-        <Route path="library" element={<Card className="w-87.5">
-        <CardHeader>
-          <CardTitle>EchoLearn</CardTitle>
-        </CardHeader>
-
-        <CardContent>
-          This is your first shadcn Card component.
-        </CardContent>
-
-        <CardFooter className="flex justify-end">
-          <Button>Start Studying</Button>
-        </CardFooter>
-      </Card>}/>
+        <Route index element={<Home/>}/>
+        <Route path="library" element={<h1>library</h1>}/>
         <Route path="flashcards" element={<h1>flashcards</h1>}/>
         <Route path="settings" element={<>settings</>}/>
         <Route path="signUp" element={<SignUp/>}/>
