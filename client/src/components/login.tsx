@@ -3,7 +3,7 @@ import {z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
 const loginSchema=z.object({
-    email:z.string().email(),
+    email:z.email(),
     password:z.string().min(6,"at least 6 characters are required")
 })
 type TloginSchema= z.infer<typeof loginSchema>
