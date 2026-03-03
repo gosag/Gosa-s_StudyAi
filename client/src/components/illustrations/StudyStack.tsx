@@ -1,4 +1,5 @@
 export function StudyStack() {
+  
   return (
     <svg
       width="300"
@@ -48,10 +49,10 @@ export function StudyStack() {
       />
 
       {/* Lines */}
-      <line x1="100" y1="100" x2="300" y2="100" stroke="#e5e7eb" strokeWidth="2" />
+     {/*  <line x1="100" y1="100" x2="300" y2="100" stroke="#e5e7eb" strokeWidth="2" />
       <line x1="100" y1="130" x2="300" y2="130" stroke="#e5e7eb" strokeWidth="2" />
       <line x1="100" y1="160" x2="300" y2="160" stroke="#e5e7eb" strokeWidth="2" />
-      <line x1="100" y1="190" x2="300" y2="190" stroke="#e5e7eb" strokeWidth="2" />
+      <line x1="100" y1="190" x2="300" y2="190" stroke="#e5e7eb" strokeWidth="2" /> */}
 
       {/* Title Text */}
       <text
@@ -67,11 +68,11 @@ export function StudyStack() {
       {/* Example Answer Text (On Line) */}
       <text
         x="100"
-        y="95"
-        fontSize="14"
+        y="105"
+        fontSize="16"
         fill="#374151"
       >
-        1. What is 2 + 2?
+        1. If you have a massive, ever-
       </text>
       <text
         x="100"
@@ -79,7 +80,31 @@ export function StudyStack() {
         fontSize="14"
         fill="#374151"
       >
-        1. What is 4 + 2?
+        growing dataset of numbers and 
+      </text>
+      <text
+        x="100"
+        y="145"
+        fontSize="14"
+        fill="#374151"
+      >
+        need to constantly find the top
+      </text>
+      <text
+        x="100"
+        y="165"
+        fontSize="14"
+        fill="#374151"
+      >
+         which data structure and algorithm 
+      </text>
+      <text
+        x="100"
+        y="185"
+        fontSize="14"
+        fill="#374151"
+      >
+         would u choose and why?
       </text>
     </svg>
   );
