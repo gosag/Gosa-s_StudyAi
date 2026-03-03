@@ -18,7 +18,7 @@ function Home() {
           <ul className="list-disc list-inside mt-2 text-sm text-gray-600">
             <li>Providing explanations and summaries</li>
             <li>Generating quizzes from your notes</li>
-            <li>Assisting with problem-solving</li>
+            <li>Adaptive flashcard review system</li>
             <li>And much more!</li>
           </ul>
         </CardContent>
