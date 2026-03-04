@@ -23,6 +23,7 @@
     "morgan": "^1.10.1",
     "multer": "^2.1.0",
     "parse-pdf": "^3.1.0",
+    "pdf-parse-new": "^2.0.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {
