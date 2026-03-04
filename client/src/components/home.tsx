@@ -8,16 +8,20 @@ import { Send } from "lucide-react"
 import { useState } from "react";
 function Home() {
   const [file,setFile]=useState<File | null>(null)
+  const [data,setData]=useState<any>(null)
   const handleUpload=async()=>{
     if(!file){
       return
     }
     const formData=new FormData();
     formData.append("pdf",file)
-    await fetch("http://localhost:8000/api/uploads",{
+    const res=await fetch("http://localhost:8000/api/uploads",{
       method:"POST",
       body:formData
     })
+    const data=await res.json();
+    console.log(data)
+    setData(data)
     setFile(null)
   }
     return (
@@ -59,6 +63,7 @@ function Home() {
       </Card>
       <div className="transition duration-300 hover:-translate-y-2 hover:rotate-01 hover:scale-103">
         <StudyStack />
+        <p className="text-center text-sm mt-2">{data?.text}</p>
       </div>
       </div>
     )}

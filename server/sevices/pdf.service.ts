@@ -1,5 +1,5 @@
-import { text } from 'node:stream/consumers';
 import pdf from 'pdf-parse-new';
+import { Buffer } from 'buffer';
 const extractTextFromFile=async (buffer:Buffer)=>{
     try{
         const data=await pdf(buffer);
