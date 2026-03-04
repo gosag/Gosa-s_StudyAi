@@ -9,20 +9,42 @@ import { useState } from "react";
 function Home() {
   const [file,setFile]=useState<File | null>(null)
   const [data,setData]=useState<any>(null)
-  const handleUpload=async()=>{
-    if(!file){
+  const [link,setLink]=useState<string>("")
+  const handleUpload = async () => {
+    if (!file && !link) {
       return
     }
-    const formData=new FormData();
-    formData.append("pdf",file)
-    const res=await fetch("http://localhost:8000/api/uploads",{
-      method:"POST",
-      body:formData
-    })
-    const data=await res.json();
-    console.log(data)
-    setData(data)
-    setFile(null)
+    try {
+      if (file) {
+        const formData = new FormData();
+        formData.append("pdf", file)
+        const res = await fetch("http://localhost:8000/api/uploads/file", {
+          method: "POST",
+          body: formData
+        })
+        const data = await res.json();
+        console.log(data)
+        setData(data)
+        setFile(null)
+      }
+      else if (link) {
+        const res = await fetch("http://localhost:8000/api/uploads/link", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ link })
+        })
+        const data = await res.json();
+        if (data.transcript) {
+          const text = data.transcript.map((item: any) => (item.text)).join(" ")
+          setData({ text })
+        } else {
+          console.error("No transcript found in response", data);
+        }
+        setLink("")
+      }
+    } catch (error) {
+      console.error("Upload failed:", error)
+    }
   }
     return (
       <div className="ml-1 flex">
@@ -54,9 +76,10 @@ function Home() {
           }} type="file" name="pdf" accept="application/pdf"  className="w-8 h-8 opacity-0 z-20 bg-transparent text-black absolute bottom-3 left-3 p-0  cursor-pointer"/>
           <Textarea
             placeholder="Paste link or type text..." 
+            onChange={(e)=>{setLink(e.target.value)}}
             className="pl-12 py-3 min-h-11 max-h-40 resize-none overflow-y-auto rounded-2xl"
           />
-          <Button onClick={handleUpload} className={`text-black relative ml-2 h-11 w-11 p-0 rounded-full cursor-pointer active:scale-100 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center ${file?"bg-green-400 hover:bg-green-500":"bg-gray-200 hover:bg-gray-300"}`}>
+          <Button onClick={handleUpload} className={`text-black  relative ml-2 h-11 w-11 p-0 rounded-full cursor-pointer active:scale-100 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center ${file || link?"bg-green-400 hover:bg-green-500":"bg-gray-200 hover:bg-gray-300"}`}>
               <Send className="w-5 h-5 ml-0.5" /> 
           </Button>
         </CardFooter>

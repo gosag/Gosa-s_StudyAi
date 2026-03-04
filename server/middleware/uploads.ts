@@ -1,5 +1,6 @@
 import express from "express"
 import multer from "multer"
+import * as youtubeTranscript from "youtube-transcript-api";
 import extractTextFromFile from "../sevices/pdf.service";
 const uploadRoute=express.Router();
 const upload=multer({storage:multer.memoryStorage(),
@@ -7,9 +8,10 @@ const upload=multer({storage:multer.memoryStorage(),
     fileFilter:(req,file,cb)=>{
         if(file.mimetype!=="application/pdf"){
             return cb(new Error("Only PDF files are allowed"))
-        }        cb(null,false)      
+        }
+        cb(null,true)      
 }});
-uploadRoute.post("/api/uploads",upload.single("pdf"),async (req,res)=>{
+uploadRoute.post("/api/uploads/file",upload.single("pdf"),async (req,res)=>{
     if(!req.file){
         return res.status(400).json({error:"No file uploaded"})
     }
@@ -20,6 +22,21 @@ uploadRoute.post("/api/uploads",upload.single("pdf"),async (req,res)=>{
     }
     catch(error){
         res.status(500).json({error:"Failed to extract text from file"})
+    }
+})
+uploadRoute.post("/api/uploads/link",async (req,res)=>{
+    const {link}=req.body;
+    if(!link){
+        return res.status(400).json({error:"No link provided"})
+    }
+    try {
+        console.log("Fetching transcript for link:", link)
+        const transcript = await youtubeTranscript.getTranscript(link)
+        res.json({ transcript })
+        console.log(transcript)
+    } catch (error) {
+        console.error("Youtube transcript error:", error);
+        res.status(500).json({ error: "Failed to fetch transcript" })
     }
 })
 export default uploadRoute;
