@@ -5,17 +5,21 @@ import {Input} from "./ui/input"
 import { MessageSquare, FileUp } from "lucide-react";
 import { StudyStack } from "./illustrations/StudyStack";
 import { Send } from "lucide-react"
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
+
 function Home() {
   const [file,setFile]=useState<File | null>(null)
   const [data,setData]=useState<any>(null)
   const [link,setLink]=useState<string>("")
+  const [loading,setLoading]=useState<boolean>(false)
   const handleUpload = async () => {
     if (!file && !link) {
       return
     }
     try {
       if (file) {
+        setLoading(true)
         const formData = new FormData();
         formData.append("pdf", file)
         const res = await fetch("http://localhost:8000/api/uploads/file", {
@@ -26,37 +30,41 @@ function Home() {
         console.log(data)
         setData(data)
         setFile(null)
+        setLoading(false)
       }
      else if (link) {
-  const res = await fetch("http://localhost:8000/api/uploads/link", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ link })
-  });
+      setLoading(true)
+      const res = await fetch("http://localhost:8000/api/uploads/link", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ link })
+      });
+      
+      const data = await res.json();
 
-  const data = await res.json();
+      // 1. Check if the backend sent a direct 'text' property
+      if (data.text) {
+        setData({ text: data.text });
+      } 
+      // 2. Check if 'transcript' is a STRING (This matches your current backend)
+      else if (typeof data.transcript === "string") {
+        setData({ text: data.transcript });
+      } 
+      /* // 3. Fallback: Check if it's an ARRAY (for older scrapers)
+      else if (Array.isArray(data.transcript)) {
+        const text = data.transcript.map((item: any) => item.text).join(" ");
+        setData({ text });
+      } */ 
+      else {
+        console.error("No transcript found in response", data);
+      }
 
-  // 1. Check if the backend sent a direct 'text' property
-  if (data.text) {
-    setData({ text: data.text });
-  } 
-  // 2. Check if 'transcript' is a STRING (This matches your current backend)
-  else if (typeof data.transcript === "string") {
-    setData({ text: data.transcript });
-  } 
-  // 3. Fallback: Check if it's an ARRAY (for older scrapers)
-  else if (Array.isArray(data.transcript)) {
-    const text = data.transcript.map((item: any) => item.text).join(" ");
-    setData({ text });
-  } 
-  else {
-    console.error("No transcript found in response", data);
-  }
-
-  setLink("");
-}
+      setLink("");
+      setLoading(false);
+    }
     } catch (error) {
       console.error("Upload failed:", error)
+      setLoading(false);
     }
   }
     return (
@@ -93,7 +101,7 @@ function Home() {
             className="pl-12 py-3 min-h-11 max-h-40 resize-none overflow-y-auto rounded-2xl"
           />
           <Button onClick={handleUpload} className={`text-black  relative ml-2 h-11 w-11 p-0 rounded-full cursor-pointer active:scale-100 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center ${file || link?"bg-green-400 hover:bg-green-500":"bg-gray-200 hover:bg-gray-300"}`}>
-              <Send className="w-5 h-5 ml-0.5" /> 
+            {loading ? <Loader2 className="w-5 h-5 ml-0.5 animate-spin" /> : <Send className="w-5 h-5 ml-0.5" />}
           </Button>
         </CardFooter>
       </Card>
