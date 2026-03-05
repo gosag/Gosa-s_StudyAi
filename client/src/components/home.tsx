@@ -13,6 +13,20 @@ function Home() {
   const [data,setData]=useState<any>(null)
   const [link,setLink]=useState<string>("")
   const [loading,setLoading]=useState<boolean>(false)
+  function isYoutubeLink(link: string) {
+  try {
+    const url = new URL(link)
+    console.log(`Checking URL hostname: ${url.hostname}`)
+    console.log(url)
+    return (
+      url.hostname === "youtube.com" ||
+      url.hostname === "www.youtube.com" ||
+      url.hostname === "youtu.be"
+    )
+  } catch {
+    return false
+  }
+}
   const handleUpload = async () => {
     if (!file && !link) {
       return
@@ -33,11 +47,15 @@ function Home() {
         setLoading(false)
       }
      else if (link) {
+      if(!isYoutubeLink(link)){
+        alert("Please enter a valid YouTube link.")
+        return;
+      }
       setLoading(true)
       const res = await fetch("http://localhost:8000/api/uploads/link", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ link })
+        body: JSON.stringify({ link})
       });
       
       const data = await res.json();
@@ -100,7 +118,7 @@ function Home() {
             onChange={(e)=>{setLink(e.target.value)}}
             className="pl-12 py-3 min-h-11 max-h-40 resize-none overflow-y-auto rounded-2xl"
           />
-          <Button onClick={handleUpload} className={`text-black  relative ml-2 h-11 w-11 p-0 rounded-full cursor-pointer active:scale-100 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center ${file || link?"bg-green-400 hover:bg-green-500":"bg-gray-200 hover:bg-gray-300"}`}>
+          <Button onClick={handleUpload} disabled={loading} className={`text-black  relative ml-2 h-11 w-11 p-0 rounded-full cursor-pointer active:scale-100 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center ${file || link?"bg-green-400 hover:bg-green-500":"bg-gray-200 hover:bg-gray-300"}`}>
             {loading ? <Loader2 className="w-5 h-5 ml-0.5 animate-spin" /> : <Send className="w-5 h-5 ml-0.5" />}
           </Button>
         </CardFooter>
