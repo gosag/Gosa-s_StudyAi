@@ -7,7 +7,6 @@ import { StudyStack } from "./illustrations/StudyStack";
 import { Send } from "lucide-react"
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
-
 function Home() {
   const [file,setFile]=useState<File | null>(null)
   const [data,setData]=useState<any>(null)
@@ -32,6 +31,10 @@ function Home() {
       return
     }
     try {
+    if(file && link){
+      alert("Please either upload a file or enter a link, not both.")
+      return;
+    }
       if (file) {
         setLoading(true)
         const formData = new FormData();
