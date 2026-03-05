@@ -3,10 +3,8 @@ import authRouter from "./routes/auth";
 import errorHandler from "./middleware/error";
 import morgan from "morgan"
 import cors from "cors"
-import multer from "multer"
-import uploadRoute from "./middleware/uploads";
+import uploadRoute from "./routes/uploads";
 const app=express()
-const upload=multer({dest:"uploads/"})
 //parsers
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));

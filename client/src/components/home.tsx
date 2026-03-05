@@ -27,21 +27,34 @@ function Home() {
         setData(data)
         setFile(null)
       }
-      else if (link) {
-        const res = await fetch("http://localhost:8000/api/uploads/link", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ link })
-        })
-        const data = await res.json();
-        if (data.transcript) {
-          const text = data.transcript.map((item: any) => (item.text)).join(" ")
-          setData({ text })
-        } else {
-          console.error("No transcript found in response", data);
-        }
-        setLink("")
-      }
+     else if (link) {
+  const res = await fetch("http://localhost:8000/api/uploads/link", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ link })
+  });
+
+  const data = await res.json();
+
+  // 1. Check if the backend sent a direct 'text' property
+  if (data.text) {
+    setData({ text: data.text });
+  } 
+  // 2. Check if 'transcript' is a STRING (This matches your current backend)
+  else if (typeof data.transcript === "string") {
+    setData({ text: data.transcript });
+  } 
+  // 3. Fallback: Check if it's an ARRAY (for older scrapers)
+  else if (Array.isArray(data.transcript)) {
+    const text = data.transcript.map((item: any) => item.text).join(" ");
+    setData({ text });
+  } 
+  else {
+    console.error("No transcript found in response", data);
+  }
+
+  setLink("");
+}
     } catch (error) {
       console.error("Upload failed:", error)
     }

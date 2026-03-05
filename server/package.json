@@ -25,6 +25,9 @@
     "multer": "^2.1.0",
     "parse-pdf": "^3.1.0",
     "pdf-parse-new": "^2.0.0",
+    "youtube-caption-extractor": "^1.9.1",
+    "youtube-captions-scraper": "^2.0.3",
+    "youtube-transcript": "^1.2.1",
     "youtube-transcript-api": "^3.0.6",
     "zod": "^4.3.6"
   },
@@ -35,6 +38,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/multer": "^2.0.0",
     "@types/node": "^25.3.1",
+    "@types/youtube-captions-scraper": "^1.0.0",
     "eslint": "^10.0.2",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.21.0"
