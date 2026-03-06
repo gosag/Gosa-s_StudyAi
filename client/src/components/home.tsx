@@ -107,6 +107,7 @@ function Home() {
             <MessageSquare className="w-5 h-5" />
           </Button>
         </CardHeader>
+        {aiData?<p className="text-center text-sm mt-2">{aiData}</p>:
         <CardContent>
           Bring any topic! I can help you with a wide range of topics, including:
           <ul className="list-disc list-inside mt-2 text-sm text-gray-600">
@@ -115,7 +116,7 @@ function Home() {
             <li>Adaptive flashcard review system</li>
             <li>And much more!</li>
           </ul>
-        </CardContent>
+        </CardContent>}
         <CardFooter className="relative items-end pb-2">
           <Button className="w-8 h-8 bg-gray-200 text-black absolute bottom-3 left-3 p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 z-10 shrink-0 flex items-center justify-center">
               <FileUp className="w-5 h-5" />
@@ -141,8 +142,10 @@ function Home() {
       <div className="transition duration-300 hover:-translate-y-2 hover:rotate-01 hover:scale-103">
         <StudyStack />
         <p className="text-center text-sm mt-2">{data?.text}</p>
+       
         <Button onClick={getAiData}> Get AI Data</Button>
-        {aiData && <p>{aiData}</p>}
+        <p className="text-center text-sm mt-2">{data?.response}</p>
+       {/*  {aiData && <p>{aiData}</p>} */}
       </div>
       </div>
     )}
