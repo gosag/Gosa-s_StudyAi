@@ -12,6 +12,7 @@ function Home() {
   const [data,setData]=useState<any>(null)
   const [link,setLink]=useState<string>("")
   const [loading,setLoading]=useState<boolean>(false)
+  const [aiData,setAiData]=useState<string>("")
   function isYoutubeLink(link: string) {
   try {
     const url = new URL(link)
@@ -93,6 +94,11 @@ function Home() {
       handleUpload()
     }
   }
+  async function getAiData(){
+    const res = await fetch("http://localhost:8000/api/uploads/test")
+    const data = await res.json()
+    setAiData(data.response)
+  }
     return (
       <div className="ml-1 flex">
         <Card className="ml-1 w-97.5 h-screen flex flex-col justify-between">
@@ -135,6 +141,8 @@ function Home() {
       <div className="transition duration-300 hover:-translate-y-2 hover:rotate-01 hover:scale-103">
         <StudyStack />
         <p className="text-center text-sm mt-2">{data?.text}</p>
+        <Button onClick={getAiData}> Get AI Data</Button>
+        {aiData && <p>{aiData}</p>}
       </div>
       </div>
     )}

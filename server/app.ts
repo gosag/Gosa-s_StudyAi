@@ -10,12 +10,19 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 //logger
 app.use(morgan("dev"))
+
+// normalize duplicate slashes in the URL
+app.use((req, res, next) => {
+    req.url = req.url.replace(/\/{2,}/g, '/');
+    next();
+});
+
 //to allow only specific domains access the api
 const corsOptions={
     origin:"http://localhost:5173",
     methods:["GET","POST"],
-    alowedHeaders:["Content-Types","Authorization"],
-    cridentials:true
+    allowedHeaders:["Content-Type","Authorization"],
+    credentials:true
 }
 app.use(cors(corsOptions))
 //routes

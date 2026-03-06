@@ -1,7 +1,8 @@
-import express from "express";
+import express, { response } from "express";
 import multer from "multer";
 import extractTextFromFile from "../sevices/pdf.service";
 import { getYoutubeTranscript } from "../sevices/youtube.service";
+import { generateResponse } from "../sevices/gemini.service";
 interface CustomError extends Error {
   status?: number,
   statusCode?: number
@@ -62,5 +63,14 @@ uploadRoute.post("/api/uploads/link", async (req, res,next): Promise<any> => {
     return next(err);
   }
 });
-
+uploadRoute.get("/api/uploads/test", async(req, res,next) => {
+  try{
+  const response = await generateResponse("Hello, Gemini. this is the first prompt of mine with u.just say  something or tell me a joke yeah yeah tell me a joke that u are sure will make me laugh in amharic ");
+  console.log(`[Gemini Test] Response: ${response}`);
+  res.json({ message: "Upload route is working!",response });
+  }catch(error){
+    console.log(error);
+    next(error)
+  }
+});
 export default uploadRoute;
