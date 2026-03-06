@@ -18,6 +18,9 @@ export function getYoutubeTranscript(link: string): Promise<string> {
 
     // Use environment variable for production, fallback to your local Windows path for dev
     const ytDlpPath = process.env.YTDLP_PATH || "C:\\tools\\yt-dlp\\yt-dlp.exe";
+    
+    // Resolve the full path to your cookies file (relative to your server root, where you run `npm start` or `npm run dev`)
+    const cookiesPath = path.resolve(process.cwd(), "youtube-cookies.txt");
 
     // 3. Command arguments as an array (PREVENTS COMMAND INJECTION)
     const args = [
@@ -25,8 +28,10 @@ export function getYoutubeTranscript(link: string): Promise<string> {
       "--write-auto-subs",
       "--sub-format", "vtt",
       "--sub-lang", "en",
-      "--js-runtimes", "node",
-      // "--cookies-from-browser", "chrome+any", // Note: This might fail on a headless production server
+      // BEST METHOD: Authenticated Cookies File
+      // This is the absolute best way to completely bypass YouTube's 429 Rate Limits and DRM blocks.
+      "--cookies", cookiesPath,
+      "--geo-bypass",
       "-o", outputBase,
       link
     ];
