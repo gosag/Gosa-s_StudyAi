@@ -88,6 +88,11 @@ function Home() {
       setLoading(false);
     }
   }
+  function handleEnter(e: React.KeyboardEvent<HTMLTextAreaElement>) {
+    if(e.key==="Enter" && (file || link)){
+      handleUpload()
+    }
+  }
     return (
       <div className="ml-1 flex">
         <Card className="ml-1 w-97.5 h-screen flex flex-col justify-between">
@@ -117,6 +122,7 @@ function Home() {
           }} type="file" name="pdf" accept="application/pdf"  className="w-8 h-8 opacity-0 z-20 bg-transparent text-black absolute bottom-3 left-3 p-0  cursor-pointer"/>
           <Textarea
             placeholder="Paste link or type text..." 
+            onKeyDown={handleEnter}
             onChange={(e)=>{setLink(e.target.value)}}
             className="pl-12 py-3 min-h-11 max-h-40 resize-none overflow-y-auto rounded-2xl"
           />
