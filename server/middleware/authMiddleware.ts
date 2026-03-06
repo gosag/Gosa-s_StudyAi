@@ -1,5 +1,6 @@
 import type {Request,Response, NextFunction } from "express"
-import User, { IUser } from "../models/userSchema";
+import User from "../models/userSchema";
+import type { IUser } from "../models/userSchema";
 import jwt from "jsonwebtoken";
 interface requestError extends Error{
     status?:number
