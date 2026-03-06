@@ -4,9 +4,9 @@ import { Textarea } from "./ui/textarea";
 import {Input} from "./ui/input"
 import { MessageSquare, FileUp } from "lucide-react";
 import { StudyStack } from "./illustrations/StudyStack";
-import { Send } from "lucide-react"
-import { Loader2 } from "lucide-react";
+import { Send ,Loader2, FileText} from "lucide-react"
 import { useState } from "react";
+
 function Home() {
   const [file,setFile]=useState<File | null>(null)
   const [data,setData]=useState<any>(null)
@@ -64,11 +64,11 @@ function Home() {
       const data = await res.json();
 
       // 1. Check if the backend sent a direct 'text' property
-      if (data.text) {
+     /*  if (data.text) {
         setData({ text: data.text });
-      } 
+      }  */
       // 2. Check if 'transcript' is a STRING (This matches your current backend)
-      else if (typeof data.transcript === "string") {
+      if (typeof data.transcript === "string") {
         setData({ text: data.transcript });
       } 
       /* // 3. Fallback: Check if it's an ARRAY (for older scrapers)
@@ -96,7 +96,6 @@ function Home() {
             <MessageSquare className="w-5 h-5" />
           </Button>
         </CardHeader>
-
         <CardContent>
           Bring any topic! I can help you with a wide range of topics, including:
           <ul className="list-disc list-inside mt-2 text-sm text-gray-600">
@@ -123,6 +122,7 @@ function Home() {
           />
           <Button onClick={handleUpload} disabled={loading} className={`text-black  relative ml-2 h-11 w-11 p-0 rounded-full cursor-pointer active:scale-100 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center ${file || link?"bg-green-400 hover:bg-green-500":"bg-gray-200 hover:bg-gray-300"}`}>
             {loading ? <Loader2 className="w-5 h-5 ml-0.5 animate-spin" /> : <Send className="w-5 h-5 ml-0.5" />}
+            {file?<FileText size={20} className="absolute -top-1 -right-1 bg-green-500 text-white rounded-full p-0.5" />:null}
           </Button>
         </CardFooter>
       </Card>

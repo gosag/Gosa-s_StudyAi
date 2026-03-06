@@ -2,6 +2,10 @@ import express from "express";
 import multer from "multer";
 import extractTextFromFile from "../sevices/pdf.service";
 import { getYoutubeTranscript } from "../sevices/youtube.service";
+interface CustomError extends Error {
+  status?: number,
+  statusCode?: number
+}
 const uploadRoute = express.Router();
 // Existing PDF Logic...
 const upload=multer({storage:multer.memoryStorage(),
@@ -12,9 +16,11 @@ const upload=multer({storage:multer.memoryStorage(),
         }
         cb(null,true)      
 }});
-uploadRoute.post("/api/uploads/file",upload.single("pdf"),async (req,res)=>{
+uploadRoute.post("/api/uploads/file",upload.single("pdf"),async (req,res,next)=>{
     if(!req.file){
-        return res.status(400).json({error:"No file uploaded"})
+      const error=new Error("No file uploaded") as CustomError
+      error.status=400
+      return next(error)
     }
     console.log(req.file)
     try{
@@ -22,29 +28,38 @@ uploadRoute.post("/api/uploads/file",upload.single("pdf"),async (req,res)=>{
         res.json(extractedText)
     }
     catch(error){
-        res.status(500).json({error:"Failed to extract text from file"})
+        const customError = error as CustomError;
+        if (customError.status) {
+            return next(customError);
+        }
+        else{
+            const err = new Error("Failed to extract text from file") as CustomError;
+            err.status = 500;
+            return next(err);
+        }
     }
 })
-uploadRoute.post("/api/uploads/link", async (req, res): Promise<any> => {
+uploadRoute.post("/api/uploads/link", async (req, res,next): Promise<any> => {
   const { link } = req.body;
   console.log(`\n[API CALL] /api/uploads/link received URL: ${link}`);
 
-  if (!link) return res.status(400).json({ error: "No link provided" });
-
+  if (!link){
+    const error=new Error("No link provided") as CustomError
+    error.status=400
+    return next(error)
+  }
   try {
     const transcript = await getYoutubeTranscript(link);
     if (!transcript || transcript.length < 10) {
-      return res.status(404).json({ error: "Transcript was empty or too short." });
+      const error=new Error("Transcript was empty or too short.") as CustomError
+      error.status=404
+      return next(error)
     }
 
     res.json({ transcript });
     console.log(`[SUCCESS] Transcript sent to EchoLearn frontend.`);
   } catch (err: any) {
-    console.error(`[SERVER ERROR]:`, err);
-    res.status(500).json({ 
-      error: "Transcript failed", 
-      details: err.message || err 
-    });
+    return next(err);
   }
 });
 
