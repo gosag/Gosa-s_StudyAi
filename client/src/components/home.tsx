@@ -6,10 +6,10 @@ import { MessageSquare, FileUp } from "lucide-react";
 import { StudyStack } from "./illustrations/StudyStack";
 import { Send ,Loader2, FileText} from "lucide-react"
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
 
 function Home() {
   const [file,setFile]=useState<File | null>(null)
-  const [data,setData]=useState<any>(null)
   const [link,setLink]=useState<string>("")
   const [loading,setLoading]=useState<boolean>(false)
   const [aiData,setAiData]=useState<string>("")
@@ -45,8 +45,7 @@ function Home() {
           body: formData
         })
         const data = await res.json();
-        console.log(data)
-        setData(data)
+        console.log(data.respons)
         setAiData(data.response)
         setFile(null)
         setLoading(false)
@@ -70,8 +69,8 @@ function Home() {
         setData({ text: data.text });
       }  */
       // 2. Check if 'transcript' is a STRING (This matches your current backend)
-      if (typeof data.transcript === "string") {
-        setData({ text: data.transcript });
+      if (typeof data.response === "string") {
+        setAiData(data.response)
       } 
       /* // 3. Fallback: Check if it's an ARRAY (for older scrapers)
       else if (Array.isArray(data.transcript)) {
@@ -108,17 +107,24 @@ function Home() {
             <MessageSquare className="w-5 h-5" />
           </Button>
         </CardHeader>
-        {aiData?<p className="text-center text-sm mt-2">{aiData}</p>:
-        <CardContent>
-          Bring any topic! I can help you with a wide range of topics, including:
-          <ul className="list-disc list-inside mt-2 text-sm text-gray-600">
-            <li>Providing explanations and summaries</li>
-            <li>Generating quizzes from your notes</li>
-            <li>Adaptive flashcard review system</li>
-            <li>And much more!</li>
-          </ul>
-        </CardContent>}
-        <CardFooter className="relative items-end pb-2">
+        <CardContent className="flex-1 overflow-y-auto max-h-full scrollbar-thin">
+          {aiData?(
+            <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none w-full wrap-break-word">
+              <ReactMarkdown>{aiData}</ReactMarkdown>
+            </div>
+          ): (
+            <div>
+              Bring any topic! I can help you with a wide range of topics, including:
+              <ul className="list-disc list-inside mt-2 text-sm text-gray-600">
+                <li>Providing explanations and summaries</li>
+                <li>Generating quizzes from your notes</li>
+                <li>Adaptive flashcard review system</li>
+                <li>And much more!</li>
+              </ul>
+            </div>
+          )}
+        </CardContent>
+        <CardFooter className="relative items-end pb-2 shrink-0">
           <Button className="w-8 h-8 bg-gray-200 text-black absolute bottom-3 left-3 p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 z-10 shrink-0 flex items-center justify-center">
               <FileUp className="w-5 h-5" />
                
@@ -130,6 +136,7 @@ function Home() {
           }} type="file" name="pdf" accept="application/pdf"  className="w-8 h-8 opacity-0 z-20 bg-transparent text-black absolute bottom-3 left-3 p-0  cursor-pointer"/>
           <Textarea
             placeholder="Paste link or type text..." 
+            value={link}
             onKeyDown={handleEnter}
             onChange={(e)=>{setLink(e.target.value)}}
             className="pl-12 py-3 min-h-11 max-h-40 resize-none overflow-y-auto rounded-2xl"

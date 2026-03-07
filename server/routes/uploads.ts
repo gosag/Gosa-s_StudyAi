@@ -58,8 +58,9 @@ uploadRoute.post("/api/uploads/link", async (req, res,next): Promise<any> => {
       error.status=404
       return next(error)
     }
-
-    res.json({ transcript });
+    const sumamrizedResponse = await generateResponse(`Hey Gemini, summarize the following YouTube transcript in a concise manner: ${transcript}`);
+    console.log(`[Gemini Summary] ${sumamrizedResponse}`);
+    res.json({ transcript, response: sumamrizedResponse });
     console.log(`[SUCCESS] Transcript sent to EchoLearn frontend.`);
   } catch (err: any) {
     return next(err);
