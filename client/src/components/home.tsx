@@ -47,6 +47,7 @@ function Home() {
         const data = await res.json();
         console.log(data)
         setData(data)
+        setAiData(data.response)
         setFile(null)
         setLoading(false)
       }
@@ -101,7 +102,7 @@ function Home() {
   }
     return (
       <div className="ml-1 flex">
-        <Card className="ml-1 w-97.5 h-screen flex flex-col justify-between">
+        <Card className="ml-1 w-[50%] h-screen flex flex-col justify-between">
         <CardHeader>
           <Button className="w-8 h-8 bg-gray-200 text-black p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center z-10">
             <MessageSquare className="w-5 h-5" />
@@ -139,12 +140,9 @@ function Home() {
           </Button>
         </CardFooter>
       </Card>
-      <div className="transition duration-300 hover:-translate-y-2 hover:rotate-01 hover:scale-103">
+      <div className="w-[50%] h-screen flex items-center justify-center">
         <StudyStack />
-        <p className="text-center text-sm mt-2">{data?.text}</p>
-       
         <Button onClick={getAiData}> Get AI Data</Button>
-        <p className="text-center text-sm mt-2">{data?.response}</p>
        {/*  {aiData && <p>{aiData}</p>} */}
       </div>
       </div>

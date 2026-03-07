@@ -26,8 +26,9 @@ uploadRoute.post("/api/uploads/file",upload.single("pdf"),async (req,res,next)=>
     console.log(req.file)
     try{
         const extractedText = await extractTextFromFile(req.file.buffer);
-        const response = await generateResponse(`Hey Gemini, here is the extracted text from the a pdf summarise it for me like by taking points like 1 2 3 and include around 500 words: ${extractedText.text}`);
-        res.json({ extractedText, response });
+        console.log(`Extracted text length: ${extractedText.text.length} characters`);
+        const response = await generateResponse(`Hey Gemini, summarize the following text in a concise manner: ${extractedText.text}`);
+        res.json({ response });
     }
     catch(error){
         const customError = error as CustomError;
