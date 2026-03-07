@@ -45,7 +45,6 @@ function Home() {
           body: formData
         })
         const data = await res.json();
-        console.log(data.respons)
         setAiData(data.response)
         setFile(null)
         setLoading(false)
@@ -101,15 +100,15 @@ function Home() {
   }
     return (
       <div className="ml-1 flex">
-        <Card className="ml-1 w-[50%] h-screen flex flex-col justify-between">
-        <CardHeader>
+        <Card className="ml-1 w-[50%] h-screen flex flex-col justify-between gap-0">
+        <CardHeader className="m-0">
           <Button className="w-8 h-8 bg-gray-200 text-black p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center z-10">
             <MessageSquare className="w-5 h-5" />
           </Button>
         </CardHeader>
-        <CardContent className="flex-1 overflow-y-auto max-h-full scrollbar-thin">
+        <CardContent className="flex-1 overflow-y-auto max-h-full">
           {aiData?(
-            <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none w-full wrap-break-word">
+            <div className="prose prose-sm md:prose-base max-w-none w-full wrap-break-word">
               <ReactMarkdown>{aiData}</ReactMarkdown>
             </div>
           ): (
