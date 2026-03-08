@@ -96,7 +96,7 @@ function Login(){
           type="submit"
           className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 active:scale-95"
         >
-          LogiIn
+          Login
         </button>
       </form>
 

@@ -2,10 +2,8 @@ import { Card, CardContent, CardFooter, CardHeader} from "./ui/card"
 import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea";
 import {Input} from "./ui/input"
-import { MessageSquare, FileUp, Brain } from "lucide-react";
+import { FileUp, Send, Loader2,FileText,BrainCircuit } from "lucide-react";
 import { StudyStack } from "./illustrations/StudyStack";
-import { Send ,Loader2, FileText} from "lucide-react"
-import { BrainCircuit, Sparkles, Bot } from "lucide-react"
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 /* import { Link } from "react-router-dom"; */
@@ -104,8 +102,8 @@ const linkHandler=async (link: string)=>{
     setAiData(data.response)
   }
     return (
-      <div className="ml-1 flex">
-        <Card className="ml-1 w-[50%] h-screen flex flex-col justify-between gap-0">
+      <div className="ml-1 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        <Card className="mx-1 mr-2 h-screen md:w-full flex flex-col justify-between gap-0 ">
         <CardHeader className="m-0">
           <Button className="w-8 h-8 bg-gray-200 text-black p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center z-10">
             <BrainCircuit className="w-5 h-5" />
