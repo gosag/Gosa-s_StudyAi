@@ -12,6 +12,6 @@ const MaterialSchema = new Schema<IMaterial>({
   summary: { type: String },
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   timestamps: { type: Date, default: Date.now }
-});
+}); 
 const Material = model<IMaterial>('Material', MaterialSchema);
 export default Material;

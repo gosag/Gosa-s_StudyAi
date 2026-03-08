@@ -1,4 +1,5 @@
 import express, { response } from "express";
+import Material from "../models/materialSchema";
 import multer from "multer";
 import extractTextFromFile from "../sevices/pdf.service";
 import { getYoutubeTranscript } from "../sevices/youtube.service";
@@ -29,7 +30,21 @@ uploadRoute.post("/api/uploads/file",protector, upload.single("pdf"),async (req,
         const extractedText = await extractTextFromFile(req.file.buffer);
         console.log(`Extracted text length: ${extractedText.text.length} characters`);
         const response = await generateResponse(`Hey Gemini, summarize the following text in a concise manner: ${extractedText.text}`);
+        console.log(`[Gemini Summary] ${response.length} characters`);
+        if (!req.user || !req.user._id) {
+          const error = new Error("User information is missing") as CustomError;
+          error.status = 401;
+          return next(error);
+        }
+        const newMatrial=new Material({
+          title:req.file.originalname || "Untitled",
+          originalText:extractedText.text || "No text extracted",
+          userId:req.user._id,
+          summary:response,
+        })
+        await newMatrial.save();
         res.json({ response });
+
     }
     catch(error){
         const customError = error as CustomError;
