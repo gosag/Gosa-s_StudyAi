@@ -1,10 +1,10 @@
 import { Outlet ,NavLink} from "react-router-dom";
+import { Home, Library, Layers, Settings } from "lucide-react";
 
 function MainOutLet(){
     return(
-<div className="flex">
-    <div>
-    <aside className="h-screen w-16 md:w-60 bg-white shadow-[4px_0_24px_rgba(0,0,0,0.05)] flex flex-col transition-all duration-300 shrink-0 z-50">
+<div className="flex min-h-screen">
+    <aside className="sticky top-0 h-screen w-16 md:w-60 bg-white shadow-[4px_0_24px_rgba(0,0,0,0.05)] flex flex-col transition-all duration-300 shrink-0 z-50">
 
       {/* 🔥 Realistic Fire Animation Styles */}
       <style>{`
@@ -64,44 +64,69 @@ function MainOutLet(){
       <nav className="flex-1 px-2 md:px-4 py-6 overflow-y-auto overflow-x-hidden">
         <ul className="space-y-2">
 
-          {[
-            { to: "/", label: "Home", icon: (
-              <path d="M10 2 2 7v11h5v-6h6v6h5V7l-8-5z"/>
-            )},
-            { to: "/library", label: "Library", icon: (
-              <path d="M2 4a2 2 0 012-2h5v14H4a2 2 0 01-2-2V4zm9-2h5a2 2 0 012 2v10a2 2 0 01-2 2h-5V2z"/>
-            )},
-            { to: "/flashcards", label: "Flashcards", icon: (
-              <>
-                <rect x="5" y="4" width="14" height="10" rx="2" opacity="0.4"/>
-                <rect x="3" y="8" width="14" height="10" rx="2"/>
-                <rect x="6" y="11" width="8" height="1.5" rx="1"/>
-                <rect x="6" y="14" width="6" height="1.5" rx="1"/>
-              </>
-            )},
-            { to: "/settings", label: "Settings", icon: (
-              <path fillRule="evenodd" clipRule="evenodd"
-                d="M11.983 1.94a1 1 0 00-1.966 0l-.2 1.19a5.978 5.978 0 00-1.56.9l-1.11-.45a1 1 0 00-1.3.58l-.38 1.12a1 1 0 00.48 1.24l1.05.6a5.978 5.978 0 000 1.8l-1.05.6a1 1 0 00-.48 1.24l.38 1.12a1 1 0 001.3.58l1.11-.45c.48.36 1 .66 1.56.9l.2 1.19a1 1 0 001.966 0l.2-1.19a5.978 5.978 0 001.56-.9l1.11.45a1 1 0 001.3-.58l.38-1.12a1 1 0 00-.48-1.24l-1.05-.6a5.978 5.978 0 000-1.8l1.05-.6a1 1 0 00.48-1.24l-.38-1.12a1 1 0 00-1.3-.58l-1.11.45a5.978 5.978 0 00-1.56-.9l-.2-1.19zM10 13a3 3 0 100-6 3 3 0 000 6z"/>
-            )}
-          ].map(({ to, label, icon }) => (
-            <li key={to}>
-              <NavLink
-                to={to}
-                title={label}
-                className={({ isActive }) =>
-                  `flex items-center justify-center md:justify-start gap-3 px-2 md:px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
-                  ${isActive 
-                    ? "bg-blue-50 text-blue-600" 
-                    : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"}`
-                }
-              >
-                <svg className="h-5 w-5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
-                  {icon}
-                </svg>
-                <span className="hidden md:block">{label}</span>
-              </NavLink>
-            </li>
-          ))}
+          <li>
+            <NavLink
+              to="/"
+              title="Home"
+              className={({ isActive }) =>
+                `flex items-center justify-center md:justify-start gap-3 px-2 md:px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                ${isActive 
+                  ? "bg-blue-50 text-blue-600" 
+                  : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"}`
+              }
+            >
+              <Home className="h-5 w-5 shrink-0" />
+              <span className="hidden md:block">Home</span>
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/library"
+              title="Library"
+              className={({ isActive }) =>
+                `flex items-center justify-center md:justify-start gap-3 px-2 md:px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                ${isActive 
+                  ? "bg-blue-50 text-blue-600" 
+                  : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"}`
+              }
+            >
+              <Library className="h-5 w-5 shrink-0" />
+              <span className="hidden md:block">Library</span>
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/flashcards"
+              title="Flashcards"
+              className={({ isActive }) =>
+                `flex items-center justify-center md:justify-start gap-3 px-2 md:px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                ${isActive 
+                  ? "bg-blue-50 text-blue-600" 
+                  : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"}`
+              }
+            >
+              <Layers className="h-5 w-5 shrink-0" />
+              <span className="hidden md:block">Flashcards</span>
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/settings"
+              title="Settings"
+              className={({ isActive }) =>
+                `flex items-center justify-center md:justify-start gap-3 px-2 md:px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
+                ${isActive 
+                  ? "bg-blue-50 text-blue-600" 
+                  : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"}`
+              }
+            >
+              <Settings className="h-5 w-5 shrink-0" />
+              <span className="hidden md:block">Settings</span>
+            </NavLink>
+          </li>
 
         </ul>
       </nav>
@@ -145,11 +170,10 @@ function MainOutLet(){
       </div>
 
     </aside>
-  </div>
-  <main>
-     <Outlet/>
-  </main>
-        </div>
+    <main className="flex-1 w-full min-w-0">
+      <Outlet/>
+    </main>
+</div>
     )
 }
 export default MainOutLet;
