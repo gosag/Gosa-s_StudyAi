@@ -6,12 +6,12 @@ import { FileUp, Send, Loader2,FileText,BrainCircuit } from "lucide-react";
 import { StudyStack } from "./illustrations/StudyStack";
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-/* import { Link } from "react-router-dom"; */
 function Home() {
   const [file,setFile]=useState<File | null>(null)
-  const [link,setLink]=useState<string>("")
-  const [loading,setLoading]=useState<boolean>(false)
-  const [aiData,setAiData]=useState<string>("")
+  const [link,setLink]=useState("")
+  const [loading,setLoading]=useState(false)
+  const summary = localStorage.getItem("summary");
+  const [aiData, setAiData] = useState<string | null>(summary ? JSON.parse(summary) as string : null);
   function isYoutubeLink(link: string) {
   try {
     const url = new URL(link)
@@ -39,7 +39,8 @@ const fileHandler=async (file: File)=>{
           body: formData
         })
         const data = await res.json();
-        setAiData(data.response)
+        setAiData(data.response);
+        localStorage.setItem('summary',JSON.stringify(data.response))
         setFile(null)
         setLoading(false)
 }
@@ -62,7 +63,8 @@ const linkHandler=async (link: string)=>{
       
       const data = await res.json();
       if (typeof data.response === "string") {
-        setAiData(data.response)
+        setAiData(data.response);
+        localStorage.setItem('summary',JSON.stringify(data.response))
       } 
       else {
         console.error("No transcript found in response", data);
@@ -76,7 +78,7 @@ const linkHandler=async (link: string)=>{
       return
     }
     try {
-    if(file && link){6
+    if(file && link){
       alert("Please either upload a file or enter a link, not both.")
       return;
     }
@@ -96,16 +98,11 @@ const linkHandler=async (link: string)=>{
       handleUpload()
     }
   }
-  async function getAiData(){
-    const res = await fetch("http://localhost:8000/api/uploads/test")
-    const data = await res.json()
-    setAiData(data.response)
-  }
     return (
       <div className="ml-1 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
         <Card className="mx-1 mr-2 h-screen md:w-full flex flex-col justify-between gap-0 ">
         <CardHeader className="m-0">
-          <Button className="w-8 h-8 bg-gray-200 text-black p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center z-10">
+          <Button onClick={()=>{setAiData(null)}} className="w-8 h-8 bg-gray-200 text-black p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center z-10">
             <BrainCircuit className="w-5 h-5" />
           </Button>
         </CardHeader>
@@ -149,13 +146,8 @@ const linkHandler=async (link: string)=>{
           </Button>
         </CardFooter>
       </Card>
-      <div className="w-[50%] h-screen flex items-center justify-center">
+      <div className=" h-screen flex items-center justify-center">
         <StudyStack />
-        {/* <Link to="/signUp" className=" text-sm text-gray-600 hover:text-gray-800 transition">Don't have an account? Sign Up</Link>
-        <Link to="/login" className="text-sm text-gray-600 hover:text-gray-800 transition">Already have an account? Login</Link> */}
-        <Button onClick={getAiData}> Get AI Data</Button>
-       {/*  {aiData && <p>{aiData}</p>} */}
-     
       </div>
       </div>
     )}

@@ -1,4 +1,4 @@
-import express, { response } from "express";
+import express from "express";
 import Material from "../models/materialSchema";
 import multer from "multer";
 import extractTextFromFile from "../sevices/pdf.service";
@@ -37,8 +37,9 @@ uploadRoute.post("/api/uploads/file",protector, upload.single("pdf"),async (req,
           return next(error);
         }
         const newMatrial=new Material({
-          title:req.file.originalname || "Untitled",
-          originalText:extractedText.text || "No text extracted",
+          materialType:"file",
+          title:req.file.originalname,
+          originalText:extractedText.text,
           userId:req.user._id,
           summary:response,
         })
@@ -75,7 +76,28 @@ uploadRoute.post("/api/uploads/link",protector, async (req, res,next): Promise<a
       return next(error)
     }
     const sumamrizedResponse = await generateResponse(`Hey Gemini, summarize the following YouTube transcript in a concise manner: ${transcript}`);
-    console.log(`[Gemini Summary] ${sumamrizedResponse}`);
+    if(sumamrizedResponse.length){
+        console.log("[Echo Learn] Transcript Summarized")
+    }
+    if(!req.user || !req.user._id){
+      const error=new Error("User information is missing") as CustomError
+      error.status=401;
+      throw error
+    }
+    const newMatrial= new Material({
+        materialType:"link",
+        title:"youtube link",
+        originalText:transcript,
+        summary:sumamrizedResponse,
+        userId:req.user._id
+    })
+    await newMatrial.save();
+    if(!newMatrial){
+      console.log("[Echo Learn] Failed to save material to database")
+      const error=new Error("Failed to save material to database") as CustomError
+      error.status=500;
+      throw error;
+    }
     res.json({ transcript, response: sumamrizedResponse });
     console.log(`[SUCCESS] Transcript sent to EchoLearn frontend.`);
   } catch (err: any) {
