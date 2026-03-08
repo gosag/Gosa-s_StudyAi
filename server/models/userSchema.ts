@@ -3,8 +3,8 @@ import {Schema,Document,Types,model} from "mongoose"
   email: string;
   password?: string; 
   savedMaterials: Types.ObjectId[];
-}
-
+ }
+ 
 const UserSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },

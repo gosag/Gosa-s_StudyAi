@@ -11,6 +11,5 @@ const MaterialSchema = new Schema<IMaterial>({
   summary: { type: String },
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true }
 });
-
 const Material = model<IMaterial>('Material', MaterialSchema);
 export default Material;
