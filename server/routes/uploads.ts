@@ -3,6 +3,7 @@ import multer from "multer";
 import extractTextFromFile from "../sevices/pdf.service";
 import { getYoutubeTranscript } from "../sevices/youtube.service";
 import { generateResponse } from "../sevices/gemini.service";
+import protector from "../middleware/authMiddleware";
 interface CustomError extends Error {
   status?: number,
   statusCode?: number
@@ -17,7 +18,7 @@ const upload=multer({storage:multer.memoryStorage(),
         }
         cb(null,true)      
 }});
-uploadRoute.post("/api/uploads/file",upload.single("pdf"),async (req,res,next)=>{
+uploadRoute.post("/api/uploads/file",protector, upload.single("pdf"),async (req,res,next)=>{
     if(!req.file){
       const error=new Error("No file uploaded") as CustomError
       error.status=400
@@ -42,7 +43,7 @@ uploadRoute.post("/api/uploads/file",upload.single("pdf"),async (req,res,next)=>
         }
     }
 })
-uploadRoute.post("/api/uploads/link", async (req, res,next): Promise<any> => {
+uploadRoute.post("/api/uploads/link",protector, async (req, res,next): Promise<any> => {
   const { link } = req.body;
   console.log(`\n[API CALL] /api/uploads/link received URL: ${link}`);
 

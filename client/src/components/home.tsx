@@ -7,7 +7,7 @@ import { StudyStack } from "./illustrations/StudyStack";
 import { Send ,Loader2, FileText} from "lucide-react"
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-
+import { Link } from "react-router-dom";
 function Home() {
   const [file,setFile]=useState<File | null>(null)
   const [link,setLink]=useState<string>("")
@@ -16,8 +16,6 @@ function Home() {
   function isYoutubeLink(link: string) {
   try {
     const url = new URL(link)
-    console.log(`Checking URL hostname: ${url.hostname}`)
-    console.log(url)
     return (
       url.hostname === "youtube.com" ||
       url.hostname === "www.youtube.com" ||
@@ -40,8 +38,14 @@ function Home() {
         setLoading(true)
         const formData = new FormData();
         formData.append("pdf", file)
+        
+        const token = localStorage.getItem("token"); // Get your token from storage
+        
         const res = await fetch("http://localhost:8000/api/uploads/file", {
           method: "POST",
+          headers: {
+            "Authorization": `Bearer ${token}`
+          },
           body: formData
         })
         const data = await res.json();
@@ -55,9 +59,14 @@ function Home() {
         return;
       }
       setLoading(true)
+      const token = localStorage.getItem("token"); // Get your token from storage
+      
       const res = await fetch("http://localhost:8000/api/uploads/link", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
         body: JSON.stringify({ link})
       });
       
@@ -148,6 +157,8 @@ function Home() {
       </Card>
       <div className="w-[50%] h-screen flex items-center justify-center">
         <StudyStack />
+        <Link to="/signUp" className=" text-sm text-gray-600 hover:text-gray-800 transition">Don't have an account? Sign Up</Link>
+        <Link to="/login" className="text-sm text-gray-600 hover:text-gray-800 transition">Already have an account? Login</Link>
         <Button onClick={getAiData}> Get AI Data</Button>
        {/*  {aiData && <p>{aiData}</p>} */}
       </div>

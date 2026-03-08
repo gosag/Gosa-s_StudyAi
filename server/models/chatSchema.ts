@@ -1,5 +1,4 @@
 import { Document, Schema , Types, model} from "mongoose";
-import { timeStamp } from "node:console";
 type Role="user"| "model"
 interface chatT extends Document{
     userId:Types.ObjectId,

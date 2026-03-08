@@ -26,6 +26,7 @@ function Login(){
           throw new Error(result.message||"something went wrong")
         }
         console.log(result.user)
+        localStorage.setItem("token", result.token)
         alert(JSON.stringify(result.user, null, 2))
         reset()
       }
