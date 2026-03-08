@@ -7,7 +7,7 @@ import { StudyStack } from "./illustrations/StudyStack";
 import { Send ,Loader2, FileText} from "lucide-react"
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Link } from "react-router-dom";
+/* import { Link } from "react-router-dom"; */
 function Home() {
   const [file,setFile]=useState<File | null>(null)
   const [link,setLink]=useState<string>("")
@@ -25,17 +25,8 @@ function Home() {
     return false
   }
 }
-  const handleUpload = async () => {
-    if (!file && !link) {
-      return
-    }
-    try {
-    if(file && link){
-      alert("Please either upload a file or enter a link, not both.")
-      return;
-    }
-      if (file) {
-        setLoading(true)
+const fileHandler=async (file: File)=>{
+  setLoading(true)
         const formData = new FormData();
         formData.append("pdf", file)
         
@@ -52,9 +43,9 @@ function Home() {
         setAiData(data.response)
         setFile(null)
         setLoading(false)
-      }
-     else if (link) {
-      if(!isYoutubeLink(link)){
+}
+const linkHandler=async (link: string)=>{
+  if(!isYoutubeLink(link)){
         alert("Please enter a valid YouTube link.")
         return;
       }
@@ -71,26 +62,30 @@ function Home() {
       });
       
       const data = await res.json();
-
-      // 1. Check if the backend sent a direct 'text' property
-     /*  if (data.text) {
-        setData({ text: data.text });
-      }  */
-      // 2. Check if 'transcript' is a STRING (This matches your current backend)
       if (typeof data.response === "string") {
         setAiData(data.response)
       } 
-      /* // 3. Fallback: Check if it's an ARRAY (for older scrapers)
-      else if (Array.isArray(data.transcript)) {
-        const text = data.transcript.map((item: any) => item.text).join(" ");
-        setData({ text });
-      } */ 
       else {
         console.error("No transcript found in response", data);
       }
-
       setLink("");
       setLoading(false);
+}
+
+  const handleUpload = async () => {
+    if (!file && !link) {
+      return
+    }
+    try {
+    if(file && link){6
+      alert("Please either upload a file or enter a link, not both.")
+      return;
+    }
+      if (file) {
+        await fileHandler(file)
+      }
+     else if (link) {
+      await linkHandler(link)
     }
     } catch (error) {
       console.error("Upload failed:", error)
@@ -157,8 +152,8 @@ function Home() {
       </Card>
       <div className="w-[50%] h-screen flex items-center justify-center">
         <StudyStack />
-        <Link to="/signUp" className=" text-sm text-gray-600 hover:text-gray-800 transition">Don't have an account? Sign Up</Link>
-        <Link to="/login" className="text-sm text-gray-600 hover:text-gray-800 transition">Already have an account? Login</Link>
+        {/* <Link to="/signUp" className=" text-sm text-gray-600 hover:text-gray-800 transition">Don't have an account? Sign Up</Link>
+        <Link to="/login" className="text-sm text-gray-600 hover:text-gray-800 transition">Already have an account? Login</Link> */}
         <Button onClick={getAiData}> Get AI Data</Button>
        {/*  {aiData && <p>{aiData}</p>} */}
       </div>
