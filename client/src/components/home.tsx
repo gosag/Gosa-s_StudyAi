@@ -2,9 +2,10 @@ import { Card, CardContent, CardFooter, CardHeader} from "./ui/card"
 import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea";
 import {Input} from "./ui/input"
-import { MessageSquare, FileUp } from "lucide-react";
+import { MessageSquare, FileUp, Brain } from "lucide-react";
 import { StudyStack } from "./illustrations/StudyStack";
 import { Send ,Loader2, FileText} from "lucide-react"
+import { BrainCircuit, Sparkles, Bot } from "lucide-react"
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 /* import { Link } from "react-router-dom"; */
@@ -107,10 +108,10 @@ const linkHandler=async (link: string)=>{
         <Card className="ml-1 w-[50%] h-screen flex flex-col justify-between gap-0">
         <CardHeader className="m-0">
           <Button className="w-8 h-8 bg-gray-200 text-black p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center z-10">
-            <MessageSquare className="w-5 h-5" />
+            <BrainCircuit className="w-5 h-5" />
           </Button>
         </CardHeader>
-        <CardContent className="flex-1 overflow-y-auto max-h-full">
+        <CardContent className="flex-1 overflow-y-auto max-h-full pb-4">
           {aiData?(
             <div className="prose prose-sm md:prose-base max-w-none w-full wrap-break-word">
               <ReactMarkdown>{aiData}</ReactMarkdown>
@@ -127,8 +128,8 @@ const linkHandler=async (link: string)=>{
             </div>
           )}
         </CardContent>
-        <CardFooter className="relative items-end pb-2 shrink-0">
-          <Button className="w-8 h-8 bg-gray-200 text-black absolute bottom-3 left-3 p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 z-10 shrink-0 flex items-center justify-center">
+        <CardFooter className="relative items-end pb-0 shrink-0">
+          <Button className="w-8 h-8 bg-gray-200 text-black absolute bottom-1.75 left-3 p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 z-10 shrink-0 flex items-center justify-center">
               <FileUp className="w-5 h-5" />
                
           </Button>
@@ -142,7 +143,7 @@ const linkHandler=async (link: string)=>{
             value={link}
             onKeyDown={handleEnter}
             onChange={(e)=>{setLink(e.target.value)}}
-            className="pl-12 py-3 min-h-11 max-h-40 resize-none overflow-y-auto rounded-2xl"
+            className="pl-12 py-3 min-h-11 max-h-40 resize-none overflow-x-auto rounded-2xl"
           />
           <Button onClick={handleUpload} disabled={loading} className={`text-black  relative ml-2 h-11 w-11 p-0 rounded-full cursor-pointer active:scale-100 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center ${file || link?"bg-green-400 hover:bg-green-500":"bg-gray-200 hover:bg-gray-300"}`}>
             {loading ? <Loader2 className="w-5 h-5 ml-0.5 animate-spin" /> : <Send className="w-5 h-5 ml-0.5" />}
@@ -156,6 +157,7 @@ const linkHandler=async (link: string)=>{
         <Link to="/login" className="text-sm text-gray-600 hover:text-gray-800 transition">Already have an account? Login</Link> */}
         <Button onClick={getAiData}> Get AI Data</Button>
        {/*  {aiData && <p>{aiData}</p>} */}
+     
       </div>
       </div>
     )}
