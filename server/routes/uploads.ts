@@ -5,6 +5,7 @@ import extractTextFromFile from "../sevices/pdf.service";
 import { getYoutubeTranscript } from "../sevices/youtube.service";
 import { generateResponse } from "../sevices/gemini.service";
 import protector from "../middleware/authMiddleware";
+import { match } from "assert";
 interface CustomError extends Error {
   status?: number,
   statusCode?: number
@@ -44,8 +45,7 @@ uploadRoute.post("/api/uploads/file",protector, upload.single("pdf"),async (req,
           summary:response,
         })
         await newMatrial.save();
-        res.json({ response });
-
+        res.json({ response, materialId:newMatrial._id });
     }
     catch(error){
         const customError = error as CustomError;
@@ -98,7 +98,7 @@ uploadRoute.post("/api/uploads/link",protector, async (req, res,next): Promise<a
       error.status=500;
       throw error;
     }
-    res.json({ transcript, response: sumamrizedResponse });
+    res.json({ transcript, response: sumamrizedResponse ,MaterialId:newMatrial._id});
     console.log(`[SUCCESS] Transcript sent to EchoLearn frontend.`);
   } catch (err: any) {
     return next(err);

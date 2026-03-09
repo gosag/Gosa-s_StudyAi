@@ -10,6 +10,8 @@ function Home() {
   const [file,setFile]=useState<File | null>(null)
   const [link,setLink]=useState("")
   const [loading,setLoading]=useState(false)
+  const MId=localStorage.getItem("materialId")
+  const [materialId,setMaterialId]=useState<string | null>(MId? JSON.parse(MId) : null)
   const summary = localStorage.getItem("summary");
   const [aiData, setAiData] = useState<string | null>(summary ? JSON.parse(summary) as string : null);
   function isYoutubeLink(link: string) {
@@ -41,8 +43,11 @@ const fileHandler=async (file: File)=>{
         const data = await res.json();
         setAiData(data.response);
         localStorage.setItem('summary',JSON.stringify(data.response))
+        localStorage.setItem('materialId', JSON.stringify(data.materialId));
         setFile(null)
+        setMaterialId(data.materialId)
         setLoading(false)
+        
 }
 const linkHandler=async (link: string)=>{
   if(!isYoutubeLink(link)){
@@ -65,6 +70,8 @@ const linkHandler=async (link: string)=>{
       if (typeof data.response === "string") {
         setAiData(data.response);
         localStorage.setItem('summary',JSON.stringify(data.response))
+        setMaterialId(data.materialId);
+        localStorage.setItem('materialId', JSON.stringify(data.materialId));
       } 
       else {
         console.error("No transcript found in response", data);
@@ -78,6 +85,7 @@ const linkHandler=async (link: string)=>{
       return
     }
     try {
+    if(!materialId){
     if(file && link){
       alert("Please either upload a file or enter a link, not both.")
       return;
@@ -87,7 +95,7 @@ const linkHandler=async (link: string)=>{
       }
      else if (link) {
       await linkHandler(link)
-    }
+    }}
     } catch (error) {
       console.error("Upload failed:", error)
       setLoading(false);
@@ -98,11 +106,17 @@ const linkHandler=async (link: string)=>{
       handleUpload()
     }
   }
+  function handleRestart(){
+    setAiData(null);
+    localStorage.removeItem("summary");
+    setMaterialId(null);
+    localStorage.removeItem("materialId");
+  }
     return (
       <div className="ml-1 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
         <Card className="mx-1 mr-2 h-screen md:w-full flex flex-col justify-between gap-0 ">
         <CardHeader className="m-0">
-          <Button onClick={()=>{setAiData(null)}} className="w-8 h-8 bg-gray-200 text-black p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center z-10">
+          <Button title="New Chat" onClick={handleRestart} className="w-8 h-8 bg-gray-200 text-black p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center z-10">
             <BrainCircuit className="w-5 h-5" />
           </Button>
         </CardHeader>
