@@ -30,7 +30,7 @@ export async function generateResponse(prompt:string):Promise<string>{
         const model = GenAi.getGenerativeModel({
             //gemini-2.5-pro or
             //gemini-2.5-flash-lite 
-            model: "gemini-2.5-flash-lite",
+            model: "gemini-2.5-pro",
             generationConfig: generationConfiguration,
         });
         const result = await model.generateContent(fullPrompt);
@@ -40,10 +40,14 @@ export async function generateResponse(prompt:string):Promise<string>{
     catch(error:any){
         /* console.error("Error generating response:", error); */
         if(error?.status===429){
-            throw new Error("Gemini API rate limit exceeded. Please try again later.") as CustomError;
+            const err = new Error("Gemini API rate limit exceeded. Please try again later.") as CustomError;
+            err.status = 429;
+            throw err;
         }
         else{
-            throw new Error("An error occurred while generating response from Gemini API. Please try again later.") as CustomError;
+            const err = new Error("An error occurred while generating response from Gemini API. Please try again later.") as CustomError;
+            err.status = 500;
+            throw err;
         }
     }
 }

@@ -1,11 +1,11 @@
 import express from "express";
 import Material from "../models/materialSchema";
+import Chat from "../models/chatSchema";
 import multer from "multer";
 import extractTextFromFile from "../sevices/pdf.service";
 import { getYoutubeTranscript } from "../sevices/youtube.service";
 import { generateResponse } from "../sevices/gemini.service";
 import protector from "../middleware/authMiddleware";
-import { match } from "assert";
 interface CustomError extends Error {
   status?: number,
   statusCode?: number
@@ -53,7 +53,7 @@ uploadRoute.post("/api/uploads/file",protector, upload.single("pdf"),async (req,
             return next(customError);
         }
         else{
-            const err = new Error("Failed to extract text from file") as CustomError;
+            const err = new Error("Failed to process request: " + (error instanceof Error ? error.message : "Unknown error")) as CustomError;
             err.status = 500;
             return next(err);
         }
@@ -112,6 +112,29 @@ uploadRoute.post("/api/continue",protector, async(req,res,next)=>{
         error.status=404
         return next(error)
     }
+    if(!req.user || !req.user._id){
+      const error=new Error("User information is missing") as CustomError
+      error.status=401;
+      throw error
+    }
+    const newChat= new Chat({
+      userId:req.user._id,
+      materialId,
+      messages:[{
+        role:"user",
+        text:userMessage,
+      }]
+    })
+    await newChat.save();
+    /* interface chatT extends Document{
+        userId:Types.ObjectId,
+        materialId:Types.ObjectId
+        messages:[
+            role:Role,
+            text:string,
+            timeStamp:Date
+        ]
+    } */
     const conversationHistory:{role: string; content: string}[] = [
         { role: "system", content: "You are a helpful assistant that provides information based on the provided material." },
         { role: "user", content: `Here is the material for reference: ${material.summary}` },
@@ -119,6 +142,17 @@ uploadRoute.post("/api/continue",protector, async(req,res,next)=>{
     ];
     const prompt = conversationHistory.map(msg => `${msg.role}: ${msg.content}`).join('\n');
     const response = await generateResponse(prompt);
+    const newAIChat = new Chat({
+      userId:req.user._id,
+      materialId,
+      messages:[
+        {
+          role:"model",
+          text:response,
+        }
+      ]
+    })
+    await newAIChat.save();
     res.json({ response });
 })
 uploadRoute.get("/api/uploads/test", async(req, res,next) => {

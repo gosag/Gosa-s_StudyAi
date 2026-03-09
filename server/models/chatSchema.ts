@@ -3,12 +3,14 @@ type Role="user"| "model"
 interface chatT extends Document{
     userId:Types.ObjectId,
     materialId:Types.ObjectId
-    messages:[
+    messages:{
         role:Role,
         text:string,
         timeStamp:Date
-    ]
+    }[];
 }
+
+
 const chatSchema=new Schema<chatT>({
     userId:{
         type:Types.ObjectId,
@@ -37,3 +39,4 @@ const chatSchema=new Schema<chatT>({
     ]
 })
 const Chat=model<chatT>("Chat",chatSchema)
+export default Chat;

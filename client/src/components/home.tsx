@@ -12,7 +12,7 @@ function Home() {
   const [loading,setLoading]=useState(false)
   const [materialId,setMaterialId]=useState<string | null>(null)
   const summary = localStorage.getItem("summary");
-  const [aiData, setAiData] = useState<string | null>(summary ? JSON.parse(summary) as string : null);
+  const [aiData, setAiData] = useState<string | null>(summary && summary !== "undefined" ? JSON.parse(summary) as string : null);
   function isYoutubeLink(link: string) {
   try {
     const url = new URL(link)
@@ -82,6 +82,7 @@ const linkHandler=async (link: string)=>{
 }
 const continueHandler=async ()=>{
   try{
+  setLoading(true);
   const token=localStorage.getItem("token");
   const res=await fetch("http://localhost:8000/api/continue",{
     method:"POST",
@@ -94,6 +95,8 @@ const continueHandler=async ()=>{
   const data=await res.json();
   setAiData(data.response);
   localStorage.setItem('summary',JSON.stringify(data.response))
+  setLink('');
+  setLoading(false)
 }
   catch(error){
     console.error("Failed to continue conversation:", error)
