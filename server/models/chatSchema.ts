@@ -3,7 +3,7 @@ type Role="user"| "model"
 interface chatT extends Document{
     userId:Types.ObjectId,
     materialId:Types.ObjectId
-    messages:{
+    message:{
         role:Role,
         text:string,
         timeStamp:Date
@@ -20,7 +20,7 @@ const chatSchema=new Schema<chatT>({
         type:Types.ObjectId,
         required:true
     },
-    messages:[
+    message:[
         {
           role:{
             type:String,

@@ -120,32 +120,30 @@ uploadRoute.post("/api/continue",protector, async(req,res,next)=>{
     const newChat= new Chat({
       userId:req.user._id,
       materialId,
-      messages:[{
+      message:[{
         role:"user",
         text:userMessage,
       }]
     })
     await newChat.save();
-    /* interface chatT extends Document{
-        userId:Types.ObjectId,
-        materialId:Types.ObjectId
-        messages:[
-            role:Role,
-            text:string,
-            timeStamp:Date
-        ]
-    } */
+   const messages=await Chat.find({materialId}).sort({ timeStamp: 1 })
+   const systemMessage=messages.map(mssg=>(
+    {
+        role:mssg?.message?.[0]?.role || "user",
+        content:mssg?.message?.[0]?.text || ""
+    }
+   ))
     const conversationHistory:{role: string; content: string}[] = [
         { role: "system", content: "You are a helpful assistant that provides information based on the provided material." },
         { role: "user", content: `Here is the material for reference: ${material.summary}` },
-        { role: "user", content: userMessage }
     ];
+    conversationHistory.push(...systemMessage);
     const prompt = conversationHistory.map(msg => `${msg.role}: ${msg.content}`).join('\n');
     const response = await generateResponse(prompt);
     const newAIChat = new Chat({
       userId:req.user._id,
       materialId,
-      messages:[
+      message:[
         {
           role:"model",
           text:response,
