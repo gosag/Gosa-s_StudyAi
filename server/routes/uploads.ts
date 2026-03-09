@@ -104,6 +104,23 @@ uploadRoute.post("/api/uploads/link",protector, async (req, res,next): Promise<a
     return next(err);
   }
 });
+uploadRoute.post("/api/continue",protector, async(req,res,next)=>{
+    const {materialId,userMessage}=req.body
+    const material=await Material.findById(materialId)
+    if(!material){
+        const error=new Error("Material not found") as CustomError
+        error.status=404
+        return next(error)
+    }
+    const conversationHistory:{role: string; content: string}[] = [
+        { role: "system", content: "You are a helpful assistant that provides information based on the provided material." },
+        { role: "user", content: `Here is the material for reference: ${material.summary}` },
+        { role: "user", content: userMessage }
+    ];
+    const prompt = conversationHistory.map(msg => `${msg.role}: ${msg.content}`).join('\n');
+    const response = await generateResponse(prompt);
+    res.json({ response });
+})
 uploadRoute.get("/api/uploads/test", async(req, res,next) => {
   try{
   const response = await generateResponse("Hello, Gemini. this is the first prompt of mine with u.just say  something or tell me a joke yeah yeah tell me a joke that u are sure will make me laugh in amharic ");

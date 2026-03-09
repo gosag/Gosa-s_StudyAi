@@ -10,8 +10,7 @@ function Home() {
   const [file,setFile]=useState<File | null>(null)
   const [link,setLink]=useState("")
   const [loading,setLoading]=useState(false)
-  const MId=localStorage.getItem("materialId")
-  const [materialId,setMaterialId]=useState<string | null>(MId? JSON.parse(MId) : null)
+  const [materialId,setMaterialId]=useState<string | null>(null)
   const summary = localStorage.getItem("summary");
   const [aiData, setAiData] = useState<string | null>(summary ? JSON.parse(summary) as string : null);
   function isYoutubeLink(link: string) {
@@ -43,7 +42,7 @@ const fileHandler=async (file: File)=>{
         const data = await res.json();
         setAiData(data.response);
         localStorage.setItem('summary',JSON.stringify(data.response))
-        localStorage.setItem('materialId', JSON.stringify(data.materialId));
+        localStorage.setItem('materialId',JSON.stringify(data.materialId));
         setFile(null)
         setMaterialId(data.materialId)
         setLoading(false)
@@ -65,8 +64,10 @@ const linkHandler=async (link: string)=>{
         },
         body: JSON.stringify({ link})
       });
-      
       const data = await res.json();
+      if(!res.ok){
+        throw new Error("something went wrong")
+      }
       if (typeof data.response === "string") {
         setAiData(data.response);
         localStorage.setItem('summary',JSON.stringify(data.response))
@@ -79,7 +80,25 @@ const linkHandler=async (link: string)=>{
       setLink("");
       setLoading(false);
 }
-
+const continueHandler=async ()=>{
+  try{
+  const token=localStorage.getItem("token");
+  const res=await fetch("http://localhost:8000/api/continue",{
+    method:"POST",
+    headers:{
+      "Content-Type":"application/json",
+      "Authorization":`Bearer ${token}`
+    },
+    body:JSON.stringify({materialId,userMessage:link})
+  })
+  const data=await res.json();
+  setAiData(data.response);
+  localStorage.setItem('summary',JSON.stringify(data.response))
+}
+  catch(error){
+    console.error("Failed to continue conversation:", error)
+  }
+}
   const handleUpload = async () => {
     if (!file && !link) {
       return
@@ -96,6 +115,9 @@ const linkHandler=async (link: string)=>{
      else if (link) {
       await linkHandler(link)
     }}
+    else{
+      continueHandler()
+    }
     } catch (error) {
       console.error("Upload failed:", error)
       setLoading(false);
