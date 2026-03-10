@@ -1,4 +1,4 @@
-import { Card, CardContent, CardFooter, CardHeader} from "./ui/card"
+import { Card, CardContent, CardFooter} from "./ui/card"
 import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea";
 import {Input} from "./ui/input"
@@ -127,8 +127,9 @@ const continueHandler=async ()=>{
       setLoading(false);
     }
   }
-  function handleEnter(e: React.KeyboardEvent<HTMLTextAreaElement>) {
-    if(e.key==="Enter" && (file || link)){
+  function handleEnter(e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) {
+    if(e.key==="Enter" && !e.shiftKey && (file || link)){
+      e.preventDefault();
       handleUpload()
     }
   }
@@ -140,62 +141,153 @@ const continueHandler=async ()=>{
     localStorage.removeItem("materialId");
   }
 
-    return (
-      <div className="ml-1 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
-        <Card className="mx-1 mr-2 h-screen md:w-full flex flex-col justify-between gap-0 ">
-        <CardHeader className="m-0">
-          <Button title="New Chat" onClick={handleRestart} className="w-8 h-8 bg-gray-200 text-black p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center z-10">
-            <BrainCircuit className="w-5 h-5" />
+  return (
+    <div className="max-w-7xl mx-auto p-3 sm:p-6 flex flex-col gap-4 sm:gap-6 w-full min-h-screen">
+      {/* Header Section */}
+      <header className="flex flex-col gap-2 border-b pb-4 shrink-0">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Your Study Materials</h1>
+            <p className="text-zinc-500 text-sm mt-1">
+              Upload a PDF or paste a link to generate AI-powered summaries, flashcards, and quizzes.
+            </p>
+          </div>
+          <Button title="New Chat" variant="outline" onClick={handleRestart} className="flex gap-2 items-center rounded-lg">
+            <BrainCircuit className="w-4 h-4" />
+            <span className="hidden sm:inline">New Chat</span>
           </Button>
-        </CardHeader>
-        <CardContent className="flex-1 overflow-y-auto max-h-full pb-4">
-          {aiData.length>0?(
-            <div className="prose prose-sm md:prose-base max-w-none w-full wrap-break-word flex flex-col gap-4">
-              {aiData.map((item,index)=>
-                <div key={index} className={`flex w-full ${item.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[98%] rounded-2xl px-4 py-0 ${item.role === 'user' ? 'bg-zinc-800 text-white ' : 'bg-zinc-100 dark:bg-zinc-800 py-2 text-black dark:text-white'}`}>
-                    <ReactMarkdown>{item.content}</ReactMarkdown>
-                  </div>
+        </div>
+      </header>
+
+      {/* Main Content Area */}
+      {aiData.length === 0 ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+          {/* Upload Section - Modern drag-and-drop style */}
+          <Card className="flex flex-col gap-6 p-8 border-dashed border-2 bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors shadow-none">
+            <div className="flex flex-col items-center justify-center text-center space-y-4">
+              <div className="p-4 bg-zinc-100 dark:bg-zinc-800 rounded-full border border-zinc-200 dark:border-zinc-700">
+                <FileUp className="w-8 h-8 text-zinc-600 dark:text-zinc-400" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="font-semibold text-lg">Upload Document</h3>
+                <p className="text-sm text-zinc-500">Drag and drop your PDF here, or click to browse</p>
+              </div>
+              <div className="relative w-full max-w-xs">
+                <Button variant="secondary" className="relative z-10 w-full rounded-lg">Select File</Button>
+                <Input 
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      setFile(e.target.files[0])
+                    }
+                  }} 
+                  type="file" 
+                  name="pdf" 
+                  accept="application/pdf"  
+                  className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer"
+                />
+              </div>
+              {file && (
+                <div className="flex items-center gap-2 mt-2 px-3 py-1.5 bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400 rounded-md text-sm font-medium border border-green-200 dark:border-green-500/20">
+                  <FileText className="w-4 h-4" />
+                  <span className="truncate max-w-50">{file.name}</span>
                 </div>
               )}
             </div>
-          ): (
-            <div> 
-              Bring any topic! I can help you with a wide range of topics, including:
-              <ul className="list-disc list-inside mt-2 text-md text-gray-600">
-                <li>Providing explanations and summaries</li>
-                <li>Generating quizzes from your notes</li>
-                <li>Adaptive flashcard review system</li>
-                <li>And much more!</li>
-              </ul>
+
+            <div className="relative flex items-center py-2">
+              <div className="grow border-t border-zinc-200 dark:border-zinc-800"></div>
+              <span className="shrink-0 mx-4 text-zinc-400 text-xs font-medium uppercase tracking-wider">OR</span>
+              <div className="grow border-t border-zinc-200 dark:border-zinc-800"></div>
             </div>
-          )}
-        </CardContent>
-        <CardFooter className="relative items-end pb-0 shrink-0">
-          <Button className="w-8 h-8 bg-gray-200 text-black absolute bottom-1.75 left-3 p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 z-10 shrink-0 flex items-center justify-center">
-              <FileUp className="w-5 h-5" />
-          </Button>
-          <Input onChange={(e)=>{
-            if(e.target.files){
-              setFile(e.target.files[0])
-            }
-          }} type="file" name="pdf" accept="application/pdf"  className="w-8 h-8 opacity-0 z-20 bg-transparent text-black absolute bottom-3 left-3 p-0  cursor-pointer"/>
-          <Textarea
-            placeholder="Paste link or type text..." 
-            value={link}
-            onKeyDown={handleEnter}
-            onChange={(e)=>{setLink(e.target.value)}}
-            className="pl-12 py-3 min-h-11 max-h-40 resize-none overflow-x-auto rounded-2xl"
-          />
-          <Button onClick={handleUpload} disabled={loading} className={`text-black  relative ml-2 h-11 w-11 p-0 rounded-full cursor-pointer active:scale-100 hover:scale-105 transition-all duration-200 shrink-0 flex items-center justify-center ${file || link?"bg-green-400 hover:bg-green-500":"bg-gray-200 hover:bg-gray-300"}`}>
-            {loading ? <Loader2 className="w-5 h-5 ml-0.5 animate-spin" /> : <Send className="w-5 h-5 ml-0.5" />}
-            {file?<FileText size={20} className="absolute -top-1 -right-1 bg-green-500 text-white rounded-full p-0.5" />:null}
-          </Button>
-        </CardFooter>
-      </Card>
-      <div className=" h-screen flex items-center justify-center">
-        <StudyStack />
-      </div>
-      </div>
-    )}
+
+            <div className="space-y-3">
+              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Paste Link or Type Topic</label>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="https://youtube.com/... or 'Machine Learning'" 
+                  value={link}
+                  onKeyDown={handleEnter}
+                  onChange={(e) => setLink(e.target.value)}
+                  className="flex-1 rounded-lg"
+                />
+              </div>
+            </div>
+
+            <Button 
+              onClick={handleUpload} 
+              disabled={loading || (!file && !link)} 
+              className={`w-full rounded-lg h-11 text-base font-medium transition-all ${file || link ? "bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-100 dark:hover:bg-zinc-200 dark:text-zinc-900" : ""}`}
+            >
+              {loading ? (
+                <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Processing...</>
+              ) : (
+                <><Send className="w-5 h-5 mr-2" /> Start Learning</>
+              )}
+            </Button>
+          </Card>
+
+          {/* Illustration Container */}
+          <div className="hidden lg:flex items-center justify-center p-8 bg-zinc-50/50 dark:bg-zinc-900/50 rounded-xl h-full border border-zinc-200 dark:border-zinc-800 border-dashed">
+            <StudyStack />
+          </div>
+        </div>
+      ) : (
+        /* Chat UI when active */
+        <Card className="flex flex-col flex-1 min-h-[70vh] w-full max-w-6xl mx-auto shadow-sm border-zinc-200 dark:border-zinc-800 overflow-hidden">
+          <CardContent className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 bg-zinc-50/30 dark:bg-zinc-950/30">
+            {aiData.map((item, index) => (
+              <div key={index} className={`flex w-full ${item.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`shadow-sm ${
+                  item.role === 'user' 
+                  ? 'max-w-[85%] lg:max-w-[75%] rounded-2xl rounded-tr-sm px-5 py-3.5 bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100' 
+                  : 'max-w-[95%] lg:max-w-[85%] rounded-2xl rounded-tl-sm px-5 sm:px-6 py-4 bg-white text-zinc-900 border border-zinc-200 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-800'
+                }`}>
+                  <div className={`prose prose-sm md:prose-base dark:prose-invert max-w-none wrap-break-word ${item.role === 'user' ? 'prose-p:m-0' : ''}`}>
+                    <ReactMarkdown>{item.content}</ReactMarkdown>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+          <CardFooter className="p-4 border-t bg-white dark:bg-zinc-950 shrink-0 relative">
+            <div className="flex items-center gap-3 w-full">
+              <div className="relative">
+                <Button variant="outline" size="icon" className="shrink-0 rounded-full h-11 w-11 relative overflow-hidden bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800">
+                  <FileUp className="w-5 h-5 text-zinc-500" />
+                  <Input 
+                    onChange={(e) => {
+                      if (e.target.files) {
+                        setFile(e.target.files[0])
+                      }
+                    }} 
+                    type="file" 
+                    name="pdf" 
+                    accept="application/pdf"  
+                    className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer"
+                  />
+                  {file && <div className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-zinc-950" />}
+                </Button>
+              </div>
+              <Textarea
+                placeholder="Ask a follow-up question..." 
+                value={link}
+                onKeyDown={handleEnter}
+                onChange={(e) => setLink(e.target.value)}
+                className="flex-1 min-h-11 max-h-32 resize-none rounded-2xl py-3 px-4 shadow-sm border-zinc-200 dark:border-zinc-800 focus-visible:ring-zinc-400"
+              />
+              <Button 
+                onClick={handleUpload} 
+                disabled={loading || (!file && !link)} 
+                size="icon"
+                className={`rounded-full h-11 w-11 shrink-0 transition-colors ${file || link ? "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200" : "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-600"}`}
+              >
+                {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
+              </Button>
+            </div>
+          </CardFooter>
+        </Card>
+      )}
+    </div>
+  )
+}
 export default Home;
