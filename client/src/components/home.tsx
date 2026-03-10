@@ -11,8 +11,8 @@ function Home() {
   const [link,setLink]=useState("")
   const [loading,setLoading]=useState(false)
   const [materialId,setMaterialId]=useState<string | null>(null)
-  const summary = localStorage.getItem("summary");
-  const [aiData, setAiData] = useState<string | null>(summary && summary !== "undefined" ? JSON.parse(summary) as string : null);
+  const [aiData, setAiData] = useState<{role: string, content: string}[]>([]);
+
   function isYoutubeLink(link: string) {
   try {
     const url = new URL(link)
@@ -40,7 +40,7 @@ const fileHandler=async (file: File)=>{
           body: formData
         })
         const data = await res.json();
-        setAiData(data.response);
+        setAiData([{role: "model",content: data.response}]);
         localStorage.setItem('summary',JSON.stringify(data.response))
         localStorage.setItem('materialId',JSON.stringify(data.materialId));
         setFile(null)
@@ -69,20 +69,21 @@ const linkHandler=async (link: string)=>{
         throw new Error("something went wrong")
       }
       if (typeof data.response === "string") {
-        setAiData(data.response);
+        setAiData([{role: "model",content: data.response}]);
         localStorage.setItem('summary',JSON.stringify(data.response))
         setMaterialId(data.materialId);
         localStorage.setItem('materialId', JSON.stringify(data.materialId));
       } 
       else {
         console.error("No transcript found in response", data);
-      }
+      } 
       setLink("");
       setLoading(false);
 }
 const continueHandler=async ()=>{
   try{
   setLoading(true);
+  setAiData(prev=>[...prev,{role:"user",content:link}]);
   const token=localStorage.getItem("token");
   const res=await fetch("http://localhost:8000/api/continue",{
     method:"POST",
@@ -93,7 +94,7 @@ const continueHandler=async ()=>{
     body:JSON.stringify({materialId,userMessage:link})
   })
   const data=await res.json();
-  setAiData(data.response);
+  setAiData(prev=>[...prev,{role:"model",content:data.response}]);
   localStorage.setItem('summary',JSON.stringify(data.response))
   setLink('');
   setLoading(false)
@@ -131,12 +132,14 @@ const continueHandler=async ()=>{
       handleUpload()
     }
   }
+
   function handleRestart(){
-    setAiData(null);
+    setAiData([]);
     localStorage.removeItem("summary");
     setMaterialId(null);
     localStorage.removeItem("materialId");
   }
+
     return (
       <div className="ml-1 grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
         <Card className="mx-1 mr-2 h-screen md:w-full flex flex-col justify-between gap-0 ">
@@ -146,14 +149,20 @@ const continueHandler=async ()=>{
           </Button>
         </CardHeader>
         <CardContent className="flex-1 overflow-y-auto max-h-full pb-4">
-          {aiData?(
-            <div className="prose prose-sm md:prose-base max-w-none w-full wrap-break-word">
-              <ReactMarkdown>{aiData}</ReactMarkdown>
+          {aiData.length>0?(
+            <div className="prose prose-sm md:prose-base max-w-none w-full wrap-break-word flex flex-col gap-4">
+              {aiData.map((item,index)=>
+                <div key={index} className={`flex w-full ${item.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[98%] rounded-2xl px-4 py-0 ${item.role === 'user' ? 'bg-zinc-800 text-white ' : 'bg-zinc-100 dark:bg-zinc-800 py-2 text-black dark:text-white'}`}>
+                    <ReactMarkdown>{item.content}</ReactMarkdown>
+                  </div>
+                </div>
+              )}
             </div>
           ): (
-            <div>
+            <div> 
               Bring any topic! I can help you with a wide range of topics, including:
-              <ul className="list-disc list-inside mt-2 text-sm text-gray-600">
+              <ul className="list-disc list-inside mt-2 text-md text-gray-600">
                 <li>Providing explanations and summaries</li>
                 <li>Generating quizzes from your notes</li>
                 <li>Adaptive flashcard review system</li>
@@ -165,7 +174,6 @@ const continueHandler=async ()=>{
         <CardFooter className="relative items-end pb-0 shrink-0">
           <Button className="w-8 h-8 bg-gray-200 text-black absolute bottom-1.75 left-3 p-0 rounded-full cursor-pointer hover:bg-gray-300 hover:scale-105 transition-all duration-200 z-10 shrink-0 flex items-center justify-center">
               <FileUp className="w-5 h-5" />
-               
           </Button>
           <Input onChange={(e)=>{
             if(e.target.files){
