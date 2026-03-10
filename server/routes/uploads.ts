@@ -167,6 +167,20 @@ uploadRoute.get("/api/materials",protector,async(req,res,next)=>{
     next(error);
    }
 })
+uploadRoute.delete("/api/delete",protector,async(req,res,next)=>{
+  try{
+    const {materialId}=req.body;
+    const deletedMaterial=await Material.findByIdAndDelete(materialId);
+    if(!deletedMaterial){
+      const error=new Error("something went wrong deleting the material") as CustomError
+      error.status=500;
+      throw Error
+    }
+    res.json({message:"material is deleted"})
+  }catch(err){
+    next(err)
+  }
+})
 uploadRoute.get("/api/uploads/test", async(req, res,next) => {
   try{
   const response = await generateResponse("Hello, Gemini. this is the first prompt of mine with u.just say  something or tell me a joke yeah yeah tell me a joke that u are sure will make me laugh in amharic ");

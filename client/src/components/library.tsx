@@ -1,5 +1,5 @@
 import {Card, CardFooter, CardHeader, CardContent, CardTitle} from "../components/ui/card"
-import { Trash2, FileText, PlayCircle, Brain } from "lucide-react";
+import { Trash2, FileText, PlayCircle, Brain ,Link} from "lucide-react";
 import {Button} from "../components/ui/button"
 import { useState,useEffect} from "react"
 function Library(){
@@ -35,6 +35,30 @@ useEffect(()=>{
     };
     fetchData()
   },[])
+  const deleteHandler=async (materialId:string)=>{
+   try{
+   const filteredMaterials= materials.filter(material=> material._id!==materialId);
+    
+    const token = localStorage.getItem("token");
+    const res=await fetch("http://localhost:8000/api/delete",{
+        method:"DELETE",
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization":`Bearer ${token}`
+        },
+        body:JSON.stringify({materialId})
+    });
+    const data=await res.json();
+    if(!res.ok){
+        throw new Error("Failed to delete material")
+    }
+    console.log(data)
+    setMaterials(filteredMaterials)}
+    catch(err){
+        console.log(err)
+    }
+  }
+
     return(
         <>  
             <div className="w-full h-full p-8 max-w-7xl mx-auto">
@@ -45,13 +69,14 @@ useEffect(()=>{
                 <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                     <div className="flex items-start gap-3 w-[85%]">
                         <div className="p-2 bg-blue-50 rounded-lg shrink-0">
-                            <FileText size={20} className="text-blue-600" />
+                            {material.materialType==="link"?<Link size={20} className="text-blue-600"/>:
+                            <FileText size={20} className="text-blue-600" />}
                         </div>
                         <CardTitle className="text-base font-semibold leading-tight line-clamp-2 mt-1 truncate break-all">
                             {material.title}
                         </CardTitle>
                     </div>
-                    <button className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-md hover:bg-red-50 shrink-0">
+                    <button onClick={()=>{deleteHandler(material._id)}} className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-md hover:bg-red-50 shrink-0">
                         <Trash2 size={18} />
                     </button>
                 </CardHeader>

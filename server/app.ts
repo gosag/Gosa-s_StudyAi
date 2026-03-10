@@ -20,7 +20,7 @@ app.use((req, res, next) => {
 //to allow only specific domains access the api
 const corsOptions={
     origin:"http://localhost:5173",
-    methods:["GET","POST"],
+    methods:["GET","POST","DELETE"],
     allowedHeaders:["Content-Type","Authorization"],
     credentials:true
 }
