@@ -5,6 +5,7 @@ import { useState,useEffect} from "react"
 function Library(){
 type MType="link"| "file"
 interface IMaterial {
+  _id:string;
   title: string;
   originalText: string;
   summary: string;
@@ -20,25 +21,26 @@ useEffect(()=>{
             const res = await fetch("http://localhost:8000/api/materials",{
                 method:"GET",
                 headers:{
-                    "Content-Type":"application/json",
                     "Authorization":`Bearer ${token}`
                 }
             })
-            const materials = await res.json();
-            setMaterials(materials)
-            
+            const data = await res.json();
+            setMaterials(data.materials || []);
         } catch(error){
             console.log(error)
         }
-    }
+    };
     fetchData()
-
-},[])
+  },[])
     return(
-        <>
-            <Card className="w-60">
+        <>  
+            <div>
+            {materials.length>0?(
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {materials.map((material)=>(
+                <Card key={material._id} className="w-60">
                 <CardHeader>
-                    <CardTitle><FileText size={20} className="inline wrap-break-word"/> Data Structure & Algorithms</CardTitle>
+                    <CardTitle><FileText size={20} className="inline wrap-break-word"/>{material.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <p className="text-sm text-muted-foreground">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>
@@ -47,7 +49,8 @@ useEffect(()=>{
                     <Button className="bg-green-500 shadow-2xl hover:bg-green-600 hover:scale-105 transition-all duration-200">Continue</Button>
                     <Button className="bg-red-500 hover:bg-red-600 hover:scale-105 transition-all duration-200">Delete</Button>
                 </CardFooter>
-            </Card>
+            </Card>))}</div>):<div>fetching data</div>}
+            </div>
         </>
     )
 }
