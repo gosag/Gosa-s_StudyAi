@@ -1,12 +1,44 @@
 import {Card, CardFooter, CardHeader, CardContent, CardTitle} from "../components/ui/card"
 import {Button} from "../components/ui/button"
 import {FileText} from "lucide-react"
+import { useState,useEffect} from "react"
 function Library(){
+type MType="link"| "file"
+interface IMaterial {
+  title: string;
+  originalText: string;
+  summary: string;
+  userId: string;
+  timestamps: Date;
+  materialType:MType
+}
+const [materials,setMaterials]=useState<IMaterial[]>([])
+useEffect(()=>{
+    const fetchData=async()=>{
+        try{
+            const token=localStorage.getItem("token")
+            const res = await fetch("http://localhost:8000/api/materials",{
+                method:"GET",
+                headers:{
+                    "Content-Type":"application/json",
+                    "Authorization":`Bearer ${token}`
+                }
+            })
+            const materials = await res.json();
+            setMaterials(materials)
+            
+        } catch(error){
+            console.log(error)
+        }
+    }
+    fetchData()
+
+},[])
     return(
         <>
             <Card className="w-60">
                 <CardHeader>
-                    <CardTitle><FileText size={20} className="inline wrap-break-word"/> Data Sturucture & Al</CardTitle>
+                    <CardTitle><FileText size={20} className="inline wrap-break-word"/> Data Structure & Algorithms</CardTitle>
                 </CardHeader>
                 <CardContent>
                     <p className="text-sm text-muted-foreground">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.</p>

@@ -153,6 +153,20 @@ uploadRoute.post("/api/continue",protector, async(req,res,next)=>{
     await newAIChat.save();
     res.json({ response });
 })
+uploadRoute.get("/api/materials",protector,async(req,res,next)=>{
+   try{
+    if(!req.user || !req.user._id){
+      const error= new Error("Missing user information") as CustomError;
+      error.status=401;
+      throw error
+    }
+    const materials=await Material.find({userId:req.user._id}).sort({timestamps:-1})
+    console.log(`[Echo Learn] Retrieved ${materials.length} materials for user ${req.user._id}`);
+    res.json({ materials });
+   } catch(error){
+    next(error);
+   }
+})
 uploadRoute.get("/api/uploads/test", async(req, res,next) => {
   try{
   const response = await generateResponse("Hello, Gemini. this is the first prompt of mine with u.just say  something or tell me a joke yeah yeah tell me a joke that u are sure will make me laugh in amharic ");
