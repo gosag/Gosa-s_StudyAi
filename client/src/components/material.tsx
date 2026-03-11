@@ -2,13 +2,11 @@ import { useParams ,useNavigate} from "react-router-dom";
 import { useEffect ,useState} from "react";
 import { Card, CardContent, CardFooter } from "./ui/card";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import ReactMarkdown from "react-markdown";
-import {FileUp,Loader2,Send} from "lucide-react"
+import {Loader2,Send} from "lucide-react"
 function MaterialContinue(){
-    const [material,setMaterial]=useState<{role:string,content:string}[]>([])
-    const [file,setFile]=useState<File | null>(null)    
+    const [material,setMaterial]=useState<{role:string,content:string}[]>([])   
     const [link,setLink]=useState("")
     const [loading,setLoading]=useState(false)
     const navigate=useNavigate()
@@ -63,7 +61,7 @@ function MaterialContinue(){
   }
 }
  function handleEnter(e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) {
-    if(e.key==="Enter" && !e.shiftKey && (file || link)){
+    if(e.key==="Enter" && !e.shiftKey && (link)){
       e.preventDefault();
       handleUpload()
     }
@@ -89,23 +87,6 @@ function MaterialContinue(){
           </CardContent>
           <CardFooter className="p-4 border-t bg-white dark:bg-zinc-950 shrink-0 relative">
             <div className="flex items-center gap-3 w-full">
-              <div className="relative">
-                <Button variant="outline" size="icon" className="shrink-0 rounded-full h-11 w-11 relative overflow-hidden bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800">
-                  <FileUp className="w-5 h-5 text-zinc-500" />
-                  <Input 
-                    onChange={(e) => {
-                      if (e.target.files) {
-                        setFile(e.target.files[0])
-                      }
-                    }} 
-                    type="file" 
-                    name="pdf" 
-                    accept="application/pdf"  
-                    className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer"
-                  />
-                  {file && <div className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-zinc-950" />}
-                </Button>
-              </div>
               <Textarea
                 placeholder="Ask a follow-up question..." 
                 value={link}
@@ -115,9 +96,9 @@ function MaterialContinue(){
               />
               <Button 
                 onClick={handleUpload} 
-                disabled={loading || (!file && !link)} 
+                disabled={loading || ( !link)} 
                 size="icon"
-                className={`rounded-full h-11 w-11 shrink-0 transition-colors ${file || link ? "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200" : "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-600"}`}
+                className={`rounded-full h-11 w-11 shrink-0 transition-colors ${link ? "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200" : "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-600"}`}
               >
                 {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
               </Button>
