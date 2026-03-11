@@ -1,7 +1,8 @@
 import {Card, CardFooter, CardHeader, CardContent, CardTitle} from "../components/ui/card"
-import { Trash2, FileText, PlayCircle, Brain ,Link} from "lucide-react";
+import { Trash2, FileText, PlayCircle, Brain ,LinkIcon } from "lucide-react";
 import {Button} from "../components/ui/button"
 import { useState,useEffect} from "react"
+import { Link } from "react-router-dom";
 function Library(){
 type MType="link"| "file"
 interface IMaterial {
@@ -69,7 +70,7 @@ useEffect(()=>{
                 <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                     <div className="flex items-start gap-3 w-[85%]">
                         <div className="p-2 bg-blue-50 rounded-lg shrink-0">
-                            {material.materialType==="link"?<Link size={20} className="text-blue-600"/>:
+                            {material.materialType==="link"?<LinkIcon size={20} className="text-blue-600"/>:
                             <FileText size={20} className="text-blue-600" />}
                         </div>
                         <CardTitle className="text-base font-semibold leading-tight line-clamp-2 mt-1 truncate break-all">
@@ -86,10 +87,12 @@ useEffect(()=>{
                     </p>
                 </CardContent>
                 <CardFooter className="pt-4 border-t border-gray-50 flex gap-3 mt-auto">
+                    <Link to={`/library/${material._id}`} className="flex-1">
                     <Button variant="outline" className="flex-1 rounded-xl bg-white hover:bg-gray-50 border-gray-200 text-gray-700 font-medium transition-all duration-200">
                         <PlayCircle className="w-4 h-4 mr-2 text-gray-500" />
                         Continue
                     </Button>
+                    </Link>
                     <Button className="flex-1 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition-all duration-200">
                         <Brain className="w-4 h-4 mr-2" />
                         Quiz

@@ -174,11 +174,25 @@ uploadRoute.delete("/api/delete",protector,async(req,res,next)=>{
     if(!deletedMaterial){
       const error=new Error("something went wrong deleting the material") as CustomError
       error.status=500;
-      throw Error
+      throw error
     }
     res.json({message:"material is deleted"})
   }catch(err){
     next(err)
+  }
+})
+uploadRoute.get("/api/materials/:id",protector,async(req,res,next)=>{
+  try{
+    const {id}=req.params;
+    const material=await Material.findById(id);
+    if(!material){
+      const error=new Error("Material not found") as CustomError
+      error.status=404;
+      throw error;
+    }
+    res.json({ material });
+  }catch(error){
+    next(error);
   }
 })
 uploadRoute.get("/api/uploads/test", async(req, res,next) => {

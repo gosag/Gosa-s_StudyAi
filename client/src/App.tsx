@@ -4,6 +4,7 @@ import MainOutLet from "./components/outlet/MainOutlet"
 import { Routes, Route } from "react-router-dom"
 import Home from "./components/home"
 import Library from "./components/library"
+import MaterialContinue from "./components/material"
 function App() {
   return (
     <Routes>
@@ -14,6 +15,7 @@ function App() {
         <Route path="settings" element={<>settings</>}/>
         <Route path="signUp" element={<SignUp/>}/>
         <Route path="login" element={<Login />} />
+        <Route path="library/:id" element={<MaterialContinue/>}/>
       </Route>
     </Routes>
   )
