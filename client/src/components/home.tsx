@@ -4,10 +4,12 @@ import { Textarea } from "./ui/textarea";
 import {Input} from "./ui/input"
 import { FileUp, Send, Loader2,FileText,BrainCircuit, PlayCircle, Brain } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 function Home() {
   type MType="link"| "file"
   interface IMaterial{
+  _id:string;
   title: string;
   originalText: string;
   summary: string;
@@ -272,10 +274,12 @@ useEffect(()=>{async function lastMaterial(){
                   </p>
                 </CardContent>
                 <CardFooter className="p-0 mt-6 grid grid-cols-2 gap-3">
+                  <Link to={`/library/${lastMaterial._id}`} className="flex-1">
                   <Button variant="outline" className="rounded-xl h-10 border-zinc-300 dark:border-zinc-700">
                     <PlayCircle className="w-4 h-4 mr-2" />
                     Continue
                   </Button>
+                  </Link>
                   <Button className="rounded-xl h-10 bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200">
                     <Brain className="w-4 h-4 mr-2" />
                     Quiz
