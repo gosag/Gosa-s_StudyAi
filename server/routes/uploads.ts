@@ -184,13 +184,19 @@ uploadRoute.delete("/api/delete",protector,async(req,res,next)=>{
 uploadRoute.get("/api/materials/:id",protector,async(req,res,next)=>{
   try{
     const {id}=req.params;
+    if(!id){
+      const error=new Error("Material ID is required") as CustomError
+      error.status=400;
+      throw error
+    }
     const material=await Material.findById(id);
     if(!material){
       const error=new Error("Material not found") as CustomError
       error.status=404;
       throw error;
     }
-    res.json({ material });
+    const chats=await Chat.find({materialId:id}).sort({timeStamp:1})
+    res.json({ material, chats });
   }catch(error){
     next(error);
   }

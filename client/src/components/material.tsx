@@ -28,7 +28,12 @@ function MaterialContinue(){
             })
             const data=await res.json();
             const materialData=[{role:"model",content:data.material.summary}]
-            setMaterial(materialData)
+            const chatsData=data.chats.map((chat:{message: {role: string; text: string}[]})=>({
+                role:chat.message[0].role,
+                content:chat.message[0].text
+            }))
+             materialData.push(...chatsData);
+            setMaterial(materialData);
         }catch(error){
             console.log(error)
         }}
