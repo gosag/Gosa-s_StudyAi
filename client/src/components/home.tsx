@@ -1,18 +1,26 @@
-import { Card, CardContent, CardFooter} from "./ui/card"
+import { Card, CardContent, CardFooter, CardHeader} from "./ui/card"
 import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea";
 import {Input} from "./ui/input"
-import { FileUp, Send, Loader2,FileText,BrainCircuit } from "lucide-react";
-import { StudyStack } from "./illustrations/StudyStack";
-import { useState } from "react";
+import { FileUp, Send, Loader2,FileText,BrainCircuit, PlayCircle, Brain } from "lucide-react";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 function Home() {
+  type MType="link"| "file"
+  interface IMaterial{
+  title: string;
+  originalText: string;
+  summary: string;
+  userId:string;
+  timestamps: Date;
+  materialType:MType
+}
   const [file,setFile]=useState<File | null>(null)
   const [link,setLink]=useState("")
   const [loading,setLoading]=useState(false)
   const [materialId,setMaterialId]=useState<string | null>(null)
   const [aiData, setAiData] = useState<{role: string, content: string}[]>([]);
-
+  const [lastMaterial, setLastMaterial]=useState<IMaterial | null>(null)
   function isYoutubeLink(link: string) {
   try {
     const url = new URL(link)
@@ -140,7 +148,27 @@ const continueHandler=async ()=>{
     setMaterialId(null);
     localStorage.removeItem("materialId");
   }
-
+useEffect(()=>{async function lastMaterial(){
+  try{
+    const token=localStorage.getItem("token");
+    const res=await fetch("http://localhost:8000/api/materials",{
+      headers:{
+        "Authorization":`Bearer ${token}`
+      }
+    })
+    const data=await res.json();
+    if(!res.ok){
+      throw new Error(data.error || "Failed to fetch materials")
+    }
+    if(data.materials && data.materials.length > 0){
+      setLastMaterial(data.materials[0]);
+    }
+  }catch(error){
+    console.log(error);
+  }
+}
+ lastMaterial()
+})
   return (
     <div className="max-w-7xl mx-auto p-3 sm:p-6 flex flex-col gap-4 sm:gap-6 w-full min-h-screen">
       {/* Header Section */}
@@ -227,9 +255,51 @@ const continueHandler=async ()=>{
           </Card>
 
           {/* Illustration Container */}
+          {lastMaterial ? (
           <div className="hidden lg:flex items-center justify-center p-8 bg-zinc-50/50 dark:bg-zinc-900/50 rounded-xl h-full border border-zinc-200 dark:border-zinc-800 border-dashed">
-            <StudyStack />
-          </div>
+              <Card className="w-full max-w-md p-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800">
+                <CardHeader className="p-0 mb-4">
+                  <div className="inline-flex items-center rounded-full border border-zinc-200 dark:border-zinc-700 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-300">
+                    Last Material
+                  </div>
+                </CardHeader>
+                <CardContent className="p-0 space-y-3">
+                  <h2 className="text-2xl font-semibold leading-tight text-zinc-900 dark:text-zinc-100 line-clamp-2">
+                    {lastMaterial.title}
+                  </h2>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400 line-clamp-3">
+                    Jump back in where you left off and keep your learning streak active.
+                  </p>
+                </CardContent>
+                <CardFooter className="p-0 mt-6 grid grid-cols-2 gap-3">
+                  <Button variant="outline" className="rounded-xl h-10 border-zinc-300 dark:border-zinc-700">
+                    <PlayCircle className="w-4 h-4 mr-2" />
+                    Continue
+                  </Button>
+                  <Button className="rounded-xl h-10 bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200">
+                    <Brain className="w-4 h-4 mr-2" />
+                    Quiz
+                  </Button>
+                </CardFooter>
+              </Card>
+          </div>):(
+            <div className="hidden lg:flex items-center justify-center p-8 bg-zinc-50/50 dark:bg-zinc-900/50 rounded-xl h-full border border-zinc-200 dark:border-zinc-800 border-dashed">
+              <Card className="w-full max-w-md p-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 animate-pulse">
+                <CardHeader className="p-0 mb-4">
+                  <div className="h-6 w-32 rounded-full bg-zinc-200 dark:bg-zinc-800"></div>
+                </CardHeader>
+                <CardContent className="p-0 space-y-3">
+                  <div className="h-7 w-11/12 rounded-md bg-zinc-200 dark:bg-zinc-800"></div>
+                  <div className="h-4 w-3/4 rounded-md bg-zinc-200 dark:bg-zinc-800"></div>
+                  <div className="h-4 w-4/5 rounded-md bg-zinc-200 dark:bg-zinc-800"></div>
+                </CardContent>
+                <CardFooter className="p-0 mt-6 grid grid-cols-2 gap-3">
+                  <div className="h-10 rounded-xl bg-zinc-200 dark:bg-zinc-800"></div>
+                  <div className="h-10 rounded-xl bg-zinc-200 dark:bg-zinc-800"></div>
+                </CardFooter>
+              </Card>
+            </div>
+          )}
         </div>
       ) : (
         /* Chat UI when active */

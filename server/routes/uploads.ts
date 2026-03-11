@@ -201,14 +201,4 @@ uploadRoute.get("/api/materials/:id",protector,async(req,res,next)=>{
     next(error);
   }
 })
-uploadRoute.get("/api/uploads/test", async(req, res,next) => {
-  try{
-  const response = await generateResponse("Hello, Gemini. this is the first prompt of mine with u.just say  something or tell me a joke yeah yeah tell me a joke that u are sure will make me laugh in amharic ");
-  console.log(`[Gemini Test] Response: ${response}`);
-  res.json({ message: "Upload route is working!",response });
-  }catch(error){
-    console.log(error);
-    next(error)
-  }
-});
 export default uploadRoute;
