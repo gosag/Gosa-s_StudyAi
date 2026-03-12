@@ -5,7 +5,7 @@ import Quiz from "../models/quizSchema"
 import multer from "multer";
 import extractTextFromFile from "../sevices/pdf.service";
 import { getYoutubeTranscript } from "../sevices/youtube.service";
-import { generateResponse } from "../sevices/gemini.service";
+import { generateResponse, quizGenerator } from "../sevices/gemini.service";
 import protector from "../middleware/authMiddleware";
 interface CustomError extends Error {
   status?: number,
@@ -168,9 +168,9 @@ uploadRoute.get("/api/materials",protector,async(req,res,next)=>{
     next(error);
    }
 })
-uploadRoute.delete("/api/delete",protector,async(req,res,next)=>{
+uploadRoute.delete("/api/delete/:materialId",protector,async(req,res,next)=>{
   try{
-    const {materialId}=req.body;
+    const {materialId}=req.params;
     const deletedMaterial=await Material.findByIdAndDelete(materialId);
     if(!deletedMaterial){
       const error=new Error("something went wrong deleting the material") as CustomError
@@ -200,6 +200,47 @@ uploadRoute.get("/api/materials/:id",protector,async(req,res,next)=>{
     res.json({ material, chats });
   }catch(error){
     next(error);
+  }
+})
+uploadRoute.get("/api/quizzes/:id",protector,async(req,res,next)=>{
+  try{
+   const {id}=req.params;
+   if(!req.user || !req.user._id){
+     const error= new Error("user information is not found") as CustomError;
+     error.status=401;
+     throw error;
+   }
+   const userId=req.user._id;
+
+   if(!id){
+    const error=new Error("Material Id is Missing") as CustomError;
+    error.status=400;
+    throw error;
+   }
+   // Check if we already generated quizzes for this material
+   const existingQuizzes = await Quiz.find({ materialId: id as any });
+   if (existingQuizzes && existingQuizzes.length > 0) {
+     return res.json({ quizzes: existingQuizzes });
+   }
+   const material=await Material.findById(id);
+   if(!material){
+    const error=new Error("Material not found") as CustomError;
+    error.status=404;
+    throw error;
+   }
+
+   const generatedQuizzes=await quizGenerator(material.summary,material.originalText);
+   const quizzes = await Quiz.insertMany(
+    generatedQuizzes.map((quiz: any)=>({
+      ...quiz,
+      userId,
+      materialId:id,
+    }))
+   );
+
+   res.json({ quizzes });
+  }catch(err){
+    next(err);
   }
 })
 export default uploadRoute;

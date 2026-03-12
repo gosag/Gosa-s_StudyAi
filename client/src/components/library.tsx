@@ -41,7 +41,7 @@ useEffect(()=>{
    const filteredMaterials= materials.filter(material=> material._id!==materialId);
     
     const token = localStorage.getItem("token");
-    const res=await fetch("http://localhost:8000/api/delete",{
+    const res=await fetch(`http://localhost:8000/api/delete/${materialId}`,{
         method:"DELETE",
         headers:{
             "Content-Type":"application/json",
