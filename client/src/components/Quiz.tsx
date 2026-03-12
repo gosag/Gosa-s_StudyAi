@@ -47,9 +47,27 @@ function Quiz() {
   }, [id]);
 
   const currentQuiz = quizzes[currentQuizIndex];
-
+  const generateMore=async()=>{
+    try{
+      const token=localStorage.getItem("token")
+      const res=await fetch(`http://localhost:8000/api/quizzes/regenerate/${id}`,{
+        method:"POST",
+        headers:{
+          "Authorization":`Bearer ${token}`
+        }
+      })
+      const data=await res.json()
+      if(!res.ok){
+        throw new Error("Something went wrong generating new quizzes")
+      }
+      setQuizzes(prev=>[...prev,...data.quizzes])
+    }
+    catch(error){
+      console.log(error)
+    }
+  }
   return (
-    <div className=" overflow-y-auto bg-gray-50/50 p-4 sm:p-6 flex flex-col items-center">
+    <div className=" overflow-y-auto bg-gray-50/50 p-4 sm:p-2 flex flex-col items-center">
       <div className="w-full max-w-2xl shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6">
         <Button variant="ghost" onClick={() => navigate(-1)} className="gap-2">
           <ArrowLeft className="w-4 h-4" /> Go Back
@@ -58,12 +76,13 @@ function Quiz() {
           <Button variant="outline" onClick={() => setCurrentQuizIndex(0)} className="gap-2 flex-1 sm:flex-none">
             <RotateCcw className="w-4 h-4" /> Restart
           </Button>
-          <Button className="gap-2 flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700">
+          {quizzes.length > 0 &&(
+          <Button className="gap-2 flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700" onClick={generateMore}>
             <Sparkles className="w-4 h-4" /> Generate More
-          </Button>
+          </Button>)}
         </div>
       </div>
-
+  
       {loading ? (
         <div className="flex-1 flex items-center justify-center">
           <RefreshCw className="w-8 h-8 animate-spin text-gray-400" />
@@ -77,7 +96,7 @@ function Quiz() {
             <span>{showAnswer ? "Answer revealed" : "Thinking..."}</span>
           </div>
 
-          <Card className="w-full h-fit flex-1 flex flex-col shadow-sm border-gray-200 min-h-0">
+          <Card className="w-full pb-4 flex-1 flex flex-col shadow-sm border-gray-200 min-h-0">
             <CardContent className="flex-1 h-full px-4 py-2  flex flex-col">
               {!showAnswer ? (
                 <div className="animate-in fade-in zoom-in-95 duration-200 my-auto">
@@ -106,7 +125,7 @@ function Quiz() {
               )}
             </CardContent>
 
-            <CardFooter className="shrink-0 bg-gray-50/50 border-t  flex justify-between items-center rounded-b-xl">
+            <CardFooter className="shrink-0 bg-gray-50/50 border-t py-0 flex flex-col gap-3 sm:flex-row  justify-between items-center rounded-b-xl">
               <Button 
                 variant="outline"
                 disabled={currentQuizIndex === 0}

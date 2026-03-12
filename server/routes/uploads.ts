@@ -228,7 +228,7 @@ uploadRoute.get("/api/quizzes/:id",protector,async(req,res,next)=>{
     error.status=404;
     throw error;
    }
-
+  
    const generatedQuizzes=await quizGenerator(material.summary,material.originalText);
    const quizzes = await Quiz.insertMany(
     generatedQuizzes.map((quiz: any)=>({
@@ -243,4 +243,36 @@ uploadRoute.get("/api/quizzes/:id",protector,async(req,res,next)=>{
     next(err);
   }
 })
+uploadRoute.post("/api/quizzes/regenerate/:id",protector,async(req,res,next)=>{
+  try{
+    const {id}=req.params;
+    if(!req.user || !req.user._id){
+      const error=new Error("user information is missing") as CustomError;
+      error.status=401
+      throw error
+    }
+    const userId=req.user._id
+    if(!id){
+      const error=new Error("Material Id is missing") as CustomError;
+      error.status=400;
+      throw error;
+    }
+    const material=await Material.findById(id)
+    if(!material){
+      const error=new Error("material is not found") as CustomError;
+      error.status=404;
+      throw error
+    }
+    const generatedQuizzes= await quizGenerator(material.summary,material.originalText)
+    const quizzes=await Quiz.insertMany(
+      generatedQuizzes.map((quiz:any)=>({
+        ...quiz,
+        userId,
+        materialId:id,
+      })   
+    ))
+    res.json({quizzes})
+  }catch(error){
+   next(error)
+}})
 export default uploadRoute;

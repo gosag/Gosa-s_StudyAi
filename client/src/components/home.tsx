@@ -170,7 +170,7 @@ useEffect(()=>{async function lastMaterial(){
   }
 }
  lastMaterial()
-})
+}, [])
   return (
     <div className="max-w-7xl mx-auto p-3 sm:p-6 flex flex-col gap-4 sm:gap-6 w-full min-h-screen">
       {/* Header Section */}
@@ -280,10 +280,12 @@ useEffect(()=>{async function lastMaterial(){
                     Continue
                   </Button>
                   </Link>
+                  <Link to={`library/${lastMaterial._id}/flashcards`}>
                   <Button className="rounded-xl h-10 bg-zinc-900 hover:bg-zinc-800 text-white dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200">
                     <Brain className="w-4 h-4 mr-2" />
                     Quiz
                   </Button>
+                  </Link>
                 </CardFooter>
               </Card>
           </div>):(
