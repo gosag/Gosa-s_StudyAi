@@ -1,6 +1,7 @@
 import express from "express";
 import Material from "../models/materialSchema";
 import Chat from "../models/chatSchema";
+import Quiz from "../models/quizSchema"
 import multer from "multer";
 import extractTextFromFile from "../sevices/pdf.service";
 import { getYoutubeTranscript } from "../sevices/youtube.service";

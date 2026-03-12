@@ -118,6 +118,7 @@ export async function generateResponse(prompt:string):Promise<string>{
      const fullPrompt = `${echoLearnPrompt}\n\n=== INPUT DATA ===\n${prompt}`;
      const generationConfiguration={
             temperature:0.7,
+            responseMimeType: "application/json",
             maxOutputTokens:1500,
         }
         const model = GenAi.getGenerativeModel({
@@ -143,4 +144,64 @@ export async function generateResponse(prompt:string):Promise<string>{
             throw err;
         }
     }
+}
+
+interface GeneratedQuiz {
+  question: string;
+  options: string[];
+  correctAnswer: string;
+}
+
+export async function quizGenerator(
+  summary: string,
+  originalText?: string
+): Promise<GeneratedQuiz[]> {
+        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+        const model = genAI.getGenerativeModel({
+            model: "gemini-1.5-flash"
+        });
+
+        const prompt = `
+                You are an AI system that generates study quizzes.
+
+                Return ONLY valid JSON.
+
+                FORMAT:
+
+                [
+                {
+                    "question": "string",
+                    "options": ["option1","option2","option3","option4"],
+                    "correctAnswer": "one of the options"
+                }
+                ]
+
+                RULES:
+
+                - Generate EXACTLY 10 quiz questions
+                - Each question must have 4 options
+                - The correctAnswer must exactly match one option
+                - Questions should test understanding of the material
+                - Avoid repeating concepts
+                - Order questions from easier → harder
+                - No explanations
+                - No text outside JSON
+
+                STUDY SUMMARY:
+                             ${summary}
+
+        ${originalText ? `ORIGINAL MATERIAL:\n${originalText}` : ""}
+        `;
+
+        const result = await model.generateContent({
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
+            generationConfig: {
+            responseMimeType: "application/json"
+            }
+        });
+
+        const text = result.response.text();
+
+        const quizzes: GeneratedQuiz[] = JSON.parse(text);
+        return quizzes;
 }

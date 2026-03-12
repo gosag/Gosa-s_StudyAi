@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+
 function Quiz() {
 const { id } = useParams();
 console.log("Material ID for Quiz:", id); // Debugging log
