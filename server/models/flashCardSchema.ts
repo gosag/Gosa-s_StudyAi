@@ -9,6 +9,7 @@ interface IFlashcard extends Document {
   interval: number;
   easeFactor: number;
   repetitionCount: number;
+  timestamps: Date;
 }
 const FlashcardSchema = new Schema<IFlashcard>({
   question: { type: String, required: true },
@@ -18,7 +19,8 @@ const FlashcardSchema = new Schema<IFlashcard>({
   nextReviewDate: { type: Date, default: Date.now },
   interval: { type: Number, default: 0 },
   easeFactor: { type: Number, default: 2.5 }, 
-  repetitionCount: { type: Number, default: 0 }
+  repetitionCount: { type: Number, default: 0 },
+  timestamps: { type: Date, default: Date.now }
 });
 
 export const Flashcard = model<IFlashcard>('Flashcard', FlashcardSchema);

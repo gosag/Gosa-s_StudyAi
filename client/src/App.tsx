@@ -5,6 +5,7 @@ import { Routes, Route } from "react-router-dom"
 import Home from "./components/home"
 import Library from "./components/library"
 import MaterialContinue from "./components/material"
+import Quiz from "./components/Quiz"
 function App() {
   return (
     <Routes>
@@ -16,6 +17,7 @@ function App() {
         <Route path="signUp" element={<SignUp/>}/>
         <Route path="login" element={<Login />} />
         <Route path="library/:id" element={<MaterialContinue/>}/>
+        <Route path="library/:id/flashcards" element={<Quiz/>}/>
       </Route>
     </Routes>
   )

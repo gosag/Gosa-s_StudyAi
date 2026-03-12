@@ -93,10 +93,12 @@ useEffect(()=>{
                         Continue
                     </Button>
                     </Link>
-                    <Button className="flex-1 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition-all duration-200">
-                        <Brain className="w-4 h-4 mr-2" />
-                        Quiz
-                    </Button>
+                    <Link to={`/library/${material._id}/flashcards`} className="flex-1">
+                        <Button className="flex-1 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-sm transition-all duration-200">
+                            <Brain className="w-4 h-4 mr-2" />
+                            Quiz
+                        </Button>
+                    </Link>
                 </CardFooter>
             </Card>))}</div>):(<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[1, 2, 3, 4, 5, 6].map((i) => (

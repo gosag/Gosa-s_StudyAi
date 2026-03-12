@@ -160,7 +160,7 @@ function MainOutLet(){
 
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <span className="text-orange-600 font-extrabold text-sm md:text-base leading-none">
-              5
+              15
             </span>
             <span className="hidden md:block text-orange-800 text-xs font-semibold tracking-wide">
               Day Streak!
