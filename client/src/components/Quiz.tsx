@@ -15,6 +15,7 @@ function Quiz() {
   const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
+  const [quizzesLoader,setQuizesLoader]=useState(false)
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [quizzes, setQuizzes] = useState<{
@@ -49,6 +50,7 @@ function Quiz() {
   const currentQuiz = quizzes[currentQuizIndex];
   const generateMore=async()=>{
     try{
+      setQuizesLoader(true)
       const token=localStorage.getItem("token")
       const res=await fetch(`http://localhost:8000/api/quizzes/regenerate/${id}`,{
         method:"POST",
@@ -61,9 +63,11 @@ function Quiz() {
         throw new Error("Something went wrong generating new quizzes")
       }
       setQuizzes(prev=>[...prev,...data.quizzes])
+      setQuizesLoader(false)
     }
     catch(error){
       console.log(error)
+      setQuizesLoader(false)
     }
   }
   return (
@@ -77,8 +81,13 @@ function Quiz() {
             <RotateCcw className="w-4 h-4" /> Restart
           </Button>
           {quizzes.length > 0 &&(
-          <Button className="gap-2 flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700" onClick={generateMore}>
-            <Sparkles className="w-4 h-4" /> Generate More
+          <Button disabled={quizzesLoader} className="gap-2 flex-1 sm:flex-none bg-blue-600 hover:bg-blue-700" onClick={generateMore}>
+            {quizzesLoader ? (
+              <RefreshCw className="w-4 h-4 animate-spin" />
+            ) : (
+              <Sparkles className="w-4 h-4" />
+            )}
+            Generate More
           </Button>)}
         </div>
       </div>
@@ -88,7 +97,7 @@ function Quiz() {
           <RefreshCw className="w-8 h-8 animate-spin text-gray-400" />
         </div>
       ) : !currentQuiz ? (
-        <div className="text-center text-gray-500 mt-12">No quizzes available.</div>
+        <div className="text-center text-gray-500 mt-12">Wait, quizzes are coming...</div>
       ) : (
         <div className="w-full max-w-2xl flex flex-col gap-4 flex-1 min-h-0">
           <div className="flex justify-between items-center px-2 text-sm font-medium text-gray-500 shrink-0">
@@ -115,7 +124,7 @@ function Quiz() {
                   </ul>
                 </div>
               ) : (
-                <div className="animate-in fade-in zoom-in-95 duration-200 flex flex-col items-center justify-center text-center my-auto space-y-4">
+                <div className="animate-in fade-in zoom-in-95 duration-200 min-h-75 flex flex-col items-center justify-center text-center my-auto space-y-4">
                   <div className="p-4 bg-green-50 rounded-full">
                     <Sparkles className="w-8 h-8 text-green-600" />
                   </div>
