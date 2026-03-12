@@ -49,7 +49,7 @@ function Quiz() {
   const currentQuiz = quizzes[currentQuizIndex];
 
   return (
-    <div className="h-[100vh] overflow-hidden bg-gray-50/50 p-4 sm:p-6 flex flex-col items-center">
+    <div className=" overflow-y-auto bg-gray-50/50 p-4 sm:p-6 flex flex-col items-center">
       <div className="w-full max-w-2xl shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6">
         <Button variant="ghost" onClick={() => navigate(-1)} className="gap-2">
           <ArrowLeft className="w-4 h-4" /> Go Back
@@ -77,18 +77,18 @@ function Quiz() {
             <span>{showAnswer ? "Answer revealed" : "Thinking..."}</span>
           </div>
 
-          <Card className="w-full flex-1 flex flex-col shadow-sm border-gray-200 min-h-0">
-            <CardContent className="flex-1 overflow-y-auto p-4 sm:p-6 flex flex-col">
+          <Card className="w-full h-fit flex-1 flex flex-col shadow-sm border-gray-200 min-h-0">
+            <CardContent className="flex-1 h-full px-4 py-2  flex flex-col">
               {!showAnswer ? (
                 <div className="animate-in fade-in zoom-in-95 duration-200 my-auto">
-                  <h2 className="text-xl sm:text-2xl font-semibold mb-8 text-gray-900 leading-relaxed">
+                  <h2 className="text-xl sm:text-md font-semibold mb-2 text-gray-900 leading-relaxed">
                     {currentQuiz.question}
                   </h2>
                   <ul className="space-y-3">
                     {currentQuiz.options.map((option, optionIndex) => (
                       <li 
                         key={optionIndex}
-                        className="p-4 rounded-lg bg-gray-50 border border-gray-100 text-gray-700 hover:bg-gray-100 transition-colors"
+                        className="p-3 rounded-lg bg-gray-50 border border-gray-100 text-gray-700 hover:bg-gray-100 transition-colors"
                       >
                         {option}
                       </li>
@@ -106,7 +106,7 @@ function Quiz() {
               )}
             </CardContent>
 
-            <CardFooter className="shrink-0 bg-gray-50/50 border-t p-4 sm:p-6 flex justify-between items-center rounded-b-xl">
+            <CardFooter className="shrink-0 bg-gray-50/50 border-t  flex justify-between items-center rounded-b-xl">
               <Button 
                 variant="outline"
                 disabled={currentQuizIndex === 0}
@@ -122,7 +122,7 @@ function Quiz() {
               <Button 
                 variant="secondary"
                 onClick={() => setShowAnswer(prev => !prev)}
-                className="gap-2 min-w-[120px]"
+                className="gap-2 min-w-30"
               >
                 <RefreshCw className={`w-4 h-4 ${showAnswer ? 'rotate-180 transition-transform' : ''}`} />
                 {showAnswer ? "Hide Answer" : "Flip"}
