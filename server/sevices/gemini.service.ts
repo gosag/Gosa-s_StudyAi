@@ -76,19 +76,7 @@ export async function generateResponse(prompt:string):Promise<string>{
 
             ---------------------------------------------------------------------
 
-            FLASHCARD GENERATION (VERY IMPORTANT)
-
-            After writing the explanation above, create flashcards that help the student remember the key ideas using **active recall**.
-
-            Flashcards must follow these rules:
-
-            • Each flashcard should test ONE clear concept.  
-            • Questions should be concise and unambiguous.  
-            • Answers should be short but complete.  
-            • Focus on the most important ideas, definitions, mechanisms, and relationships.  
-            • Avoid trivial details.
-            ---------------------------------------------------------------------
-
+           
             WHEN THE USER ASKS QUESTIONS OR CONTINUES THE CONVERSATION
 
             Act like a real tutor in a discussion.
