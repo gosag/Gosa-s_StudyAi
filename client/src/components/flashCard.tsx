@@ -4,8 +4,8 @@ function FlashCard(){
     const [flashCards,setFlashCards]=useState<{front:string,back:string,materialId:string}[]>([])
     useEffect(()=>{async function fetchFlashCards(){
         try{
-            const token=localStorage.getItem("token")
-            const res=await fetch("http://localhost:8000//api/flashcards/review",{
+            const token=localStorage.getItem("token");
+            const res=await fetch("http://localhost:8000/api/flashcards/review",{
                 method:"GET",
                 headers:{
                     "Authorization":`Bearer ${token}`
@@ -14,7 +14,8 @@ function FlashCard(){
             if(!res.ok){
                 throw new Error("Something went wrong fetching flashcards");
             }
-            setFlashCards(data.flashCards);
+            console.log(data.flashcards)
+            setFlashCards(data.flashcards || []);
         }catch(error){
             console.log(error)
         }
@@ -31,7 +32,7 @@ function FlashCard(){
                 >
                 FlashCards
                 </motion.div>
-                {
+                {flashCards && flashCards.length>0?(
                     flashCards.map((card:{front:string,back:string,materialId:string},index)=>(
                         <motion.div
                         key={index}
@@ -40,7 +41,9 @@ function FlashCard(){
                         <h3 className="text-lg font-bold">{card.front}</h3>
                         <p className="text-gray-600">{card.back}</p>
                         </motion.div>
-                    ))
+                    ))):(
+                        <p className="text-gray-500 mt-4">No flashcards to review right now. Check back later!</p>
+                     )
 
                 }
             </>
