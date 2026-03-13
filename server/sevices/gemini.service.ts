@@ -87,22 +87,6 @@ export async function generateResponse(prompt:string):Promise<string>{
             • Answers should be short but complete.  
             • Focus on the most important ideas, definitions, mechanisms, and relationships.  
             • Avoid trivial details.
-
-            Return the flashcards in **valid JSON format** so they can be stored in a database.
-
-            Use this exact structure:
-
-            {
-            "flashcards": [
-                {
-                "front": "Question here",
-                "back": "Answer here"
-                }
-            ]
-            }
-
-            Generate between **8 and 15 flashcards**.
-
             ---------------------------------------------------------------------
 
             WHEN THE USER ASKS QUESTIONS OR CONTINUES THE CONVERSATION
@@ -182,8 +166,7 @@ interface GeneratedQuiz {
 }
 
 export async function quizGenerator(
-  summary: string,
-  originalText?: string
+  summary: string
 ): Promise<GeneratedQuiz[]> {
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
@@ -227,8 +210,6 @@ export async function quizGenerator(
 
                 STUDY SUMMARY:
                              ${summary}
-
-        ${originalText ? `ORIGINAL MATERIAL:\n${originalText}` : ""}
         `;
 
         try {
@@ -246,7 +227,7 @@ export async function quizGenerator(
             throw new Error("Failed to generate quizzes.");
         }
 }
-export async function regenerateQuizzes(summary: string, existingQuizzes:GeneratedQuiz[], originalText?: string ): Promise<GeneratedQuiz[]> {
+export async function regenerateQuizzes(summary: string, existingQuizzes:GeneratedQuiz[] ): Promise<GeneratedQuiz[]> {
     const apiKey = process.env.GEMINI_API_KEY;
     if(!apiKey){
         throw new Error("Gemini Api key is missing")
@@ -292,8 +273,6 @@ export async function regenerateQuizzes(summary: string, existingQuizzes:Generat
             STUDY SUMMARY:
             ${summary}
 
-            ${originalText ? `ORIGINAL MATERIAL:\n${originalText}` : ""}
-
             PREVIOUSLY GENERATED QUIZZES (DO NOT REPEAT OR PARAPHRASE THESE):
             ${JSON.stringify(existingQuizzes)}
             Generate 10 completely NEW quiz questions that test other parts of the material.
@@ -316,7 +295,6 @@ export async function regenerateQuizzes(summary: string, existingQuizzes:Generat
 }
 export async function generateFlashCards(
   summary: string,
-  originalText?: string
 ): Promise<{ front: string; back: string }[]> {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error("Gemini Api key is missing");
@@ -340,7 +318,6 @@ export async function generateFlashCards(
     INPUT DATA:
     ---
     KEY SUMMARY: ${summary}
-    ${originalText ? `FULL CONTEXT: ${originalText}` : ""}
     ---
 
     OUTPUT FORMAT: Return a JSON array of objects with "front" and "back" keys.
