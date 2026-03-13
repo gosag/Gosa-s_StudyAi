@@ -234,7 +234,7 @@ useEffect(()=>{async function lastMaterial(){
               <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Paste Link or Type Topic</label>
               <div className="flex gap-2">
                 <Input
-                  placeholder="https://youtube.com/... or 'Machine Learning'" 
+                  placeholder="https://youtube.com/..." 
                   value={link}
                   onKeyDown={handleEnter}
                   onChange={(e) => setLink(e.target.value)}
