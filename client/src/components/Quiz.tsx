@@ -77,7 +77,7 @@ function Quiz() {
           <ArrowLeft className="w-4 h-4" /> Go Back
         </Button>
         <div className="flex gap-2 w-full sm:w-auto">
-          <Button variant="outline" onClick={() => setCurrentQuizIndex(0)} className="gap-2 flex-1 sm:flex-none">
+          <Button variant="outline" onClick={() => { setCurrentQuizIndex(0); setShowAnswer(false)}} className="gap-2 flex-1 sm:flex-none">
             <RotateCcw className="w-4 h-4" /> Restart
           </Button>
           {quizzes.length > 0 &&(
