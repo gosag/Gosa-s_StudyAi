@@ -1,4 +1,5 @@
 import {Document,Schema,model,Types} from "mongoose"
+import { de } from "zod/v4/locales";
 interface IFlashcard extends Document {
   front: string;
   back: string;
@@ -23,4 +24,6 @@ const FlashcardSchema = new Schema<IFlashcard>({
   timestamps: { type: Date, default: Date.now }
 });
 
-export const Flashcard = model<IFlashcard>('Flashcard', FlashcardSchema);
+const Flashcard = model<IFlashcard>('Flashcard', FlashcardSchema)
+export default Flashcard;
+export type {IFlashcard}

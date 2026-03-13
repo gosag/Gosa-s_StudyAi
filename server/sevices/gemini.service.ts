@@ -11,6 +11,7 @@ export async function generateResponse(prompt:string):Promise<string>{
         }
 
         const GenAi = new GoogleGenerativeAI(apiKey);
+
         const echoLearnPrompt = `You are the core AI tutor for the EchoLearn study platform.
 
             Your job is not just to summarize information. Your real goal is to help the student UNDERSTAND the material deeply and remember it later.
@@ -75,6 +76,35 @@ export async function generateResponse(prompt:string):Promise<string>{
 
             ---------------------------------------------------------------------
 
+            FLASHCARD GENERATION (VERY IMPORTANT)
+
+            After writing the explanation above, create flashcards that help the student remember the key ideas using **active recall**.
+
+            Flashcards must follow these rules:
+
+            • Each flashcard should test ONE clear concept.  
+            • Questions should be concise and unambiguous.  
+            • Answers should be short but complete.  
+            • Focus on the most important ideas, definitions, mechanisms, and relationships.  
+            • Avoid trivial details.
+
+            Return the flashcards in **valid JSON format** so they can be stored in a database.
+
+            Use this exact structure:
+
+            {
+            "flashcards": [
+                {
+                "front": "Question here",
+                "back": "Answer here"
+                }
+            ]
+            }
+
+            Generate between **8 and 15 flashcards**.
+
+            ---------------------------------------------------------------------
+
             WHEN THE USER ASKS QUESTIONS OR CONTINUES THE CONVERSATION
 
             Act like a real tutor in a discussion.
@@ -115,23 +145,23 @@ export async function generateResponse(prompt:string):Promise<string>{
             You are helping someone actually learn.
             `;
 
-     const fullPrompt = `${echoLearnPrompt}\n\n=== INPUT DATA ===\n${prompt}`;
-     const generationConfiguration={
+        const fullPrompt = `${echoLearnPrompt}\n\n=== INPUT DATA ===\n${prompt}`;
+
+        const generationConfiguration={
             temperature:0.7,
-            maxOutputTokens:1500,
+            maxOutputTokens:2000,
         }
+
         const model = GenAi.getGenerativeModel({
-            //gemini-2.5-pro or
-            //gemini-2.5-flash-lite 
             model: "gemini-2.5-flash-lite",
             generationConfig: generationConfiguration,
         });
+
         const result = await model.generateContent(fullPrompt);
-        console.log(result);
+
         return result.response.text();
     }
     catch(error:any){
-        /* console.error("Error generating response:", error); */
         if(error?.status===429){
             const err = new Error("Gemini API rate limit exceeded. Please try again later.") as CustomError;
             err.status = 429;
@@ -144,7 +174,6 @@ export async function generateResponse(prompt:string):Promise<string>{
         }
     }
 }
-
 interface GeneratedQuiz {
   question: string;
   options: string[];
@@ -209,7 +238,6 @@ export async function quizGenerator(
                     responseMimeType: "application/json"
                 }
             });
-
             const text = result.response.text();
             const quizzes: GeneratedQuiz[] = JSON.parse(text);
             return quizzes;
@@ -285,4 +313,50 @@ export async function regenerateQuizzes(summary: string, existingQuizzes:Generat
             console.error("Error generating or parsing quizzes:", error);
             throw new Error("Failed to generate quizzes.");
         }
+}
+export async function generateFlashCards(
+  summary: string,
+  originalText?: string
+): Promise<{ front: string; back: string }[]> {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) throw new Error("Gemini Api key is missing");
+
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash-lite",
+  });
+
+  const prompt = `
+    ACT AS: A Senior Cognitive Scientist specializing in Spaced Repetition Systems (SRS) and the SM-2 Algorithm.
+    TASK: Generate high-yield, atomic flashcards optimized for the SM-2 memory model.
+
+    CORE PRINCIPLE: THE 20 RULES OF KNOWLEDGE FORMULATION
+    1. ATOMICITY: Each card MUST represent only one discrete "fact". If a concept has three parts, create three separate cards.
+    2. MINIMUM INFORMATION PRINCIPLE: The answer (back) should ideally be 1-5 words. Avoid full sentences unless necessary.
+    3. RETRIEVAL CUES: Use "Cloze Deletion" (fill-in-the-blank) or "Front-Back" Q&A to trigger active recall, not recognition.
+    4. NO AMBIGUITY: The question must have exactly one correct answer.
+    5. SM-2 OPTIMIZATION: Ensure the cards are difficult enough to require effort but simple enough to be answered in <10 seconds.
+
+    INPUT DATA:
+    ---
+    KEY SUMMARY: ${summary}
+    ${originalText ? `FULL CONTEXT: ${originalText}` : ""}
+    ---
+
+    OUTPUT FORMAT: Return a JSON array of objects with "front" and "back" keys.
+  `;
+
+  try {
+    const result = await model.generateContent({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: {
+        responseMimeType: "application/json",
+      },
+    });
+
+    return JSON.parse(result.response.text());
+  } catch (error) {
+    console.error("Flashcard Generation Error:", error);
+    throw new Error("Failed to generate SM-2 compatible flashcards.");
+  }
 }

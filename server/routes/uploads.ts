@@ -2,10 +2,11 @@ import express from "express";
 import Material from "../models/materialSchema";
 import Chat from "../models/chatSchema";
 import Quiz from "../models/quizSchema"
+import Flashcard from "../models/flashCardSchema";
 import multer from "multer";
 import extractTextFromFile from "../sevices/pdf.service";
 import { getYoutubeTranscript } from "../sevices/youtube.service";
-import { generateResponse, quizGenerator, regenerateQuizzes } from "../sevices/gemini.service";
+import { generateFlashCards, generateResponse, quizGenerator, regenerateQuizzes } from "../sevices/gemini.service";
 import protector from "../middleware/authMiddleware";
 interface CustomError extends Error {
   status?: number,
@@ -38,6 +39,7 @@ uploadRoute.post("/api/uploads/file",protector, upload.single("pdf"),async (req,
           error.status = 401;
           return next(error);
         }
+        const userId = req.user._id;
         const newMatrial=new Material({
           materialType:"file",
           title:req.file.originalname,
@@ -46,6 +48,14 @@ uploadRoute.post("/api/uploads/file",protector, upload.single("pdf"),async (req,
           summary:response,
         })
         await newMatrial.save();
+        const flashcardResponse=await generateFlashCards(response,extractedText.text)
+        const flashards=await Flashcard.insertMany(
+          flashcardResponse.map((flashcard:any)=>({
+            ...flashcard,
+            userId,
+            materialId:newMatrial._id,
+          }))
+        )
         res.json({ response, materialId:newMatrial._id });
     }
     catch(error){
@@ -85,12 +95,13 @@ uploadRoute.post("/api/uploads/link",protector, async (req, res,next): Promise<a
       error.status=401;
       throw error
     }
+    const userId=req.user._id;
     const newMatrial= new Material({
         materialType:"link",
         title:"youtube link",
         originalText:transcript,
         summary:sumamrizedResponse,
-        userId:req.user._id
+        userId
     })
     await newMatrial.save();
     if(!newMatrial){
@@ -99,6 +110,14 @@ uploadRoute.post("/api/uploads/link",protector, async (req, res,next): Promise<a
       error.status=500;
       throw error;
     }
+    const flashcardResponse=await generateFlashCards(sumamrizedResponse,transcript)
+    const flashards=await Flashcard.insertMany(
+          flashcardResponse.map((flashcard:any)=>({
+            ...flashcard,
+            userId,
+            materialId:newMatrial._id,
+          }))
+        )
     res.json({ transcript, response: sumamrizedResponse ,MaterialId:newMatrial._id});
     console.log(`[SUCCESS] Transcript sent to EchoLearn frontend.`);
   } catch (err: any) {
