@@ -5,7 +5,7 @@ import Quiz from "../models/quizSchema"
 import multer from "multer";
 import extractTextFromFile from "../sevices/pdf.service";
 import { getYoutubeTranscript } from "../sevices/youtube.service";
-import { generateResponse, quizGenerator } from "../sevices/gemini.service";
+import { generateResponse, quizGenerator, regenerateQuizzes } from "../sevices/gemini.service";
 import protector from "../middleware/authMiddleware";
 interface CustomError extends Error {
   status?: number,
@@ -263,7 +263,13 @@ uploadRoute.post("/api/quizzes/regenerate/:id",protector,async(req,res,next)=>{
       error.status=404;
       throw error
     }
-    const generatedQuizzes= await quizGenerator(material.summary,material.originalText)
+    let generatedQuizzes;
+    const existingQuizzes=await Quiz.find({materialId:id as any})
+    if(!existingQuizzes || existingQuizzes.length===0){
+      generatedQuizzes= await quizGenerator(material.summary,material.originalText)
+    }else{
+      generatedQuizzes=await regenerateQuizzes(material.summary,existingQuizzes,material.originalText)
+    }
     const quizzes=await Quiz.insertMany(
       generatedQuizzes.map((quiz:any)=>({
         ...quiz,

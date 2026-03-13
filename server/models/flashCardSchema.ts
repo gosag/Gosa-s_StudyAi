@@ -1,7 +1,7 @@
 import {Document,Schema,model,Types} from "mongoose"
 interface IFlashcard extends Document {
-  question: string;
-  answer: string;
+  front: string;
+  back: string;
   difficultyLevel: 'easy' | 'medium' | 'hard';
   materialId: Types.ObjectId;
   // SRS Fields
@@ -12,8 +12,8 @@ interface IFlashcard extends Document {
   timestamps: Date;
 }
 const FlashcardSchema = new Schema<IFlashcard>({
-  question: { type: String, required: true },
-  answer: { type: String, required: true },
+  front: { type: String, required: true },
+  back: { type: String, required: true },
   difficultyLevel: { type: String, enum: ['easy', 'medium', 'hard'], default: 'medium' },
   materialId: { type: Schema.Types.ObjectId, ref: 'Material', required: true },
   nextReviewDate: { type: Date, default: Date.now },

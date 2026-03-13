@@ -148,6 +148,7 @@ export async function generateResponse(prompt:string):Promise<string>{
 interface GeneratedQuiz {
   question: string;
   options: string[];
+  existingQuizzes?:string; 
   correctAnswer: string;
 }
 
@@ -202,6 +203,74 @@ export async function quizGenerator(
         `;
 
         try {
+            const result = await model.generateContent({
+                contents: [{ role: "user", parts: [{ text: prompt }] }],
+                generationConfig: {
+                    responseMimeType: "application/json"
+                }
+            });
+
+            const text = result.response.text();
+            const quizzes: GeneratedQuiz[] = JSON.parse(text);
+            return quizzes;
+        } catch (error) {
+            console.error("Error generating or parsing quizzes:", error);
+            throw new Error("Failed to generate quizzes.");
+        }
+}
+export async function regenerateQuizzes(summary: string, existingQuizzes:GeneratedQuiz[], originalText?: string ): Promise<GeneratedQuiz[]> {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if(!apiKey){
+        throw new Error("Gemini Api key is missing")
+    }
+    const genAI=new GoogleGenerativeAI(apiKey)
+    const model = genAI.getGenerativeModel({
+            model: "gemini-2.5-flash-lite"
+    });
+    const prompt = `
+            You are an AI system that generates study quizzes.
+
+            Your task is to generate NEW quiz questions that are different from previously generated quizzes.
+
+            Return ONLY a valid JSON array of objects.
+
+            FORMAT:
+            [
+            {
+                "question": "string",
+                "options": [
+                "option1",
+                "option2",
+                "option3",
+                "option4"
+                ],
+                "correctAnswer": "exact match of the correct option string"
+            }
+            ]
+
+            RULES:
+
+            - Generate EXACTLY 10 quiz questions
+            - Each question must have 4 options
+            - The correctAnswer must exactly match one option
+            - Questions must test understanding of the material
+            - Order questions from easier → harder
+            - Avoid repeating concepts already used in the previous quizzes
+            - Do NOT generate the same or very similar questions
+            - Focus on different facts, ideas, or concepts from the material
+            - No explanations
+            - No text outside JSON
+
+            STUDY SUMMARY:
+            ${summary}
+
+            ${originalText ? `ORIGINAL MATERIAL:\n${originalText}` : ""}
+
+            PREVIOUSLY GENERATED QUIZZES (DO NOT REPEAT OR PARAPHRASE THESE):
+            ${JSON.stringify(existingQuizzes)}
+            Generate 10 completely NEW quiz questions that test other parts of the material.
+            `;
+    try {
             const result = await model.generateContent({
                 contents: [{ role: "user", parts: [{ text: prompt }] }],
                 generationConfig: {
