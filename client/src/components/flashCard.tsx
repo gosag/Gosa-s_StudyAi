@@ -1,5 +1,26 @@
 import {motion} from "framer-motion"
+import { useEffect, useState } from "react";
 function FlashCard(){
+    const [flashCards,setFlashCards]=useState<{front:string,back:string,materialId:string}[]>([])
+    useEffect(()=>{async function fetchFlashCards(){
+        try{
+            const token=localStorage.getItem("token")
+            const res=await fetch("http://localhost:8000//api/flashcards/review",{
+                method:"GET",
+                headers:{
+                    "Authorization":`Bearer ${token}`
+                }})
+            const data=await res.json();
+            if(!res.ok){
+                throw new Error("Something went wrong fetching flashcards");
+            }
+            setFlashCards(data.flashCards);
+        }catch(error){
+            console.log(error)
+        }
+    }
+    fetchFlashCards();
+    },[])
         return(
             <>
                <motion.div
@@ -10,6 +31,18 @@ function FlashCard(){
                 >
                 FlashCards
                 </motion.div>
+                {
+                    flashCards.map((card:{front:string,back:string,materialId:string},index)=>(
+                        <motion.div
+                        key={index}
+                        className="p-4 bg-gray-100 rounded-lg shadow"
+                        >
+                        <h3 className="text-lg font-bold">{card.front}</h3>
+                        <p className="text-gray-600">{card.back}</p>
+                        </motion.div>
+                    ))
+
+                }
             </>
         )
 }

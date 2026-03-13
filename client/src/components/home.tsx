@@ -182,7 +182,7 @@ useEffect(()=>{async function lastMaterial(){
               Upload a PDF or paste a link to generate AI-powered summaries, flashcards, and quizzes.
             </p>
           </div>
-          <Button title="New Chat" variant="outline" onClick={handleRestart} className="flex gap-2 items-center rounded-lg">
+          <Button title="New Chat" variant="outline" disabled={aiData.length === 0} onClick={handleRestart} className="flex gap-2 items-center rounded-lg">
             <BrainCircuit className="w-4 h-4" />
             <span className="hidden sm:inline">New Chat</span>
           </Button>

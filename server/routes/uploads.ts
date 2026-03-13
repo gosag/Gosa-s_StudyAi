@@ -317,4 +317,34 @@ uploadRoute.post("/api/quizzes/regenerate/:id",protector,async(req,res,next)=>{
   }catch(error){
    next(error)
 }})
+uploadRoute.get("/api/flashcards/review",protector,async(req,res,next)=>{
+  try{
+  if(!req.user || !req.user._id){
+    const error=new Error("user info is missing") as CustomError;
+    error.status=401;
+    throw error;
+  }
+  const userId=req.user._id;
+  
+  // Set the "now" check to the end of the current day so that anything due today is pulled
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const flashcards=await Flashcard.find({userId,nextReviewDate:{ $lte: endOfDay }}).limit(20);
+  if(!flashcards || flashcards.length===0){
+    const error=new Error("No flashcards are due for review") as CustomError;
+    error.status=404;
+    throw error;
+  }
+  const flashcardsToReturn=flashcards.map(flashcard=>({
+  _id:flashcard._id,
+  materialId:flashcard.materialId,
+  front:flashcard.front,
+  back:flashcard.back
+  }))
+  res.json({flashcards:flashcardsToReturn})
+}catch(error){
+  next(error)
+}
+})
 export default uploadRoute;
