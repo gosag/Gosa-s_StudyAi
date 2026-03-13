@@ -48,8 +48,8 @@ uploadRoute.post("/api/uploads/file",protector, upload.single("pdf"),async (req,
           summary:response,
         })
         await newMatrial.save();
-        const flashcardResponse=await generateFlashCards(response,extractedText.text)
-        const flashards=await Flashcard.insertMany(
+        const flashcardResponse=await generateFlashCards(response)
+        await Flashcard.insertMany(
           flashcardResponse.map((flashcard:any)=>({
             ...flashcard,
             userId,
@@ -110,8 +110,8 @@ uploadRoute.post("/api/uploads/link",protector, async (req, res,next): Promise<a
       error.status=500;
       throw error;
     }
-    const flashcardResponse=await generateFlashCards(sumamrizedResponse,transcript)
-    const flashards=await Flashcard.insertMany(
+    const flashcardResponse=await generateFlashCards(sumamrizedResponse)
+    await Flashcard.insertMany(
           flashcardResponse.map((flashcard:any)=>({
             ...flashcard,
             userId,
@@ -152,7 +152,7 @@ uploadRoute.post("/api/continue",protector, async(req,res,next)=>{
         role:mssg?.message?.[0]?.role || "user",
         content:mssg?.message?.[0]?.text || ""
     }
-   ))
+   )).slice(-10) // Take only the last 10 messages to keep the context relevant and within token limits.
     const conversationHistory:{role: string; content: string}[] = [
         { role: "system", content: "You are a helpful assistant that provides information based on the provided material." },
         { role: "user", content: `Here is the material for reference: ${material.summary}` },
@@ -190,12 +190,19 @@ uploadRoute.get("/api/materials",protector,async(req,res,next)=>{
 uploadRoute.delete("/api/delete/:materialId",protector,async(req,res,next)=>{
   try{
     const {materialId}=req.params;
+    if(!materialId){
+      throw new Error("Material ID is required") as CustomError
+    }
     const deletedMaterial=await Material.findByIdAndDelete(materialId);
     if(!deletedMaterial){
       const error=new Error("something went wrong deleting the material") as CustomError
       error.status=500;
       throw error
     }
+     
+      await Chat.deleteMany({materialId});
+      await Flashcard.deleteMany({materialId});
+      await Quiz.deleteMany({materialId: materialId as any});
     res.json({message:"material is deleted"})
   }catch(err){
     next(err)
@@ -248,7 +255,7 @@ uploadRoute.get("/api/quizzes/:id",protector,async(req,res,next)=>{
     throw error;
    }
   
-   const generatedQuizzes=await quizGenerator(material.summary,material.originalText);
+   const generatedQuizzes=await quizGenerator(material.summary);
    const quizzes = await Quiz.insertMany(
     generatedQuizzes.map((quiz: any)=>({
       ...quiz,
@@ -285,9 +292,15 @@ uploadRoute.post("/api/quizzes/regenerate/:id",protector,async(req,res,next)=>{
     let generatedQuizzes;
     const existingQuizzes=await Quiz.find({materialId:id as any})
     if(!existingQuizzes || existingQuizzes.length===0){
-      generatedQuizzes= await quizGenerator(material.summary,material.originalText)
+      generatedQuizzes= await quizGenerator(material.summary)
     }else{
-      generatedQuizzes=await regenerateQuizzes(material.summary,existingQuizzes,material.originalText)
+      const usefullData=existingQuizzes.map((quiz:any)=>(
+        {question:quiz.question,
+         options:quiz.options,
+         correctAnswer:quiz.correctAnswer,
+        }
+      ))
+      generatedQuizzes=await regenerateQuizzes(material.summary,usefullData)
     }
     const quizzes=await Quiz.insertMany(
       generatedQuizzes.map((quiz:any)=>({
