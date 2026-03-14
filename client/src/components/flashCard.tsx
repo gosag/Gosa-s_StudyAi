@@ -1,12 +1,15 @@
-import {motion} from "framer-motion"
-import { useEffect, useState } from "react";
-import  {Button}  from "./ui/button";
+import { motion, AnimatePresence } from "framer-motion"
+import { useEffect, useState, useCallback } from "react";
+import { Button } from "./ui/button";
+import { RotateCcw, ArrowRight, ArrowLeft} from "lucide-react";
+
 function FlashCard(){
     const [flashCards,setFlashCards]=useState<{front:string,back:string,materialId:string,_id:string}[]>([])
     const [loading,setLoading]=useState(true)
     const [currentCardIndex,setCurrentCardIndex]=useState(0)
     const [showAnswer,setShowAnswer]=useState(false);
     const [updateMessage,setUpdateMessage]=useState("")
+
     useEffect(()=>{async function fetchFlashCards(){
         try{
             const token=localStorage.getItem("token");
@@ -29,7 +32,9 @@ function FlashCard(){
     }
     fetchFlashCards();
     },[])
-    const currentCard=flashCards[currentCardIndex]
+
+    const currentCard = flashCards[currentCardIndex];
+
     const handleDifficulty=async (difficulty:string)=>{
         try{
             const token=localStorage.getItem("token")
@@ -46,59 +51,245 @@ function FlashCard(){
                 throw new Error("Something went wrong updating flashcard")
             }
             setUpdateMessage(data.message)
-            console.log(data.message)
+            // Auto advance
+            if (currentCardIndex < flashCards.length - 1) {
+                setTimeout(() => {
+                    handleNext();
+                }, 500);
+            }
         }catch(error){
             console.log(error)
-            setUpdateMessage("Failed to update flashcard")
+            setUpdateMessage("Failed to update flashcard");
+
         }finally{
-            console.log(updateMessage)
+           setTimeout(() => setUpdateMessage(""), 4000);
         }
     }
-        return(
-            <>
-                {loading ? (
-                    <p className="text-gray-500">Loading flashcards...</p>
-                ) : flashCards && flashCards.length > 0 ? (
-                    <motion.div
-                        key={currentCardIndex}
-                        className="p-4 bg-gray-100 rounded-lg shadow"
-                        >
-                        {!showAnswer?(<h3 className="text-lg font-bold">{currentCard.front}</h3>):(<div>
-                           <p className="text-gray-600">{currentCard.back}</p>
-                           <div className="flex justify-between gap-2 mt-4">
-                           <Button onClick={() => handleDifficulty("again")}>again</Button>
-                           <Button onClick={() => handleDifficulty("hard")}>Hard</Button>
-                           <Button onClick={() => handleDifficulty("good")}>Good</Button>
-                           <Button onClick={() => handleDifficulty("easy")}>Easy</Button>
-                           </div> 
-                        </div>
-                        
-                        )}
-                        <div className="flex justify-between mt-4">
-                            <Button
-                                onClick={() => {setCurrentCardIndex((prev) => Math.max(0, prev - 1)); setShowAnswer(false)}}
-                                disabled={currentCardIndex === 0}
-                            >
-                                Previous
-                            </Button>
-                            <Button onClick={() => {setShowAnswer(!showAnswer)}}>
-                             Flip
-                            </Button>
-                            <Button
-                                onClick={() => {setCurrentCardIndex((prev) => Math.min(flashCards.length - 1, prev + 1)); setShowAnswer(false)}}
-                                disabled={currentCardIndex === flashCards.length - 1}
-                            >
-                                Next
-                            </Button>
-                            
-                        </div>
-                    </motion.div>
-                    ):(
-                        <p className="text-gray-500 mt-4">No flashcards to review right now. Check back later!</p>
-                     )
 
-                }
-            </>
-        )
+    const handleNext = useCallback(() => {
+        if (currentCardIndex < flashCards.length - 1) {
+            setShowAnswer(false);
+            setCurrentCardIndex(prev => prev + 1);
+            setUpdateMessage("");
+        }
+    }, [currentCardIndex, flashCards.length]);
+
+    const handlePrev = useCallback(() => {
+        if (currentCardIndex > 0) {
+            setShowAnswer(false);
+            setCurrentCardIndex(prev => prev - 1);
+            setUpdateMessage("");
+        }
+    }, [currentCardIndex]);
+
+    const handleFlip = useCallback(() => {
+        setShowAnswer(prev => !prev);
+    }, []);
+
+    // Keyboard navigation
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "ArrowRight") handleNext();
+            if (e.key === "ArrowLeft") handlePrev();
+            if (e.key === " " || e.key === "Spacebar") {
+                e.preventDefault();
+                handleFlip();
+            }
+        };
+        window.addEventListener("keydown", handleKeyDown);
+        return () => window.removeEventListener("keydown", handleKeyDown);
+    }, [handleNext, handlePrev, handleFlip]);
+
+    if (loading) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] w-full p-6">
+                <div className="w-full max-w-2xl h-80 bg-gray-100 rounded-3xl animate-pulse shadow-sm border border-gray-200"></div>
+                <div className="flex gap-4 mt-8">
+                    <div className="w-12 h-12 bg-gray-100 rounded-full animate-pulse"></div>
+                    <div className="w-16 h-12 bg-gray-100 rounded-2xl animate-pulse"></div>
+                    <div className="w-12 h-12 bg-gray-100 rounded-full animate-pulse"></div>
+                </div>
+            </div>
+        );
+    }
+
+    if (!flashCards || flashCards.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
+                <div className="w-24 h-24 mb-6 rounded-full bg-blue-50 flex items-center justify-center">
+                    <RotateCcw className="w-12 h-12 text-blue-500" />
+                </div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">You're all caught up!</h2>
+                <p className="text-gray-500 max-w-md">No flashcards to review right now. Take a break or create some new cards to study later.</p>
+            </div>
+        );
+    }
+
+    const progress = ((currentCardIndex + 1) / flashCards.length) * 100;
+
+    return (
+        <div className="flex flex-col items-center justify-between h-dvh w-full max-w-3xl mx-auto p-4 md:p-6 font-sans overflow-hidden">
+            
+            {/* Top Section / Progress */}
+            <div className="w-full mt-2 sm:mt-4 mb-4">
+                <div className="flex justify-between items-end mb-2">
+                    <span className="text-sm font-medium text-gray-500 uppercase tracking-wider">Reviewing</span>
+                    <span className="text-sm font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-full">
+                        {currentCardIndex + 1} / {flashCards.length}
+                    </span>
+                </div>
+                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                    <motion.div 
+                        className="h-full bg-blue-600 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${progress}%` }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                    />
+                </div>
+            </div>
+
+            {/* Center Section / Flashcard */}
+            <div 
+                className="relative w-full flex-1 max-h-[50vh] sm:max-h-[60vh] z-10" 
+                style={{ perspective: "1000px" }}
+            >
+                <motion.div
+                    className="w-full h-full relative cursor-pointer"
+                    onClick={handleFlip}
+                    initial={false}
+                    animate={{ rotateX: showAnswer ? 180 : 0 }}
+                    transition={{ duration: 0.6, type: "spring", stiffness: 200, damping: 20 }}
+                    style={{ transformStyle: "preserve-3d" }}
+                >
+                    {/* Front */}
+                    <div 
+                        className="absolute inset-0 flex items-center justify-center p-8 sm:p-12 text-center rounded-3xl bg-white border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300"
+                        style={{ backfaceVisibility: "hidden" }}
+                    >
+                        <div className="pointer-events-none select-none">
+                            <span className="text-xs font-bold text-blue-500 uppercase tracking-widest block mb-4">Question</span>
+                            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 leading-tight">
+                                {currentCard.front}
+                            </h3>
+                        </div>
+                    </div>
+
+                    {/* Back */}
+                    <div 
+                        className="absolute inset-0 flex flex-col items-center justify-center p-8 sm:p-12 text-center rounded-3xl bg-linear-to-br from-blue-50 to-indigo-50 border border-blue-100 shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
+                        style={{ backfaceVisibility: "hidden", transform: "rotateX(180deg)" }}
+                    >
+                        <div className="pointer-events-none select-none overflow-y-auto w-full max-h-full scrollbar-transparent">
+                            <span className="text-xs font-bold text-indigo-500 uppercase tracking-widest block mb-4">Answer</span>
+                            <p className="text-xl sm:text-2xl text-gray-800 leading-relaxed font-medium">
+                                {currentCard.back}
+                            </p>
+                        </div>
+                    </div>
+                </motion.div>
+            </div>
+
+            {/* Bottom Section / Controls & Difficulty */}
+            <div className="w-full flex flex-col items-center gap-4 sm:gap-6 pb-4 sm:pb-8 pt-4">
+                
+                {/* Navigation Controls */}
+                <div className="flex items-center justify-center gap-4 sm:gap-6">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        className="rounded-full w-12 h-12 border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-50 shadow-sm"
+                        onClick={(e) => { e.stopPropagation(); handlePrev(); }}
+                        disabled={currentCardIndex === 0}
+                    >
+                        <ArrowLeft className="w-5 h-5" />
+                    </Button>
+                    
+                    <Button 
+                        onClick={(e) => { e.stopPropagation(); handleFlip(); }}
+                        className="rounded-2xl px-8 h-12 bg-gray-900 hover:bg-gray-800 text-white shadow-md transition-all active:scale-95 flex items-center gap-2"
+                    >
+                        <RotateCcw className={`w-4 h-4 ${showAnswer ? '-rotate-180' : ''} transition-transform duration-500`} />
+                        <span className="font-semibold tracking-wide">{showAnswer ? "Show Question" : "Reveal Answer"}</span>
+                    </Button>
+                    
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        className="rounded-full w-12 h-12 border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-50 shadow-sm"
+                        onClick={(e) => { e.stopPropagation(); handleNext(); }}
+                        disabled={currentCardIndex === flashCards.length - 1}
+                    >
+                        <ArrowRight className="w-5 h-5" />
+                    </Button>
+                </div>
+
+                {/* Difficulty Rating */}
+                <div className="h-16 flex items-center justify-center overflow-visible">
+                    <AnimatePresence>
+                        {showAnswer && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -20, scale: 0.9 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 25 }}
+                                className="flex gap-2 sm:gap-3 p-2 bg-white rounded-2xl shadow-lg border border-gray-100"
+                            >
+                                <Button 
+                                    variant="ghost" 
+                                    onClick={() => handleDifficulty("again")}
+                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-red-50 hover:text-red-600 transition-colors rounded-xl"
+                                >
+                                    <span className="text-2xl">🔄</span>
+                                    <span className="text-xs font-semibold">Again</span>
+                                </Button>
+                                <Button 
+                                    variant="ghost" 
+                                    onClick={() => handleDifficulty("hard")}
+                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-orange-50 hover:text-orange-600 transition-colors rounded-xl"
+                                >
+                                    <span className="text-2xl">😓</span>
+                                    <span className="text-xs font-semibold">Hard</span>
+                                </Button>
+                                <Button 
+                                    variant="ghost" 
+                                    onClick={() => handleDifficulty("good")}
+                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-blue-50 hover:text-blue-600 transition-colors rounded-xl"
+                                >
+                                    <span className="text-2xl">🤔</span>
+                                    <span className="text-xs font-semibold">Good</span>
+                                </Button>
+                                <Button 
+                                    variant="ghost"
+                                    onClick={() => handleDifficulty("easy")}
+                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-green-50 hover:text-green-600 transition-colors rounded-xl"
+                                >
+                                    <span className="text-2xl">😄</span>
+                                    <span className="text-xs font-semibold">Easy</span>
+                                </Button>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+
+                {/* Status Message */}
+                <div className="h-6 flex items-center justify-center">
+                    <AnimatePresence>
+                        {updateMessage && (
+                            <motion.p 
+                                initial={{ opacity: 0, y: 5 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 5 }}
+                                className="text-sm font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100"
+                            >
+                                {updateMessage}
+                            </motion.p>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </div>
+            
+        </div>
+    );
 }
+
 export default FlashCard;
