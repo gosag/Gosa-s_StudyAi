@@ -4,12 +4,10 @@ import Material from "../models/material.model";
 import Chat from "../models/chat.model";
 import Quiz from "../models/quiz.model"
 import Flashcard from "../models/flashCard.model";
-import multer from "multer";
 import extractTextFromFile from "../services/pdf.service";
 import { getYoutubeTranscript } from "../services/youtube.service";
 import { generateFlashCards, generateResponse, quizGenerator, regenerateQuizzes } from "../services/gemini.service";
-import protector from "../middleware/authMiddleware";
-import {updateUserStreak } from "../services/streak";
+import {updateUserStreak } from "../services/streak.service";
 import type {Request,Response,NextFunction} from "express"
 interface CustomError extends Error {
   status?: number,
