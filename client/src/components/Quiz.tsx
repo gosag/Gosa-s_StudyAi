@@ -10,7 +10,6 @@ import {
   RotateCcw, 
   Sparkles 
 } from "lucide-react";
-
 function Quiz() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -18,6 +17,7 @@ function Quiz() {
   const [quizzesLoader,setQuizesLoader]=useState(false)
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [error,setError]=useState<string | null>(null)
   const [quizzes, setQuizzes] = useState<{
     question: string;
     options: string[];
@@ -37,10 +37,16 @@ function Quiz() {
         });
         
         const data = await res.json();
+        if(!res.ok){
+          throw new Error(data.error?.message || data.error || "Failed to fetch quizzes. Please try again.");
+        }
         // Fallback to empty array if data.quizzes is undefined to prevent crash.
         setQuizzes(data.quizzes || []);
-      } catch (error) {
-        console.error(error);
+        setError(null) // Clear any previous errors on successful fetch
+      } catch (err: any) {
+        console.error(err);
+        setError(err.message || "Failed to fetch quizzes. Please try again.")
+        setTimeout(()=>{setError(null)},4000)
       }
     }
     fetchQuizzes();
@@ -60,18 +66,21 @@ function Quiz() {
       })
       const data=await res.json()
       if(!res.ok){
-        throw new Error("Something went wrong generating new quizzes")
+        throw new Error(data.error?.message || data.error || "Something went wrong generating new quizzes. Please try again.")
       }
       setQuizzes(prev=>[...prev,...data.quizzes])
-      setQuizesLoader(false)
+      setQuizesLoader(false);
+      setError(null)
     }
     catch(error){
       console.log(error)
       setQuizesLoader(false)
+      setError("Failed to generate new quizzes. Please try again.")
+      setTimeout(()=>{setError(null)},4000)
     }
   }
   return (
-    <div className=" overflow-y-auto bg-gray-50/50 p-4 sm:p-2 flex flex-col items-center">
+    <div className="h-dvh overflow-y-auto bg-gray-50/50 p-4 sm:p-2 flex flex-col items-center">
       <div className="w-full max-w-2xl shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6">
         <Button variant="ghost" onClick={() => navigate(-1)} className="gap-2">
           <ArrowLeft className="w-4 h-4" /> Go Back
@@ -168,6 +177,9 @@ function Quiz() {
               </Button>
             </CardFooter>
           </Card>
+    
+          {error && <div className="text-sm text-red-500 text-center">{error}</div>}
+       
         </div>
       )}
     </div>

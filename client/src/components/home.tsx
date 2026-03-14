@@ -23,6 +23,7 @@ function Home() {
   const [materialId,setMaterialId]=useState<string | null>(null)
   const [aiData, setAiData] = useState<{role: string, content: string}[]>([]);
   const [lastMaterial, setLastMaterial]=useState<IMaterial | null>(null)
+  const [error,setError]=useState<string | null>(null)
   function isYoutubeLink(link: string) {
   try {
     const url = new URL(link)
@@ -50,13 +51,19 @@ const fileHandler=async (file: File)=>{
           body: formData
         })
         const data = await res.json();
+        if(!res.ok){
+          setError(data.error || "something went wrong try again");
+          setLoading(false);
+          console.log("not okay")
+          return;
+        }
         setAiData([{role: "model",content: data.response}]);
         localStorage.setItem('summary',JSON.stringify(data.response))
         localStorage.setItem('materialId',JSON.stringify(data.materialId));
         setFile(null)
         setMaterialId(data.materialId)
         setLoading(false)
-        
+        setError(null)
 }
 const linkHandler=async (link: string)=>{
   if(!isYoutubeLink(link)){
@@ -76,6 +83,8 @@ const linkHandler=async (link: string)=>{
       });
       const data = await res.json();
       if(!res.ok){
+        setError(data.error || "something went wrong try again")
+
         throw new Error("something went wrong")
       }
       if (typeof data.response === "string") {
@@ -89,6 +98,7 @@ const linkHandler=async (link: string)=>{
       } 
       setLink("");
       setLoading(false);
+      setError("")
 }
 const continueHandler=async ()=>{
   try{
@@ -104,12 +114,16 @@ const continueHandler=async ()=>{
     body:JSON.stringify({materialId,userMessage:link})
   })
   const data=await res.json();
+  if(!res.ok){
+    setError(data.error || "Failed to continue conversation. Please try again.")
+  }
   setAiData(prev=>[...prev,{role:"model",content:data.response}]);
   localStorage.setItem('summary',JSON.stringify(data.response))
   setLink('');
   setLoading(false)
 }
   catch(error){
+    setError("Failed to continue conversation. Please try again.")
     console.error("Failed to continue conversation:", error)
   }
 }
@@ -171,6 +185,7 @@ useEffect(()=>{async function lastMaterial(){
 }
  lastMaterial()
 }, [])
+console.log(aiData)
   return (
     <div className="max-w-7xl mx-auto p-3 sm:p-6 flex flex-col gap-4 sm:gap-6 w-full min-h-screen">
       {/* Header Section */}
@@ -360,7 +375,20 @@ useEffect(()=>{async function lastMaterial(){
                 {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
               </Button>
             </div>
-          </CardFooter>
+          </CardFooter> 
+          {error && (
+            <CardFooter className="p-4 border-t bg-red-50 dark:bg-red-900 shrink-0">
+              <div className="flex items-center gap-2 w-full">
+                <div className="p-2 bg-red-100 dark:bg-red-800 rounded-full">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1.707-11.707a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 001.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <span className="text-sm text-red-700 dark:text-red-300">{error}</span>
+              </div>
+            </CardFooter>
+          )}
+
         </Card>
       )}
     </div>
