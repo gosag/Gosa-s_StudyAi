@@ -1,8 +1,10 @@
-import { Outlet ,NavLink} from "react-router-dom";
+import { Outlet ,NavLink, useLocation} from "react-router-dom";
 import { Home, Library, Layers, Settings } from "lucide-react";
 import {useEffect ,useState} from "react"
 function MainOutLet(){
   const [currentStreak,setCurrentStreak]=useState<number | null>(null)
+  const location = useLocation();
+  
   useEffect(()=>{
     document.title="EchoLearn - Your Path to Mastery"
     async function fetchStreak(){
@@ -19,15 +21,13 @@ function MainOutLet(){
           console.log(`${ "Something went wrong "} `)
         }
         const cStreak=Number(data.currentStreak)
-        console.log(data.currentStreak)
-        console.log(cStreak)
         setCurrentStreak(cStreak)
       }catch(err){
         console.log(err)
       }
     }
     fetchStreak()
-  })
+  }, [location.pathname])
     return(
 <div className="flex min-h-screen">
     <aside className="sticky top-0 h-screen w-16 md:w-60 bg-white shadow-[4px_0_24px_rgba(0,0,0,0.05)] flex flex-col transition-all duration-300 shrink-0 z-50">
