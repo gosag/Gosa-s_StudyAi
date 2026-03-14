@@ -190,7 +190,7 @@ export const getUserMaterials = async (req: Request, res: Response, next: NextFu
 }
 export const deleteMaterial = async (req: Request, res: Response, next: NextFunction) => {
   try{
-    const {materialId}=req.params;
+    const materialId=req.params.id;
     if(!materialId){
       throw new Error("Material ID is required") as CustomError
     }
