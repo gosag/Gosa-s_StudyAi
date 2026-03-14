@@ -46,7 +46,6 @@ function Quiz() {
       } catch (err: any) {
         console.error(err);
         setError(err.message || "Failed to fetch quizzes. Please try again.")
-        setTimeout(()=>{setError(null)},4000)
       }
     }
     fetchQuizzes();
