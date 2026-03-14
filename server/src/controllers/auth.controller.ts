@@ -1,13 +1,10 @@
 import express from "express"
-import User from "../models/userSchema"
+import User from "../models/user.model"
 import asyncHandler from "express-async-handler"
 import jwt from "jsonwebtoken"
 import type { Request ,Response ,NextFunction} from "express";
 import bcrypt from "bcryptjs"
 import type { Types } from "mongoose";
-import protector from "../middleware/authMiddleware";
-import validate from "../middleware/validator"
-import { loginSchema ,signUpSchema} from "../models/zodSchema";
 const authRouter=express.Router();
 interface RequestError extends Error{
     status?:number,
@@ -17,7 +14,7 @@ const tokenGenerator=(id:Types.ObjectId)=>{
     const SECRET=process.env.SECRET!
     return jwt.sign({id:id.toString()},SECRET,{expiresIn:"30d"})
 }
-authRouter.post("/api/auth/register",validate(signUpSchema,"body"),asyncHandler(async(req:Request,res:Response)=>{
+export const registerController= asyncHandler(async(req:Request,res:Response)=>{
     const {email,password}=req.body;
     const userExists=await User.findOne({email})
     if(userExists){
@@ -37,13 +34,13 @@ authRouter.post("/api/auth/register",validate(signUpSchema,"body"),asyncHandler(
         throw error
     }
     res.json({user})
-}))
+})
 interface userIF{
     email?:string,
     password?:string,
     _id?:Types.ObjectId 
 }
-authRouter.post("/api/auth/login",validate(loginSchema,"body"),asyncHandler(async(req:Request,res:Response)=>{
+export const loginController= asyncHandler(async(req:Request,res:Response)=>{
     const {email,password}=req.body;
     const user=await User.findOne({email:email}) as userIF;
     if(!user){
@@ -62,8 +59,8 @@ authRouter.post("/api/auth/login",validate(loginSchema,"body"),asyncHandler(asyn
         return 
     }
     res.json({user,token:tokenGenerator(id)})
-}))
-authRouter.get("/api/auth/:id",protector,asyncHandler(async(req:Request,res:Response)=>{
+})
+export const  getUserData= asyncHandler(async(req:Request,res:Response)=>{
 const id=req.params.id;
 const user=await User.findById(id)
     if(!user){
@@ -72,5 +69,4 @@ const user=await User.findById(id)
         throw error
     }
     res.json({user})
-}))
-export default authRouter;
+})

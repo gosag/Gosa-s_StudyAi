@@ -1,4 +1,4 @@
-import User from '../models/userSchema'; 
+import User from '../models/user.model'; 
 export const updateUserStreak = async (userId: string) => {
   try {
     const user = await User.findById(userId);

@@ -1,30 +1,21 @@
 import express from "express";
-import User from "../models/userSchema";
-import Material from "../models/materialSchema";
-import Chat from "../models/chatSchema";
-import Quiz from "../models/quizSchema"
-import Flashcard from "../models/flashCardSchema";
+import User from "../models/user.model";
+import Material from "../models/material.model";
+import Chat from "../models/chat.model";
+import Quiz from "../models/quiz.model"
+import Flashcard from "../models/flashCard.model";
 import multer from "multer";
-import extractTextFromFile from "../sevices/pdf.service";
-import { getYoutubeTranscript } from "../sevices/youtube.service";
-import { generateFlashCards, generateResponse, quizGenerator, regenerateQuizzes } from "../sevices/gemini.service";
+import extractTextFromFile from "../services/pdf.service";
+import { getYoutubeTranscript } from "../services/youtube.service";
+import { generateFlashCards, generateResponse, quizGenerator, regenerateQuizzes } from "../services/gemini.service";
 import protector from "../middleware/authMiddleware";
-import {updateUserStreak } from "../sevices/streak";
+import {updateUserStreak } from "../services/streak";
+import type {Request,Response,NextFunction} from "express"
 interface CustomError extends Error {
   status?: number,
   statusCode?: number
 }
-const uploadRoute = express.Router();
-// Existing PDF Logic...
-const upload=multer({storage:multer.memoryStorage(),
-    limits:{fileSize:15*1024*1024},
-    fileFilter:(req,file,cb)=>{
-        if(file.mimetype!=="application/pdf"){
-            return cb(new Error("Only PDF files are allowed"))
-        }
-        cb(null,true)      
-}});
-uploadRoute.post("/api/uploads/file",protector, upload.single("pdf"),async (req,res,next)=>{
+export const uploadFile = async (req: Request, res: Response, next: NextFunction) => {
     if(!req.file){
       const error=new Error("No file uploaded") as CustomError
       error.status=400
@@ -76,8 +67,8 @@ uploadRoute.post("/api/uploads/file",protector, upload.single("pdf"),async (req,
             return next(err);
         }
     }
-})
-uploadRoute.post("/api/uploads/link",protector, async (req, res,next): Promise<any> => {
+}
+export const uploadLink = async (req: Request, res: Response, next: NextFunction) => {
   const { link } = req.body;
   console.log(`\n[API CALL] /api/uploads/link received URL: ${link}`);
 
@@ -131,8 +122,8 @@ uploadRoute.post("/api/uploads/link",protector, async (req, res,next): Promise<a
   } catch (err: any) {
     return next(err);
   }
-});
-uploadRoute.post("/api/continue",protector, async(req,res,next)=>{
+};
+export const continueConversation = async (req: Request, res: Response, next: NextFunction) => {
     const {materialId,userMessage}=req.body
     const material=await Material.findById(materialId)
     if(!material){
@@ -182,8 +173,8 @@ uploadRoute.post("/api/continue",protector, async(req,res,next)=>{
     await newAIChat.save();
     await updateUserStreak(userId as any);
     res.json({ response });
-})
-uploadRoute.get("/api/materials",protector,async(req,res,next)=>{
+}
+export const getUserMaterials = async (req: Request, res: Response, next: NextFunction) => {
    try{
     if(!req.user || !req.user._id){
       const error= new Error("Missing user information") as CustomError;
@@ -196,8 +187,8 @@ uploadRoute.get("/api/materials",protector,async(req,res,next)=>{
    } catch(error){
     next(error);
    }
-})
-uploadRoute.delete("/api/delete/:materialId",protector,async(req,res,next)=>{
+}
+export const deleteMaterial = async (req: Request, res: Response, next: NextFunction) => {
   try{
     const {materialId}=req.params;
     if(!materialId){
@@ -217,8 +208,8 @@ uploadRoute.delete("/api/delete/:materialId",protector,async(req,res,next)=>{
   }catch(err){
     next(err)
   }
-})
-uploadRoute.get("/api/materials/:id",protector,async(req,res,next)=>{
+}
+export const getMaterialById = async (req: Request, res: Response, next: NextFunction) => {
   try{
     const {id}=req.params;
     if(!id){
@@ -237,8 +228,8 @@ uploadRoute.get("/api/materials/:id",protector,async(req,res,next)=>{
   }catch(error){
     next(error);
   }
-})
-uploadRoute.get("/api/quizzes/:id",protector,async(req,res,next)=>{
+}
+export const generateQuizzes = async (req: Request, res: Response, next: NextFunction) => {
   try{
    const {id}=req.params;
    if(!req.user || !req.user._id){
@@ -278,8 +269,8 @@ uploadRoute.get("/api/quizzes/:id",protector,async(req,res,next)=>{
   }catch(err){
     next(err);
   }
-})
-uploadRoute.post("/api/quizzes/regenerate/:id",protector,async(req,res,next)=>{
+}
+export const regenerateQuizzesAsync = async (req: Request, res: Response, next: NextFunction) => {
   try{
     const {id}=req.params;
     if(!req.user || !req.user._id){
@@ -323,8 +314,8 @@ uploadRoute.post("/api/quizzes/regenerate/:id",protector,async(req,res,next)=>{
     res.json({quizzes})
   }catch(error){
    next(error)
-}})
-uploadRoute.get("/api/flashcards/review",protector,async(req,res,next)=>{
+}}
+export const getFlashcardsForReview = async (req: Request, res: Response, next: NextFunction) => {
   try{
   if(!req.user || !req.user._id){
     const error=new Error("user info is missing") as CustomError;
@@ -353,8 +344,8 @@ uploadRoute.get("/api/flashcards/review",protector,async(req,res,next)=>{
 }catch(error){
   next(error)
 }
-})
-uploadRoute.patch("/api/flashcards/:id/review", protector, async (req, res, next) => {
+};
+export const updateFlashcardReview = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;
     const { difficultyLevel } = req.body;
@@ -413,8 +404,8 @@ uploadRoute.patch("/api/flashcards/:id/review", protector, async (req, res, next
   } catch (error) {
     next(error);
   }
-});
-uploadRoute.get("/api/streak",protector,async(req,res,next)=>{
+};
+export const getUserStreak = async (req: Request, res: Response, next: NextFunction) => {
   try{
     if(!req.user || !req.user._id){
       const error=new Error("User information is missing") as CustomError;
@@ -427,6 +418,4 @@ uploadRoute.get("/api/streak",protector,async(req,res,next)=>{
   }catch(error){
     next(error)
   }
-})
-
-export default uploadRoute;
+}

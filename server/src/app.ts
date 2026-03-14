@@ -1,9 +1,9 @@
 import express from "express"
-import authRouter from "./routes/auth";
+import authRouter from "./routes/auth.routes";
 import errorHandler from "./middleware/error";
 import morgan from "morgan"
 import cors from "cors"
-import uploadRoute from "./routes/uploads";
+import uploadRoute from "./routes/upload.routes";
 const app=express()
 //parsers
 app.use(express.json());
