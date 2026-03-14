@@ -347,4 +347,57 @@ uploadRoute.get("/api/flashcards/review",protector,async(req,res,next)=>{
   next(error)
 }
 })
+uploadRoute.patch("/api/flashcards/:id/review", protector, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { difficultyLevel } = req.body;
+    const flashcard = await Flashcard.findById(id);
+    if (!flashcard) {
+      const error = new Error("Flashcard not found") as CustomError;
+      error.status = 404;
+      throw error;
+    }
+    // Convert difficulty -> SM-2 quality score
+    let quality = 0;
+    if (difficultyLevel === "again") quality = 1;
+    if (difficultyLevel === "hard") quality = 2;
+    if (difficultyLevel === "good") quality = 4;
+    if (difficultyLevel === "easy") quality = 5;
+    let { repetitionCount, interval, easeFactor } = flashcard;
+    // SM-2 Algorithm
+    if (quality < 3) {
+      repetitionCount = 0;
+      interval = 1;
+    } else {
+      repetitionCount += 1;
+      if (repetitionCount === 1) {
+        interval = 1;
+      } else if (repetitionCount === 2) {
+        interval = 6;
+      } else {
+        interval = Math.round(interval * easeFactor);
+      }
+    }
+    // Update ease factor
+    easeFactor =
+      easeFactor +
+      (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
+    if (easeFactor < 1.3) {
+      easeFactor = 1.3;
+    }
+    // Calculate next review date
+    const nextReviewDate = new Date();
+    nextReviewDate.setDate(nextReviewDate.getDate() + interval);
+    // Save updates
+    flashcard.difficultyLevel = difficultyLevel;
+    flashcard.repetitionCount = repetitionCount;
+    flashcard.interval = interval;
+    flashcard.easeFactor = easeFactor;
+    flashcard.nextReviewDate = nextReviewDate;
+    await flashcard.save();
+    res.json({message:"Flashcard review updated successfully"});
+  } catch (error) {
+    next(error);
+  }
+});
 export default uploadRoute;

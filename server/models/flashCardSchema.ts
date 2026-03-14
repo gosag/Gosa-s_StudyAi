@@ -3,7 +3,7 @@ import { de } from "zod/v4/locales";
 interface IFlashcard extends Document {
   front: string;
   back: string;
-  difficultyLevel: 'easy' | 'medium' | 'hard';
+  difficultyLevel: 'again' | 'hard' | 'good' | 'easy';
   materialId: Types.ObjectId;
   userId: Types.ObjectId;
   // SRS Fields
@@ -16,7 +16,7 @@ interface IFlashcard extends Document {
 const FlashcardSchema = new Schema<IFlashcard>({
   front: { type: String, required: true },
   back: { type: String, required: true },
-  difficultyLevel: { type: String, enum: ['easy', 'medium', 'hard'], default: 'medium' },
+  difficultyLevel: { type: String, enum: ['again', 'hard', 'good','easy'], default: 'good' },
   materialId: { type: Schema.Types.ObjectId, ref: 'Material', required: true },
   userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   nextReviewDate: { type: Date, default: Date.now },
