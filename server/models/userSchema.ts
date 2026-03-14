@@ -10,8 +10,8 @@ import {Schema,Document,Types,model} from "mongoose"
 const UserSchema = new Schema<IUser>({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  currentStreak: { type: Number, default: 0 },
-  longestStreak: { type: Number, default: 0 },
+  currentStreak: { type: Number, default: 1 },
+  longestStreak: { type: Number, default: 1 },
   lastActivityDate:{type:Date, default: Date.now}
 });
 

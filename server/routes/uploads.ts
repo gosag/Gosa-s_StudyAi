@@ -1,4 +1,5 @@
 import express from "express";
+import User from "../models/userSchema";
 import Material from "../models/materialSchema";
 import Chat from "../models/chatSchema";
 import Quiz from "../models/quizSchema"
@@ -413,4 +414,18 @@ uploadRoute.patch("/api/flashcards/:id/review", protector, async (req, res, next
     next(error);
   }
 });
+uploadRoute.get("/api/streak",protector,async(req,res,next)=>{
+  try{
+    if(!req.user || !req.user._id){
+      const error=new Error("User information is missing") as CustomError;
+      error.status=401;
+      throw error
+    }
+    const userId=req.user._id;
+    const user=await User.findById(userId)
+    res.json({currentStreak:user?.currentStreak})
+  }catch(error){
+    next(error)
+  }
+})
 export default uploadRoute;

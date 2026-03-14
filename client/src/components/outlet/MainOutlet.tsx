@@ -1,7 +1,33 @@
 import { Outlet ,NavLink} from "react-router-dom";
 import { Home, Library, Layers, Settings } from "lucide-react";
-
+import {useEffect ,useState} from "react"
 function MainOutLet(){
+  const [currentStreak,setCurrentStreak]=useState<number | null>(null)
+  useEffect(()=>{
+    document.title="EchoLearn - Your Path to Mastery"
+    async function fetchStreak(){
+      try{
+        const token=localStorage.getItem("token");
+        const res=await fetch("http://localhost:8000/api/streak",{
+          method:"GET",
+          headers:{
+            "Authorization":`Bearer ${token}`
+          }
+        })
+        const data= await res.json()
+        if(!res.ok){
+          console.log(`${ "Something went wrong "} `)
+        }
+        const cStreak=Number(data.currentStreak)
+        console.log(data.currentStreak)
+        console.log(cStreak)
+        setCurrentStreak(cStreak)
+      }catch(err){
+        console.log(err)
+      }
+    }
+    fetchStreak()
+  })
     return(
 <div className="flex min-h-screen">
     <aside className="sticky top-0 h-screen w-16 md:w-60 bg-white shadow-[4px_0_24px_rgba(0,0,0,0.05)] flex flex-col transition-all duration-300 shrink-0 z-50">
@@ -143,7 +169,7 @@ function MainOutLet(){
             <svg
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="fire-glow text-orange-400 blur-sm"
+              className={`${currentStreak===0?" text-gray-400 blur-sm":"text-orange-400"} fire-glow  blur-sm`}
             >
               <path d="M12.963 2.286a.75.75 0 00-1.071-.136 9.742 9.742 0 00-3.539 6.177A7.547 7.547 0 016.648 6.61a.75.75 0 00-1.152.082A9 9 0 1015.68 4.534a7.46 7.46 0 01-2.717-2.248z" />
             </svg>
@@ -152,7 +178,7 @@ function MainOutLet(){
             <svg
               viewBox="0 0 24 24"
               fill="currentColor"
-              className="fire-core text-orange-500 relative"
+              className={`fire-core relative ${currentStreak===0?"text-gray-400":" text-orange-500"}`}
             >
               <path d="M12.963 2.286a.75.75 0 00-1.071-.136 9.742 9.742 0 00-3.539 6.177A7.547 7.547 0 016.648 6.61a.75.75 0 00-1.152.082A9 9 0 1015.68 4.534a7.46 7.46 0 01-2.717-2.248z" />
             </svg>
@@ -160,7 +186,7 @@ function MainOutLet(){
 
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
             <span className="text-orange-600 font-extrabold text-sm md:text-base leading-none">
-              15
+              {currentStreak}
             </span>
             <span className="hidden md:block text-orange-800 text-xs font-semibold tracking-wide">
               Day Streak!
