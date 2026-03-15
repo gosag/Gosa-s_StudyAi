@@ -103,11 +103,11 @@ function FlashCard(){
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] w-full p-6">
-                <div className="w-full max-w-2xl h-80 bg-gray-100 rounded-3xl animate-pulse shadow-sm border border-gray-200"></div>
+                <div className="w-full max-w-2xl h-80 bg-gray-100 dark:bg-zinc-900 rounded-3xl animate-pulse shadow-sm border border-gray-200 dark:border-zinc-800"></div>
                 <div className="flex gap-4 mt-8">
-                    <div className="w-12 h-12 bg-gray-100 rounded-full animate-pulse"></div>
-                    <div className="w-16 h-12 bg-gray-100 rounded-2xl animate-pulse"></div>
-                    <div className="w-12 h-12 bg-gray-100 rounded-full animate-pulse"></div>
+                    <div className="w-12 h-12 bg-gray-100 dark:bg-zinc-900 rounded-full animate-pulse"></div>
+                    <div className="w-16 h-12 bg-gray-100 dark:bg-zinc-900 rounded-2xl animate-pulse"></div>
+                    <div className="w-12 h-12 bg-gray-100 dark:bg-zinc-900 rounded-full animate-pulse"></div>
                 </div>
             </div>
         );
@@ -116,11 +116,11 @@ function FlashCard(){
     if (!flashCards || flashCards.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
-                <div className="w-24 h-24 mb-6 rounded-full bg-blue-50 flex items-center justify-center">
+                <div className="w-24 h-24 mb-6 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                     <RotateCcw className="w-12 h-12 text-blue-500" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">You're all caught up!</h2>
-                <p className="text-gray-500 max-w-md">No flashcards to review right now. Take a break or create some new cards to study later.</p>
+                <h2 className="text-2xl font-bold text-gray-800 dark:text-zinc-100 mb-2">You're all caught up!</h2>
+                <p className="text-gray-500 dark:text-zinc-400 max-w-md">No flashcards to review right now. Take a break or create some new cards to study later.</p>
             </div>
         );
     }
@@ -133,12 +133,12 @@ function FlashCard(){
             {/* Top Section / Progress */}
             <div className="w-full mt-2 sm:mt-4 mb-4">
                 <div className="flex justify-between items-end mb-2">
-                    <span className="text-sm font-medium text-gray-500 uppercase tracking-wider">Reviewing</span>
-                    <span className="text-sm font-semibold text-gray-700 bg-gray-100 px-3 py-1 rounded-full">
+                    <span className="text-sm font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Reviewing</span>
+                    <span className="text-sm font-semibold text-gray-700 dark:text-zinc-300 bg-gray-100 dark:bg-zinc-900 px-3 py-1 rounded-full">
                         {currentCardIndex + 1} / {flashCards.length}
                     </span>
                 </div>
-                <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-gray-100 dark:bg-zinc-900  rounded-full overflow-hidden">
                     <motion.div 
                         className="h-full bg-blue-600 rounded-full"
                         initial={{ width: 0 }}
@@ -163,12 +163,12 @@ function FlashCard(){
                 >
                     {/* Front */}
                     <div 
-                        className="absolute inset-0 flex items-center justify-center p-8 sm:p-12 text-center rounded-3xl bg-white border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300"
+                        className="absolute inset-0 flex items-center justify-center p-8 sm:p-12 text-center rounded-3xl bg-white dark:bg-zinc-950 border border-gray-100 dark:border-zinc-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300"
                         style={{ backfaceVisibility: "hidden" }}
                     >
                         <div className="pointer-events-none select-none">
-                            <span className="text-xs font-bold text-blue-500 uppercase tracking-widest block mb-4">Question</span>
-                            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 leading-tight">
+                            <span className="text-xs font-bold text-blue-500 dark:text-blue-400 uppercase tracking-widest block mb-4">Question</span>
+                            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 dark:text-zinc-100 leading-tight">
                                 {currentCard.front}
                             </h3>
                         </div>
@@ -176,12 +176,12 @@ function FlashCard(){
 
                     {/* Back */}
                     <div 
-                        className="absolute inset-0 flex flex-col items-center justify-center p-8 sm:p-12 text-center rounded-3xl bg-linear-to-br from-blue-50 to-indigo-50 border border-blue-100 shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
+                        className="absolute inset-0 flex flex-col items-center justify-center p-8 sm:p-12 text-center rounded-3xl bg-linear-to-br from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 border border-blue-100 dark:border-blue-900/50 shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
                         style={{ backfaceVisibility: "hidden", transform: "rotateX(180deg)" }}
                     >
                         <div className="pointer-events-none select-none overflow-y-auto w-full max-h-full scrollbar-transparent">
-                            <span className="text-xs font-bold text-indigo-500 uppercase tracking-widest block mb-4">Answer</span>
-                            <p className="text-xl sm:text-2xl text-gray-800 leading-relaxed font-medium">
+                            <span className="text-xs font-bold text-indigo-500 dark:text-indigo-400 uppercase tracking-widest block mb-4">Answer</span>
+                            <p className="text-xl sm:text-2xl text-gray-800 dark:text-zinc-100 leading-relaxed font-medium">
                                 {currentCard.back}
                             </p>
                         </div>
@@ -197,7 +197,7 @@ function FlashCard(){
                     <Button
                         variant="outline"
                         size="icon"
-                        className="rounded-full w-12 h-12 border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-50 shadow-sm"
+                        className="rounded-full w-12 h-12 border-gray-200 dark:border-zinc-800 text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-100 hover:bg-gray-50 dark:hover:bg-zinc-800 shadow-sm"
                         onClick={(e) => { e.stopPropagation(); handlePrev(); }}
                         disabled={currentCardIndex === 0}
                     >
@@ -206,7 +206,7 @@ function FlashCard(){
                     
                     <Button 
                         onClick={(e) => { e.stopPropagation(); handleFlip(); }}
-                        className="rounded-2xl px-8 h-12 bg-gray-900 hover:bg-gray-800 text-white shadow-md transition-all active:scale-95 flex items-center gap-2"
+                        className="rounded-2xl px-8 h-12 bg-gray-900 dark:bg-zinc-100 hover:bg-gray-800 dark:hover:bg-white text-white dark:text-black shadow-md transition-all active:scale-95 flex items-center gap-2"
                     >
                         <RotateCcw className={`w-4 h-4 ${showAnswer ? '-rotate-180' : ''} transition-transform duration-500`} />
                         <span className="font-semibold tracking-wide">{showAnswer ? "Show Question" : "Reveal Answer"}</span>
@@ -215,7 +215,7 @@ function FlashCard(){
                     <Button
                         variant="outline"
                         size="icon"
-                        className="rounded-full w-12 h-12 border-gray-200 text-gray-500 hover:text-gray-900 hover:bg-gray-50 shadow-sm"
+                        className="rounded-full w-12 h-12 border-gray-200 dark:border-zinc-800 text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-100 hover:bg-gray-50 dark:hover:bg-zinc-800 shadow-sm"
                         onClick={(e) => { e.stopPropagation(); handleNext(); }}
                         disabled={currentCardIndex === flashCards.length - 1}
                     >
@@ -232,12 +232,12 @@ function FlashCard(){
                                 animate={{ opacity: 1, y: 0, scale: 1 }}
                                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                                 transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 25 }}
-                                className="flex gap-2 sm:gap-3 p-2 bg-white rounded-2xl shadow-lg border border-gray-100"
+                                className="flex gap-2 sm:gap-3 p-2 bg-white dark:bg-zinc-950 rounded-2xl shadow-lg border border-gray-100 dark:border-zinc-800"
                             >
                                 <Button 
                                     variant="ghost" 
                                     onClick={() => handleDifficulty("again")}
-                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-red-50 hover:text-red-600 transition-colors rounded-xl"
+                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-red-50 dark:hover:bg-red-900/40 hover:text-red-600 dark:hover:text-red-400 transition-colors rounded-xl"
                                 >
                                     <span className="text-2xl">🔄</span>
                                     <span className="text-xs font-semibold">Again</span>
@@ -245,7 +245,7 @@ function FlashCard(){
                                 <Button 
                                     variant="ghost" 
                                     onClick={() => handleDifficulty("hard")}
-                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-orange-50 hover:text-orange-600 transition-colors rounded-xl"
+                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-orange-50 dark:hover:bg-orange-900/40 hover:text-orange-600 dark:hover:text-orange-400 transition-colors rounded-xl"
                                 >
                                     <span className="text-2xl">😓</span>
                                     <span className="text-xs font-semibold">Hard</span>
@@ -253,7 +253,7 @@ function FlashCard(){
                                 <Button 
                                     variant="ghost" 
                                     onClick={() => handleDifficulty("good")}
-                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-blue-50 hover:text-blue-600 transition-colors rounded-xl"
+                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-blue-50 dark:bg-blue-900/20 hover:text-blue-600 transition-colors rounded-xl"
                                 >
                                     <span className="text-2xl">🤔</span>
                                     <span className="text-xs font-semibold">Good</span>
@@ -261,7 +261,7 @@ function FlashCard(){
                                 <Button 
                                     variant="ghost"
                                     onClick={() => handleDifficulty("easy")}
-                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-green-50 hover:text-green-600 transition-colors rounded-xl"
+                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-green-50 dark:hover:bg-green-900/40 hover:text-green-600 dark:hover:text-green-400 transition-colors rounded-xl"
                                 >
                                     <span className="text-2xl">😄</span>
                                     <span className="text-xs font-semibold">Easy</span>
@@ -293,3 +293,6 @@ function FlashCard(){
 }
 
 export default FlashCard;
+
+
+
