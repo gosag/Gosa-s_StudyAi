@@ -79,7 +79,7 @@ function Quiz() {
     }
   }
   return (
-    <div className="h-dvh overflow-y-auto bg-gray-50/50 p-4 sm:p-2 flex flex-col items-center">
+    <div className=" overflow-y-auto bg-gray-50/50 dark:bg-black border-gray-100 dark:border-zinc-800 p-4 sm:p-2 flex flex-col items-center">
       <div className="w-full max-w-2xl shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6">
         <Button variant="ghost" onClick={() => navigate(-1)} className="gap-2">
           <ArrowLeft className="w-4 h-4" /> Go Back
@@ -102,29 +102,28 @@ function Quiz() {
   
       {loading ? (
         <div className="flex-1 flex items-center justify-center">
-          <RefreshCw className="w-8 h-8 animate-spin text-gray-400" />
+          <RefreshCw className="w-8 h-8 animate-spin text-gray-400 dark:text-gray-500" />
         </div>
       ) : !currentQuiz ? (
-        <div className="text-center text-gray-500 mt-12">Wait, quizzes are coming...</div>
+        <div className="text-center text-gray-500  dark:text-gray-400 mt-12">Wait, quizzes are coming...</div>
       ) : (
         <div className="w-full max-w-2xl flex flex-col gap-4 flex-1 min-h-0">
-          <div className="flex justify-between items-center px-2 text-sm font-medium text-gray-500 shrink-0">
+          <div className="flex justify-between items-center px-2 text-sm font-medium text-gray-500 dark:text-gray-400 shrink-0">
             <span>Question {currentQuizIndex + 1} of {quizzes.length}</span>
             <span>{showAnswer ? "Answer revealed" : "Thinking..."}</span>
           </div>
-
-          <Card className="w-full pb-4 flex-1 flex flex-col shadow-sm border-gray-200 min-h-0">
+          <Card className="w-full pb-4 flex-1 flex flex-col shadow-sm border-gray-200 dark:border-gray-800 dark:bg-zinc-900 min-h-0">
             <CardContent className="flex-1 h-full px-4 py-2  flex flex-col">
               {!showAnswer ? (
                 <div className="animate-in fade-in zoom-in-95 duration-200 my-auto">
-                  <h2 className="text-xl sm:text-md font-semibold mb-2 text-gray-900 leading-relaxed">
+                  <h2 className="text-xl sm:text-md font-semibold mb-2 text-gray-900 dark:text-gray-100 leading-relaxed">
                     {currentQuiz.question}
                   </h2>
                   <ul className="space-y-3">
                     {currentQuiz.options.map((option, optionIndex) => (
                       <li 
                         key={optionIndex}
-                        className="p-3 rounded-lg bg-gray-50 border border-gray-100 text-gray-700 hover:bg-gray-100 transition-colors"
+                        className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-gray-100 dark:border-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                       >
                         {option}
                       </li>
@@ -133,16 +132,16 @@ function Quiz() {
                 </div>
               ) : (
                 <div className="animate-in fade-in zoom-in-95 duration-200 min-h-75 flex flex-col items-center justify-center text-center my-auto space-y-4">
-                  <div className="p-4 bg-green-50 rounded-full">
-                    <Sparkles className="w-8 h-8 text-green-600" />
+                  <div className="p-4 bg-green-50 dark:bg-green-900/30 rounded-full">
+                    <Sparkles className="w-8 h-8 text-green-600 dark:text-green-400" />
                   </div>
-                  <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider">Correct Answer</h3>
-                  <p className="text-2xl font-semibold text-gray-900">{currentQuiz.correctAnswer}</p>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Correct Answer</h3>
+                  <p className="text-2xl font-semibold text-gray-900 dark:text-white">{currentQuiz.correctAnswer}</p>
                 </div>
               )}
             </CardContent>
 
-            <CardFooter className="shrink-0 bg-gray-50/50 border-t py-0 flex flex-col gap-3 sm:flex-row  justify-between items-center rounded-b-xl">
+            <CardFooter className=" mt-0.5 bg-gray-50/50 dark:bg-transparent border-t dark:border-gray-800 py-0 flex shrink gap-3 sm:flex-row  justify-between items-center rounded-b-xl">
               <Button 
                 variant="outline"
                 disabled={currentQuizIndex === 0}
@@ -152,7 +151,7 @@ function Quiz() {
                 }}
               >
                 <ChevronLeft className="w-4 h-4 mr-2" />
-                Previous
+                <span className="hidden sm:inline">Previous</span>
               </Button>
 
               <Button 
@@ -171,7 +170,7 @@ function Quiz() {
                   setShowAnswer(false);
                 }}
               >
-                Next
+                <span className="hidden sm:inline">Next</span>
                 <ChevronRight className="w-4 h-4 ml-2" />
               </Button>
             </CardFooter>
