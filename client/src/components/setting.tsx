@@ -13,9 +13,8 @@ function Settings() {
     }
     return "light";
   });
-
+ const [updateStatus, setUpdateStatus] = useState<string | null>(null);
   useEffect(() => {
-    // Toggles the "dark" class on the <html> tag for Tailwind styling
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
     root.classList.add(theme);
@@ -26,6 +25,32 @@ function Settings() {
   const [studyTime, setStudyTime] = useState("18:00");
 
   const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
+  const saveStudyTime = async() => {
+    try{
+        console.log("Saved study reminder time:", studyTime);
+        const reminderHour= Number(studyTime.split(":")[0]);
+        const reminderMinute= Number(studyTime.split(":")[1]); 
+        const token=localStorage.getItem("token");
+        const res= await fetch("http://localhost:8000/api/settings/reminder",{
+            method:"PATCH",
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body:JSON.stringify({ reminderHour, reminderMinute })
+        });
+        const data= await res.json();
+        if (!res.ok) {
+            throw new Error("Failed to save study reminder time");
+        }
+        setUpdateStatus(`${data.message || "Study reminder time updated successfully."}`);
+        setTimeout(() => setUpdateStatus(null), 5000);
+    }catch(err){
+        console.log("Failed to save study reminder time:", err);
+        setUpdateStatus("Failed to save study reminder time. Please try again.");
+        setTimeout(() => setUpdateStatus(null), 5000);
+    }
+  };
 
   return (
     <div className="max-w-3xl py-10 px-4 md:px-8 space-y-8">
@@ -37,7 +62,6 @@ function Settings() {
       </div>
 
       <div className="space-y-6">
-        {/* Appearance Section */}
         <Card>
           <CardHeader>
             <CardTitle>Appearance</CardTitle>
@@ -57,8 +81,6 @@ function Settings() {
             </Button>
           </CardContent>
         </Card>
-
-        {/* Notifications & Reminders Section */}
         <Card>
           <CardHeader>
             <CardTitle>Notifications & Reminders</CardTitle>
@@ -95,10 +117,13 @@ function Settings() {
                   className="max-w-37.5"
                 />
               </div>
-              <Button variant="outline">Save Time</Button>
+              <Button variant="outline" className="hover:scale-105 active:scale-100" onClick={saveStudyTime}>
+                Save Time
+              </Button>
             </div>
           </CardContent>
         </Card>
+        {updateStatus && <p className="text-sm text-muted-foreground">{updateStatus}</p>}
       </div>
     </div>
   );

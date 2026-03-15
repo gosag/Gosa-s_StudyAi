@@ -149,7 +149,7 @@ export const continueConversation = async (req: Request, res: Response, next: Ne
         role:mssg?.message?.[0]?.role || "user",
         content:mssg?.message?.[0]?.text || ""
     }
-   )).slice(-10) // Take only the last 10 messages to keep the context relevant and within token limits.
+   )).slice(-10)
     const conversationHistory:{role: string; content: string}[] = [
         { role: "system", content: "You are a helpful assistant that provides information based on the provided material." },
         { role: "user", content: `Here is the material for reference: ${material.summary}` },
@@ -320,8 +320,6 @@ export const getFlashcardsForReview = async (req: Request, res: Response, next: 
     throw error;
   }
   const userId=req.user._id;
-  
-  // Set the "now" check to the end of the current day so that anything due today is pulled
   const endOfDay = new Date();
   endOfDay.setHours(23, 59, 59, 999);
 
@@ -379,17 +377,14 @@ export const updateFlashcardReview = async (req: Request, res: Response, next: N
         interval = Math.round(interval * easeFactor);
       }
     }
-    // Update ease factor
     easeFactor =
       easeFactor +
       (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02));
     if (easeFactor < 1.3) {
       easeFactor = 1.3;
     }
-    // Calculate next review date
     const nextReviewDate = new Date();
     nextReviewDate.setDate(nextReviewDate.getDate() + interval);
-    // Save updates
     flashcard.difficultyLevel = difficultyLevel;
     flashcard.repetitionCount = repetitionCount;
     flashcard.interval = interval;
@@ -433,8 +428,9 @@ export const uploadReminderSettings= async(req:Request ,res:Response ,next:NextF
       if(!updatedUser){
         const error=new Error("Failed to update user settings") as CustomError;
         error.status=500;
-        throw error
+        throw error;
       }
+      res.json({message:"Study reminder time updated successfully."})
     }catch(error){
       next(error)
     }

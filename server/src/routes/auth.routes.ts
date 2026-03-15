@@ -8,7 +8,7 @@ import {
     getUserData
 } from "../controllers/auth.controller"
 const authRouter=express.Router();
-authRouter.post("/api/auth/register",validate(signUpSchema,"body"), registerController)
-authRouter.post("/api/auth/login",validate(loginSchema,"body"), loginController)
-authRouter.get("/api/auth/:id",protector,getUserData)
+authRouter.post("/api/auth/register",validate(signUpSchema,"body"), registerController);
+authRouter.post("/api/auth/login",validate(loginSchema,"body"), loginController);
+authRouter.get("/api/auth/:id",protector,getUserData);
 export default authRouter;
