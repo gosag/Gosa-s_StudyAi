@@ -32,7 +32,6 @@ function SignUp(){
         if(!res.ok){
           throw new Error (returnedData.message|| "something went wrong sending data to the server")
         }
-        console.log(returnedData.user)
         alert(JSON.stringify(returnedData.user, null, 2))
         reset()
       }
@@ -121,7 +120,7 @@ function SignUp(){
           {/* Button */}
           <button
             type="submit"
-            className="flex w-full justify-center rounded-xl bg-black px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black transition-all active:scale-[0.98]"
+            className="flex w-full justify-center rounded-xl bg-black px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black transition-all active:scale-[0.98]"
           >
             Create account
           </button>

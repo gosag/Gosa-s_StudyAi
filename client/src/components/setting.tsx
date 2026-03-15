@@ -151,6 +151,7 @@ const streakReminderEnable= async()=>{
         <Link to="/login" className="text-sm text-blue-600 hover:underline block text-center">
           Login
           </Link>
+          <Link to="/landingPage" className="text-white">Landing page</Link>
       </div>
     </div>
   );

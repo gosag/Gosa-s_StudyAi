@@ -9,6 +9,7 @@
     "concurrently": "^9.2.1"
   },
   "dependencies": {
+    "framer-motion": "^12.36.0",
     "lucide-react": "^0.577.0",
     "youtube-transcript": "^1.2.1",
     "youtube-transcript-api": "^3.0.6"

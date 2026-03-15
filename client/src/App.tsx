@@ -8,6 +8,7 @@ import MaterialContinue from "./components/material"
 import Quiz from "./components/Quiz"
 import FlashCard from "./components/flashCard"
 import Settings from "./components/setting"
+import LandingPage from "./components/landingPage"
 function App() {
   return (
     <Routes>
@@ -18,6 +19,7 @@ function App() {
         <Route path="settings" element={<Settings/>}/>
         <Route path="signUp" element={<SignUp/>}/>
         <Route path="login" element={<Login />} />
+        <Route path="landingPage" element={<LandingPage/>}/>
         <Route path="library/:id" element={<MaterialContinue/>}/>
         <Route path="library/:id/flashcards" element={<Quiz/>}/>
       </Route>

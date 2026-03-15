@@ -88,7 +88,7 @@ function MainOutLet(){
           <span className="text-white font-bold text-lg">E</span>
         </div>
         <span className="hidden md:block text-lg font-bold text-gray-800 dark:text-zinc-100 tracking-wide truncate">
-          Echo<span className="text-blue-600 dark:text-blue-400">Learn</span>
+          Echo<span className="text-blue-600 dark:text-blue-400"> Study</span>
         </span>
       </div>
 
