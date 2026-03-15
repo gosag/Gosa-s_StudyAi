@@ -35,78 +35,79 @@ function Login(){
         }
     }
     return (
-  <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-indigo-500 via-purple-500 to-pink-500 px-4">
-    
-    <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-8 space-y-6">
+  <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
+    <div className="w-full max-w-md">
       
       {/* Header */}
-      <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-800">EchoLearn</h1>
-        <p className="text-gray-500 mt-1">Welcome back 👋</p>
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">EchoLearn</h1>
+        <p className="text-sm text-gray-500 mt-2">Welcome back to your dashboard</p>
       </div>
 
-      {/* Form */}
-      <form onSubmit={handleSubmit(submitHandler)} className="space-y-5">
+      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-900/5 p-8 sm:p-10">
+        {/* Form */}
+        <form onSubmit={handleSubmit(submitHandler)} className="space-y-6">
 
-        {/* Email */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            {...register("email")}
-            placeholder="example@gmail.com"
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition ${
-              errors.email
-                ? "border-red-500 focus:ring-red-400"
-                : "border-gray-300 focus:ring-indigo-500"
-            }`}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.email.message}
-            </p>
-          )}
-        </div>
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium text-gray-900 mb-2">
+              Email address
+            </label>
+            <input
+              {...register("email")}
+              placeholder="you@example.com"
+              className={`block w-full rounded-xl border-0 py-2.5 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:outline-none sm:text-sm sm:leading-6 transition-all ${
+                errors.email
+                  ? "ring-red-500 focus:ring-red-500"
+                  : "ring-gray-300 focus:ring-black"
+              }`}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-2">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
 
-        {/* Password */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
-          <input
-            type="password"
-            {...register("password")}
-            placeholder="Password"
-            className={`w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 transition ${
-              errors.password
-                ? "border-red-500 focus:ring-red-400"
-                : "border-gray-300 focus:ring-indigo-500"
-            }`}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-medium text-gray-900 mb-2">
+              Password
+            </label>
+            <input
+              type="password"
+              {...register("password")}
+              placeholder="••••••••"
+              className={`block w-full rounded-xl border-0 py-2.5 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:outline-none sm:text-sm sm:leading-6 transition-all ${
+                errors.password
+                  ? "ring-red-500 focus:ring-red-500"
+                  : "ring-gray-300 focus:ring-black"
+              }`}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-2">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
 
-        {/* Button */}
-        <button
-          type="submit"
-          className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200 active:scale-95"
-        >
-          Login
-        </button>
-      </form>
+          {/* Button */}
+          <button
+            type="submit"
+            className="flex w-full justify-center rounded-xl bg-black px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black transition-all active:scale-[0.98]"
+          >
+            Sign in
+          </button>
+        </form>
 
-      {/* Footer */}
-      <p className="text-center text-sm text-gray-500">
-        Don’t have an account?{" "}
-        <span className="text-indigo-600 font-medium cursor-pointer hover:underline">
-          <Link to="/">Sign Up</Link>
-        </span>
-      </p>
+        {/* Footer */}
+        <p className="text-center text-sm text-gray-500 mt-8">
+          Don’t have an account?{" "}
+          <Link to="/signUp" className="font-semibold text-black hover:underline">
+            Sign up
+          </Link>
+        </p>
+      </div>
 
     </div>
   </div>

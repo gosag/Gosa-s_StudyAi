@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-
+import { Link } from "react-router-dom";
 function Settings() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     // Initialize theme from localStorage or system preference
@@ -145,7 +145,12 @@ const streakReminderEnable= async()=>{
           </CardContent>
           {updateStatus && <p className="text-sm text-muted-foreground text-center">{updateStatus}</p>}
         </Card>
-        
+        <Link to="/signup" className="text-sm text-blue-600 hover:underline block text-center">
+          signUP
+        </Link>
+        <Link to="/login" className="text-sm text-blue-600 hover:underline block text-center">
+          Login
+          </Link>
       </div>
     </div>
   );
