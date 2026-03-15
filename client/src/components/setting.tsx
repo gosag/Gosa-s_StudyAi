@@ -118,7 +118,7 @@ const streakReminderEnable= async()=>{
                 </p>
               </div>
               <Button 
-                onClick={() => {setStreakReminders(!streakReminders); streakReminderEnable();}}
+                onClick={() => {setStreakReminders(prev=>!prev); streakReminderEnable();}}
                 variant={streakReminders ? "default" : "secondary"}
               >
                 {streakReminders ? "Enabled" : "Disabled"}

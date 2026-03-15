@@ -419,18 +419,23 @@ export const uploadReminderSettings= async(req:Request ,res:Response ,next:NextF
         throw error
       }
       const updateField:{streakReminderEnabled?:boolean; reminderHour?:number; reminderMinute?:number; timezone?:string}={}
-      const {streakReminderEnabled,reminderHour,reminderMinute,timezone}=req.body;
-      if(streakReminderEnabled){updateField.streakReminderEnabled=true};
-      if(reminderHour) updateField.reminderHour=reminderHour;
-      if(reminderMinute) updateField.reminderMinute=reminderMinute;
-      if(timezone) updateField.timezone=timezone;
-      const updatedUser=await User.findByIdAndUpdate(req.user._id,updateField,{new:true})
+    
+      const {reminderHour,reminderMinute,timezone}=req.body;
+      const streakReminderEnabled=req.body.streakReminders
+
+      if(streakReminderEnabled !== undefined) updateField.streakReminderEnabled = streakReminderEnabled;
+      if(reminderHour !== undefined) updateField.reminderHour = reminderHour;
+      if(reminderMinute !== undefined) updateField.reminderMinute = reminderMinute;
+      if(timezone !== undefined) updateField.timezone = timezone;
+      console.log("Updating user settings with:", updateField);
+      const updatedUser=await User.findByIdAndUpdate(req.user._id, { $set: updateField }, { returnDocument: 'after' })
       if(!updatedUser){
         const error=new Error("Failed to update user settings") as CustomError;
         error.status=500;
         throw error;
       }
-      res.json({message:"Study reminder time updated successfully."})
+      res.json({message:"Study reminder settings updated successfully."})
+      console.log(updatedUser)
     }catch(error){
       next(error)
     }
