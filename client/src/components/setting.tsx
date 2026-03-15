@@ -51,7 +51,28 @@ function Settings() {
         setTimeout(() => setUpdateStatus(null), 5000);
     }
   };
-
+const streakReminderEnable= async()=>{
+    try{
+        const token=localStorage.getItem("token");
+        const res= await fetch("http://localhost:8000/api/settings/reminder",{
+            method:"PATCH",
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body:JSON.stringify({ streakReminders })
+        });
+        const data= await res.json();
+        if (!res.ok) {
+            throw new Error("Failed to update streak reminder setting");
+        }
+        setUpdateStatus(`${data.message || "Streak reminder setting updated successfully."}`);
+        setTimeout(() => setUpdateStatus(null), 5000);
+    }catch(err){
+        setUpdateStatus("Failed to update streak reminder setting. Please try again.");
+        setTimeout(() => setUpdateStatus(null), 5000);
+    }
+}
   return (
     <div className="max-w-3xl py-10 px-4 md:px-8 space-y-8">
       <div>
@@ -97,7 +118,7 @@ function Settings() {
                 </p>
               </div>
               <Button 
-                onClick={() => setStreakReminders(!streakReminders)}
+                onClick={() => {setStreakReminders(!streakReminders); streakReminderEnable();}}
                 variant={streakReminders ? "default" : "secondary"}
               >
                 {streakReminders ? "Enabled" : "Disabled"}
@@ -122,8 +143,9 @@ function Settings() {
               </Button>
             </div>
           </CardContent>
+          {updateStatus && <p className="text-sm text-muted-foreground text-center">{updateStatus}</p>}
         </Card>
-        {updateStatus && <p className="text-sm text-muted-foreground">{updateStatus}</p>}
+        
       </div>
     </div>
   );
