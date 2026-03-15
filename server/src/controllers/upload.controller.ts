@@ -416,7 +416,7 @@ export const getUserStreak = async (req: Request, res: Response, next: NextFunct
     next(error)
   }
 }
-export const uploadReminderSetting= async(req:Request ,res:Response ,next:NextFunction)=>{
+export const uploadReminderSettings= async(req:Request ,res:Response ,next:NextFunction)=>{
     try{
       if(!req.user || !req.user._id){
         const error=new Error("Missing user information") as CustomError;
@@ -429,7 +429,12 @@ export const uploadReminderSetting= async(req:Request ,res:Response ,next:NextFu
       if(reminderHour) updateField.reminderHour=reminderHour;
       if(reminderMinute) updateField.reminderMinute=reminderMinute;
       if(timezone) updateField.timezone=timezone;
-
+      const updatedUser=await User.findByIdAndUpdate(req.user._id,updateField,{new:true})
+      if(!updatedUser){
+        const error=new Error("Failed to update user settings") as CustomError;
+        error.status=500;
+        throw error
+      }
     }catch(error){
       next(error)
     }

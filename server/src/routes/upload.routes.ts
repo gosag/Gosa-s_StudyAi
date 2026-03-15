@@ -11,7 +11,8 @@ import {uploadFile,
         regenerateQuizzesAsync, 
         getFlashcardsForReview, 
         updateFlashcardReview,
-        getUserStreak
+        getUserStreak,
+        uploadReminderSettings
       } from "../controllers/upload.controller";
 const uploadRoute = express.Router();
 const upload=multer({storage:multer.memoryStorage(),
@@ -33,5 +34,5 @@ uploadRoute.post("/api/quizzes/regenerate/:id",protector, regenerateQuizzesAsync
 uploadRoute.get("/api/flashcards/review",protector, getFlashcardsForReview)
 uploadRoute.patch("/api/flashcards/:id/review", protector, updateFlashcardReview);
 uploadRoute.get("/api/streak", protector, getUserStreak);
-uploadRoute.patch("/api/settings/reminder",protector, )
+uploadRoute.patch("/api/settings/reminder",protector, uploadReminderSettings)
 export default uploadRoute;
