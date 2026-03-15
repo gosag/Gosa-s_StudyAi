@@ -185,7 +185,6 @@ useEffect(()=>{async function lastMaterial(){
 }
  lastMaterial()
 }, [])
-console.log(aiData)
   return (
     <div className="max-w-7xl mx-auto p-3 sm:p-6 flex flex-col gap-4 sm:gap-6 w-full min-h-screen">
       {/* Header Section */}
@@ -340,7 +339,7 @@ console.log(aiData)
               </div>
             ))}
           </CardContent>
-          <CardFooter className="p-4 border-t bg-white dark:bg-zinc-950 shrink-0 relative">
+          <CardFooter className="p-4 border-t bg-white dark:bg-zinc-900/50 shrink-0 relative">
             <div className="flex items-center gap-3 w-full">
               <div className="relative">
                 <Button variant="outline" size="icon" className="shrink-0 rounded-full h-11 w-11 relative overflow-hidden bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800">

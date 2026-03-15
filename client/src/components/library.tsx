@@ -65,7 +65,7 @@ useEffect(()=>{
             {materials.length>0?(
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {materials.map((material)=>(
-                <Card key={material._id} className="w-full rounded-2xl shadow-sm  hover:shadow-lg transition-all duration-200 hover:-translate-y-1 bg-white dark:bg-zinc-900 border border-gray-100 dark:border-zinc-800 flex flex-col">
+                <Card key={material._id} className="w-full rounded-2xl shadow-sm  hover:shadow-lg transition-all duration-200 hover:-translate-y-1 bg-white dark:bg-neutral-900 border border-gray-100 dark:border-zinc-800 flex flex-col">
                 <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                     <div className="flex items-start gap-3 w-[85%]">
                         <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg shrink-0">

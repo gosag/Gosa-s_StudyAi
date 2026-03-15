@@ -160,7 +160,7 @@ function FlashCard(){
                 >
                     {/* Front */}
                     <div 
-                        className="absolute inset-0 flex items-center justify-center p-8 sm:p-12 text-center rounded-3xl bg-white dark:bg-zinc-900/50  dark:hover:bg-zinc-900 border border-gray-100 dark:border-zinc-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300"
+                        className="absolute inset-0 flex items-center justify-center p-8 sm:p-12 text-center rounded-3xl bg-white dark:bg-neutral-900  dark:hover:bg-zinc-900 border border-gray-100 dark:border-zinc-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300"
                         style={{ backfaceVisibility: "hidden" }}
                     >
                         <div className="pointer-events-none select-none">
