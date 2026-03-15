@@ -1,4 +1,3 @@
-import express from "express";
 import User from "../models/user.model";
 import Material from "../models/material.model";
 import Chat from "../models/chat.model";

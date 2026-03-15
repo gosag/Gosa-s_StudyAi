@@ -15,7 +15,7 @@ export const updateUserStreak = async (userId: string) => {
     } else if (diffDays === 1) {
       user.currentStreak += 1;
       if (user.currentStreak > user.longestStreak) {
-        user.longestStreak = user.currentStreak;
+        user.longestStreak = user.currentStreak;  
       }
     } else {
     

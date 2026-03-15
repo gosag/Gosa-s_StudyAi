@@ -7,6 +7,7 @@ import Library from "./components/library"
 import MaterialContinue from "./components/material"
 import Quiz from "./components/Quiz"
 import FlashCard from "./components/flashCard"
+import Settings from "./components/setting"
 function App() {
   return (
     <Routes>
@@ -14,7 +15,7 @@ function App() {
         <Route index element={<Home/>}/>
         <Route path="library" element={<Library/>}/>
         <Route path="flashcards" element={<FlashCard/>}/>
-        <Route path="settings" element={<>settings</>}/>
+        <Route path="settings" element={<Settings/>}/>
         <Route path="signUp" element={<SignUp/>}/>
         <Route path="login" element={<Login />} />
         <Route path="library/:id" element={<MaterialContinue/>}/>
