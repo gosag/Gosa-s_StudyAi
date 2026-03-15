@@ -416,3 +416,21 @@ export const getUserStreak = async (req: Request, res: Response, next: NextFunct
     next(error)
   }
 }
+export const uploadReminderSetting= async(req:Request ,res:Response ,next:NextFunction)=>{
+    try{
+      if(!req.user || !req.user._id){
+        const error=new Error("Missing user information") as CustomError;
+        error.status=401;
+        throw error
+      }
+      const updateField:{streakReminderEnabled?:boolean; reminderHour?:number; reminderMinute?:number; timezone?:string}={}
+      const {streakReminderEnabled,reminderHour,reminderMinute,timezone}=req.body;
+      if(streakReminderEnabled){updateField.streakReminderEnabled=true};
+      if(reminderHour) updateField.reminderHour=reminderHour;
+      if(reminderMinute) updateField.reminderMinute=reminderMinute;
+      if(timezone) updateField.timezone=timezone;
+
+    }catch(error){
+      next(error)
+    }
+}

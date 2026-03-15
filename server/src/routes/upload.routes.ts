@@ -32,6 +32,6 @@ uploadRoute.get("/api/quizzes/:id",protector,generateQuizzes)
 uploadRoute.post("/api/quizzes/regenerate/:id",protector, regenerateQuizzesAsync)
 uploadRoute.get("/api/flashcards/review",protector, getFlashcardsForReview)
 uploadRoute.patch("/api/flashcards/:id/review", protector, updateFlashcardReview);
-uploadRoute.get("/api/streak", protector, getUserStreak)
-
+uploadRoute.get("/api/streak", protector, getUserStreak);
+uploadRoute.patch("/api/settings/reminder",protector, )
 export default uploadRoute;
