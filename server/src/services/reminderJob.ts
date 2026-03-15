@@ -46,7 +46,7 @@ cron.schedule("* * * * *", async () => {
     if (lastStudy.getTime() !== today.getTime()) {
         if(user.streakReminderEnabled){
             console.log(`Send reminder to ${user.email}`)
-            await sendEmail(user.email, "Study Reminder ", "Don't forget to study today!")
+            await sendEmail(user.email, "Study Reminder ", "Don't forget to study today! and keep your streak alive! 🔥")
         } 
     }
   }}catch(err){
