@@ -9,7 +9,6 @@ export const updateUserStreak = async (userId: string) => {
     const lastActivity = new Date(Date.UTC(lastDate.getUTCFullYear(), lastDate.getUTCMonth(), lastDate.getUTCDate()));
     const diffTime = Math.abs(today.getTime() - lastActivity.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-    
     if (diffDays === 0) {
       if (user.currentStreak === 0) {
         user.currentStreak = 1;
