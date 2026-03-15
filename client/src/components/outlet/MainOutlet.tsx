@@ -29,8 +29,8 @@ function MainOutLet(){
     fetchStreak()
   }, [location.pathname])
     return(
-<div className="flex min-h-screen">
-    <aside className="sticky top-0 h-screen w-16 md:w-60 bg-white shadow-[4px_0_24px_rgba(0,0,0,0.05)] flex flex-col transition-all duration-300 shrink-0 z-50">
+<div className="flex min-h-screen bg-white dark:bg-zinc-950 text-gray-900 dark:text-zinc-100">
+    <aside className="sticky top-0 h-screen w-16 md:w-60 bg-white dark:bg-zinc-950 shadow-[4px_0_24px_rgba(0,0,0,0.05)] dark:shadow-none dark:border-r dark:border-zinc-800 flex flex-col transition-all duration-300 shrink-0 z-50">
 
       {/* 🔥 Realistic Fire Animation Styles */}
       <style>{`
@@ -77,12 +77,12 @@ function MainOutLet(){
 `}</style>
 
       {/* Logo */}
-      <div className="flex items-center justify-center md:justify-start gap-3 px-2 md:px-4 py-6 border-b">
+      <div className="flex items-center justify-center md:justify-start gap-3 px-2 md:px-4 py-6 border-b dark:border-zinc-800">
         <div className="h-9 w-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-md shrink-0">
           <span className="text-white font-bold text-lg">E</span>
         </div>
-        <span className="hidden md:block text-lg font-bold text-gray-800 tracking-wide truncate">
-          Echo<span className="text-blue-600">Learn</span>
+        <span className="hidden md:block text-lg font-bold text-gray-800 dark:text-zinc-100 tracking-wide truncate">
+          Echo<span className="text-blue-600 dark:text-blue-400">Learn</span>
         </span>
       </div>
 
@@ -97,8 +97,8 @@ function MainOutLet(){
               className={({ isActive }) =>
                 `flex items-center justify-center md:justify-start gap-3 px-2 md:px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
                 ${isActive 
-                  ? "bg-blue-50 text-blue-600" 
-                  : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"}`
+                  ? "bg-blue-50 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400" 
+                  : "text-gray-700 dark:text-zinc-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"}`
               }
             >
               <Home className="h-5 w-5 shrink-0" />
@@ -113,8 +113,8 @@ function MainOutLet(){
               className={({ isActive }) =>
                 `flex items-center justify-center md:justify-start gap-3 px-2 md:px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
                 ${isActive 
-                  ? "bg-blue-50 text-blue-600" 
-                  : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"}`
+                  ? "bg-blue-50 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400" 
+                  : "text-gray-700 dark:text-zinc-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"}`
               }
             >
               <Library className="h-5 w-5 shrink-0" />
@@ -129,8 +129,8 @@ function MainOutLet(){
               className={({ isActive }) =>
                 `flex items-center justify-center md:justify-start gap-3 px-2 md:px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
                 ${isActive 
-                  ? "bg-blue-50 text-blue-600" 
-                  : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"}`
+                  ? "bg-blue-50 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400" 
+                  : "text-gray-700 dark:text-zinc-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"}`
               }
             >
               <Layers className="h-5 w-5 shrink-0" />
@@ -145,8 +145,8 @@ function MainOutLet(){
               className={({ isActive }) =>
                 `flex items-center justify-center md:justify-start gap-3 px-2 md:px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200
                 ${isActive 
-                  ? "bg-blue-50 text-blue-600" 
-                  : "text-gray-700 hover:bg-blue-50 hover:text-blue-600"}`
+                  ? "bg-blue-50 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400" 
+                  : "text-gray-700 dark:text-zinc-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400"}`
               }
             >
               <Settings className="h-5 w-5 shrink-0" />
@@ -160,7 +160,7 @@ function MainOutLet(){
       {/* 🔥 Streak Section */}
       <div className="px-2 md:px-4 pb-6 mt-auto shrink-0">
         <div
-          className="bg-linear-to-br from-orange-50 to-orange-100 border border-orange-200 shadow-md rounded-xl p-2 md:p-3 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3"
+          className="bg-linear-to-br from-orange-50 to-orange-100 dark:from-orange-950/40 dark:to-orange-900/20 border border-orange-200 dark:border-orange-900/50 shadow-md rounded-xl p-2 md:p-3 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3"
           title="5 Day Study Streak!"
         >
           <div className="fire-wrapper w-6 h-6 md:w-7 md:h-7 shrink-0">
