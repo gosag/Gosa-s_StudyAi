@@ -20,6 +20,7 @@ const sendEmail = async (to:string, subject:string, text:string) => {
         const info = await transporter.sendMail(mailOptions)
         console.log(`Email sent to ${to}:`, info.response)
     } catch (error) {
+
         console.error(`Error sending email to ${to}:`, error)
     }
 }
@@ -43,11 +44,10 @@ cron.schedule("* * * * *", async () => {
     lastStudy.setHours(0,0,0,0)
 
     if (lastStudy.getTime() !== today.getTime()) {
-
-      console.log(`Send reminder to ${user.email}`)
-
-      // send email / push notification
-      sendEmail(user.email, "Study Reminder ", "Don't forget to study today!")
+        if(user.streakReminderEnabled){
+            console.log(`Send reminder to ${user.email}`)
+            await sendEmail(user.email, "Study Reminder ", "Don't forget to study today!")
+        } 
     }
   }}catch(err){
     console.log("Error in reminder job:", err)
