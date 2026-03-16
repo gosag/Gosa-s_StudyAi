@@ -35,6 +35,8 @@ function MainOutLet(){
     root.classList.add(theme);
   }, []);
     return(
+<>
+
 <div className="flex min-h-screen bg-white dark:bg-zinc-950 text-gray-900 dark:text-zinc-100">
     <aside className="sticky top-0 h-screen w-16 md:w-60 bg-white dark:bg-zinc-950 shadow-[4px_0_24px_rgba(0,0,0,0.05)] dark:shadow-none dark:border-r dark:border-zinc-800 flex flex-col transition-all duration-300 shrink-0 z-50">
 
@@ -206,6 +208,7 @@ function MainOutLet(){
       <Outlet/>
     </main>
 </div>
+</>
     )
 }
 export default MainOutLet;
