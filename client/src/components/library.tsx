@@ -15,9 +15,11 @@ interface IMaterial {
   materialType:MType
 }
 const [materials,setMaterials]=useState<IMaterial[]>([])
+const [loading,setLoading]=useState(false)
 useEffect(()=>{
     const fetchData=async()=>{
         try{
+            setLoading(true)
             const token=localStorage.getItem("token")
             const res = await fetch("http://localhost:8000/api/materials",{
                 method:"GET",
@@ -32,6 +34,8 @@ useEffect(()=>{
             setMaterials(data.materials || []);
         } catch(error){
             console.log(error)
+        }finally{
+            setLoading(false)
         }
     };
     fetchData()
@@ -99,7 +103,10 @@ useEffect(()=>{
                         </Button>
                     </Link>
                 </CardFooter>
-            </Card>))}</div>):(<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            </Card>))}</div>):(
+                <div>
+                {loading?(
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                     <Card key={i} className="w-full rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-sm animate-pulse flex flex-col h-full dark:bg-zinc-900">
                         <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
@@ -119,6 +126,24 @@ useEffect(()=>{
                         </CardFooter>
                     </Card>
                 ))}
+               </div>
+                ):(
+                    <div className="flex flex-col items-center justify-center py-20 px-4 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-2xl bg-gray-50/50 dark:bg-zinc-900/50 max-w-3xl mx-auto mt-8">
+                        <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-full mb-5">
+                            <FileText className="w-10 h-10 text-blue-600 dark:text-blue-400" />
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-900 dark:text-zinc-100 mb-2">Your library is empty</h3>
+                        <p className="text-gray-500 dark:text-zinc-400 max-w-md mx-auto mb-8 leading-relaxed">
+                            You haven't added any materials yet. Upload a document or add a link to start generating interactive quizzes and flashcards.
+                        </p>
+                        <Link to="/material">
+                            <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-xl font-medium shadow-sm transition-all duration-200">
+                                Add New Material
+                            </Button>
+                        </Link>
+                    </div>
+                )}
+                
             </div>)}
             </div>
         </>
