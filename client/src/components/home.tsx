@@ -24,6 +24,7 @@ function Home() {
   const [aiData, setAiData] = useState<{role: string, content: string}[]>([]);
   const [lastMaterial, setLastMaterial]=useState<IMaterial | null>(null)
   const [error,setError]=useState<string | null>(null)
+  const [materailLoading,setMaterialLoading]=useState(false)
   function isYoutubeLink(link: string) {
   try {
     const url = new URL(link)
@@ -166,6 +167,7 @@ const continueHandler=async ()=>{
   }
 useEffect(()=>{async function lastMaterial(){
   try{
+    setMaterialLoading(true);
     const token=localStorage.getItem("token");
     const res=await fetch("http://localhost:8000/api/materials",{
       headers:{
@@ -181,6 +183,8 @@ useEffect(()=>{async function lastMaterial(){
     }
   }catch(error){
     console.log(error);
+  } finally{
+    setMaterialLoading(false);
   }
 }
  lastMaterial()
@@ -303,21 +307,37 @@ useEffect(()=>{async function lastMaterial(){
                 </CardFooter>
               </Card>
           </div>):(
-            <div className="hidden lg:flex items-center justify-center p-8 bg-zinc-50/50 dark:bg-zinc-900/50 rounded-xl h-full border border-zinc-200 dark:border-zinc-800 border-dashed">
-              <Card className="w-full max-w-md p-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 animate-pulse">
-                <CardHeader className="p-0 mb-4">
-                  <div className="h-6 w-32 rounded-full bg-zinc-200 dark:bg-zinc-800"></div>
-                </CardHeader>
-                <CardContent className="p-0 space-y-3">
-                  <div className="h-7 w-11/12 rounded-md bg-zinc-200 dark:bg-zinc-800"></div>
-                  <div className="h-4 w-3/4 rounded-md bg-zinc-200 dark:bg-zinc-800"></div>
-                  <div className="h-4 w-4/5 rounded-md bg-zinc-200 dark:bg-zinc-800"></div>
-                </CardContent>
-                <CardFooter className="p-0 mt-6 grid grid-cols-2 gap-3">
-                  <div className="h-10 rounded-xl bg-zinc-200 dark:bg-zinc-800"></div>
-                  <div className="h-10 rounded-xl bg-zinc-200 dark:bg-zinc-800"></div>
-                </CardFooter>
-              </Card>
+            <div>
+              {materailLoading?(
+                <div className="hidden lg:flex items-center justify-center p-8 bg-zinc-50/50 dark:bg-zinc-900/50 rounded-xl h-full border border-zinc-200 dark:border-zinc-800 border-dashed">
+                <Card className="w-full max-w-md p-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 animate-pulse">
+                  <CardHeader className="p-0 mb-4">
+                    <div className="h-6 w-32 rounded-full bg-zinc-200 dark:bg-zinc-800"></div>
+                  </CardHeader>
+                  <CardContent className="p-0 space-y-3">
+                    <div className="h-7 w-11/12 rounded-md bg-zinc-200 dark:bg-zinc-800"></div>
+                    <div className="h-4 w-3/4 rounded-md bg-zinc-200 dark:bg-zinc-800"></div>
+                    <div className="h-4 w-4/5 rounded-md bg-zinc-200 dark:bg-zinc-800"></div>
+                  </CardContent>
+                  <CardFooter className="p-0 mt-6 grid grid-cols-2 gap-3">
+                    <div className="h-10 rounded-xl bg-zinc-200 dark:bg-zinc-800"></div>
+                    <div className="h-10 rounded-xl bg-zinc-200 dark:bg-zinc-800"></div>
+                  </CardFooter>
+                </Card>
+               </div>
+              ):(
+                <div className="hidden min-h-115 lg:flex flex-col items-center justify-center p-8 bg-zinc-50/50 dark:bg-zinc-900/50 rounded-xl h-full border border-zinc-200 dark:border-zinc-800 border-dashed text-center gap-4">
+                  <div className="p-4 bg-zinc-100 dark:bg-zinc-800 rounded-full">
+                    <Brain className="w-8 h-8 text-zinc-400 dark:text-zinc-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-1">No Recent Materials</h3>
+                    <p className="text-sm text-zinc-500 dark:text-zinc-400 max-w-xs">
+                      Upload a PDF or paste a link on the left to start generating your study content.
+                    </p>
+                  </div>
+               </div>)}
+            
             </div>
           )}
         </div>
