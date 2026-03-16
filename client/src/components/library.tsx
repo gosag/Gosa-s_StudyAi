@@ -21,7 +21,7 @@ useEffect(()=>{
         try{
             setLoading(true)
             const token=localStorage.getItem("token")
-            const res = await fetch("http://localhost:8000/api/materials",{
+            const res = await fetch(`${import.meta.env.VITE_API_URL}/api/materials`,{
                 method:"GET",
                 headers:{
                     "Authorization":`Bearer ${token}`
@@ -44,7 +44,7 @@ useEffect(()=>{
    try{
    const filteredMaterials= materials.filter(material=> material._id!==materialId);
     const token = localStorage.getItem("token");
-    const res=await fetch(`http://localhost:8000/api/delete/${materialId}`,{
+    const res=await fetch(`${import.meta.env.VITE_API_URL}/api/delete/${materialId}`,{
         method:"DELETE",
         headers:{
             "Content-Type":"application/json",

@@ -10,7 +10,7 @@ function MainOutLet(){
     async function fetchStreak(){
       try{
         const token=localStorage.getItem("token");
-        const res=await fetch("http://localhost:8000/api/streak",{
+        const res=await fetch(`${import.meta.env.VITE_API_URL}/api/streak`,{
           method:"GET",
           headers:{
             "Authorization":`Bearer ${token}`

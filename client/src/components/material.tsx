@@ -18,7 +18,7 @@ function MaterialContinue(){
     useEffect(()=>{async function fetchMaterial(){
         try{ 
             const token=localStorage.getItem("token");
-            const res=await fetch(`http://localhost:8000/api/materials/${id}`,{
+            const res=await fetch(`${import.meta.env.VITE_API_URL}/api/materials/${id}`,{
                 method:"GET",
                 headers:{
                     "Authorization":`Bearer ${token}`
@@ -42,7 +42,7 @@ function MaterialContinue(){
   setLoading(true);
   setMaterial(prev=>[...prev,{role:"user",content:link}]);
   const token=localStorage.getItem("token");
-  const res=await fetch("http://localhost:8000/api/continue",{
+  const res=await fetch(`${import.meta.env.VITE_API_URL}/api/continue`,{
     method:"POST",
     headers:{
       "Content-Type":"application/json",

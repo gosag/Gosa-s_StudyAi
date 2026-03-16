@@ -13,7 +13,7 @@ function FlashCard(){
     useEffect(()=>{async function fetchFlashCards(){
         try{
             const token=localStorage.getItem("token");
-            const res=await fetch("http://localhost:8000/api/flashcards/review",{
+            const res=await fetch(`${import.meta.env.VITE_API_URL}/api/flashcards/review`,{
                 method:"GET",
                 headers:{
                     "Authorization":`Bearer ${token}`
@@ -38,7 +38,7 @@ function FlashCard(){
     const handleDifficulty=async (difficulty:string)=>{
         try{
             const token=localStorage.getItem("token")
-            const res=await fetch(`http://localhost:8000/api/flashcards/${currentCard._id}/review`,{
+            const res=await fetch(`${import.meta.env.VITE_API_URL}/api/flashcards/${currentCard._id}/review`,{
                 method:"PATCH",
                 headers:{
                     "Content-Type":"application/json",

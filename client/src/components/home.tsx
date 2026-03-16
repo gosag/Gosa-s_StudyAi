@@ -44,7 +44,7 @@ const fileHandler=async (file: File)=>{
         
         const token = localStorage.getItem("token"); // Get your token from storage
         
-        const res = await fetch("http://localhost:8000/api/uploads/file", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/uploads/file`, {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${token}`
@@ -74,7 +74,7 @@ const linkHandler=async (link: string)=>{
       setLoading(true)
       const token = localStorage.getItem("token"); // Get your token from storage
       
-      const res = await fetch("http://localhost:8000/api/uploads/link", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/uploads/link`, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
@@ -106,7 +106,7 @@ const continueHandler=async ()=>{
   setLoading(true);
   setAiData(prev=>[...prev,{role:"user",content:link}]);
   const token=localStorage.getItem("token");
-  const res=await fetch("http://localhost:8000/api/continue",{
+  const res=await fetch(`${import.meta.env.VITE_API_URL}/api/continue`,{
     method:"POST",
     headers:{
       "Content-Type":"application/json",
@@ -169,7 +169,7 @@ useEffect(()=>{async function lastMaterial(){
   try{
     setMaterialLoading(true);
     const token=localStorage.getItem("token");
-    const res=await fetch("http://localhost:8000/api/materials",{
+    const res=await fetch(`${import.meta.env.VITE_API_URL}/api/materials`,{
       headers:{
         "Authorization":`Bearer ${token}`
       }

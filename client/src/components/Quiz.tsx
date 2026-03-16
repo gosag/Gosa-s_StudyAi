@@ -29,7 +29,7 @@ function Quiz() {
       if (!id) return;
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(`http://localhost:8000/api/quizzes/${id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/quizzes/${id}`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -57,7 +57,7 @@ function Quiz() {
     try{
       setQuizesLoader(true)
       const token=localStorage.getItem("token")
-      const res=await fetch(`http://localhost:8000/api/quizzes/regenerate/${id}`,{
+      const res=await fetch(`${import.meta.env.VITE_API_URL}/api/quizzes/regenerate/${id}`,{
         method:"POST",
         headers:{
           "Authorization":`Bearer ${token}`

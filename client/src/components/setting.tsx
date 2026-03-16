@@ -29,7 +29,7 @@ function Settings() {
         const reminderHour= Number(studyTime.split(":")[0]);
         const reminderMinute= Number(studyTime.split(":")[1]); 
         const token=localStorage.getItem("token");
-        const res= await fetch("http://localhost:8000/api/settings/reminder",{
+        const res= await fetch(`${import.meta.env.VITE_API_URL}/api/settings/reminder`,{
             method:"PATCH",
             headers:{
                 "Content-Type":"application/json",
@@ -52,7 +52,7 @@ function Settings() {
 const streakReminderEnable= async()=>{
     try{
         const token=localStorage.getItem("token");
-        const res= await fetch("http://localhost:8000/api/settings/reminder",{
+        const res= await fetch(`${import.meta.env.VITE_API_URL}/api/settings/reminder`,{
             method:"PATCH",
             headers:{
                 "Content-Type":"application/json",
