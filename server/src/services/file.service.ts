@@ -22,7 +22,6 @@ const extractTextFromFile = async (buffer: Buffer, mimetype: string) => {
             };
         } 
         else if (mimetype.startsWith("text/")) {
-            // Plain Text, Markdown, CSV can just be decoded directly
             return {
                 text: buffer.toString('utf-8'),
                 numpages: null,

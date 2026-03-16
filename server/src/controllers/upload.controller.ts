@@ -3,7 +3,7 @@ import Material from "../models/material.model";
 import Chat from "../models/chat.model";
 import Quiz from "../models/quiz.model"
 import Flashcard from "../models/flashCard.model";
-import extractTextFromFile from "../services/pdf.service";
+import extractTextFromFile from "../services/file.service";
 import { getYoutubeTranscript } from "../services/youtube.service";
 import { generateFlashCards, generateResponse, quizGenerator, regenerateQuizzes } from "../services/gemini.service";
 import {updateUserStreak } from "../services/streak.service";
