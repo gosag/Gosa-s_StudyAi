@@ -31,7 +31,9 @@ function SignUp(){
         })
         const returnedData=await res.json()
         if(!res.ok){
-          throw new Error (returnedData.message|| "something went wrong sending data to the server")
+          console.log("Server responded with HTTP ", res.status, returnedData);
+          const errMsg = returnedData.message || returnedData.error || (returnedData.errors && returnedData.errors[0]?.message) || "something went wrong sending data to the server";
+          throw new Error(errMsg);
         }
         reset()
         alert("account created successfully, you can now log in")

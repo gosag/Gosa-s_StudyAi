@@ -23,7 +23,9 @@ function Login(){
         })
         const result=await res.json()
         if(!res.ok){
-          throw new Error(result.message||"something went wrong")
+          console.log("Server responded with HTTP ", res.status, result);
+          const errMsg = result.message || result.error || (result.errors && result.errors[0]?.message) || "something went wrong";
+          throw new Error(errMsg);
         }
         localStorage.setItem("token", result.token)
         reset();
