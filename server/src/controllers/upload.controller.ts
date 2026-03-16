@@ -20,7 +20,7 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
     }
     console.log(req.file)
     try{
-        const extractedText = await extractTextFromFile(req.file.buffer);
+        const extractedText = await extractTextFromFile(req.file.buffer, req.file.mimetype);
         console.log(`Extracted text length: ${extractedText.text.length} characters`);
         const response = await generateResponse(`Hey Gemini, summarize the following text in a concise manner: ${extractedText.text}`);
         console.log(`[Gemini Summary] ${response.length} characters`);

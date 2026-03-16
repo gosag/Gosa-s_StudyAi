@@ -40,7 +40,7 @@ function Home() {
 const fileHandler=async (file: File)=>{
   setLoading(true)
         const formData = new FormData();
-        formData.append("pdf", file)
+        formData.append("file", file)
         
         const token = localStorage.getItem("token"); // Get your token from storage
         
@@ -230,7 +230,7 @@ useEffect(()=>{async function lastMaterial(){
                   }} 
                   type="file" 
                   name="pdf" 
-                  accept="application/pdf"  
+                  accept="application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain,text/markdown,text/csv"
                   className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer"
                 />
               </div>

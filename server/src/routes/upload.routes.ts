@@ -15,15 +15,25 @@ import {uploadFile,
         uploadReminderSettings
       } from "../controllers/upload.controller";
 const uploadRoute = express.Router();
-const upload=multer({storage:multer.memoryStorage(),
-    limits:{fileSize:15*1024*1024},
-    fileFilter:(req,file,cb)=>{
-        if(file.mimetype!=="application/pdf"){
-            return cb(new Error("Only PDF files are allowed"))
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 15 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        // Allowed MIME types
+        const allowedTypes = [
+            "application/pdf", // PDF
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
+            "text/plain", // .txt
+            "text/markdown", // .md
+            "text/csv" // .csv
+        ];
+        if (!allowedTypes.includes(file.mimetype)) {
+            return cb(new Error("File type not supported. Upload PDF, DOCX, TXT, MD, or CSV."));
         }
-        cb(null,true)      
-}});
-    uploadRoute.post("/api/uploads/file",protector, upload.single("pdf"), uploadFile)
+        cb(null, true);
+    }
+});
+    uploadRoute.post("/api/uploads/file",protector, upload.single("file"), uploadFile)
     uploadRoute.post("/api/uploads/link",protector, uploadLink);
     uploadRoute.post("/api/continue",protector, continueConversation)
     uploadRoute.get("/api/materials",protector, getUserMaterials)

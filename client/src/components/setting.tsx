@@ -2,10 +2,8 @@ import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import { Link } from "react-router-dom";
 function Settings() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
-    // Initialize theme from localStorage or system preference
     if (typeof window !== "undefined") {
       const savedTheme = localStorage.getItem("theme");
       if (savedTheme === "dark" || savedTheme === "light") return savedTheme;
@@ -14,7 +12,7 @@ function Settings() {
     return "light";
   });
  const [updateStatus, setUpdateStatus] = useState<string | null>(null);
-  useEffect(() => {
+  useEffect(() => { 
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
     root.classList.add(theme);
@@ -145,13 +143,6 @@ const streakReminderEnable= async()=>{
           </CardContent>
           {updateStatus && <p className="text-sm text-muted-foreground text-center">{updateStatus}</p>}
         </Card>
-        <Link to="/signup" className="text-sm text-blue-600 hover:underline block text-center">
-          signUP
-        </Link>
-        <Link to="/login" className="text-sm text-blue-600 hover:underline block text-center">
-          Login
-          </Link>
-          <Link to="/landingPage" className="text-white">Landing page</Link>
       </div>
     </div>
   );
