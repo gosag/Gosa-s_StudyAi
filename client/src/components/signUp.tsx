@@ -38,9 +38,9 @@ function SignUp(){
         navigate("/login", { replace: true })
         
       }
-    catch(error){
+    catch(error: any){
       console.error(error);
-      alert("An error occurred while creating your account. Please try again.")
+      alert(error.message || "An error occurred while creating your account. Please try again.")
     }}   
   return (
   <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">

@@ -30,8 +30,9 @@ function Login(){
         window.location.href = "/";
         
       }
-        catch(error){
+        catch(error: any){
           console.error(error)
+          alert(error.message || "An error occurred while logging in. Please try again.")
         }
     }
     return (
