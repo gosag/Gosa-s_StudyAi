@@ -28,6 +28,9 @@ app.use(cors(corsOptions))
 //routes
 app.use(uploadRoute)
 app.use(authRouter)
+app.get("/",(req,res)=>{
+    res.send("Welcome to EchoLearn API")
+})
 //error handler
 app.use(errorHandler)
 export default app;

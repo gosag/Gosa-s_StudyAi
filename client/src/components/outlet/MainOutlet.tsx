@@ -19,6 +19,11 @@ function MainOutLet(){
         const data= await res.json()
         if(!res.ok){
           console.log(`${ "Something went wrong "} `)
+          if(res.status === 401 || res.status === 404){
+            localStorage.removeItem("token");
+            window.location.href = "/login";
+          }
+          return;
         }
         const cStreak=Number(data.currentStreak)
         setCurrentStreak(cStreak)
