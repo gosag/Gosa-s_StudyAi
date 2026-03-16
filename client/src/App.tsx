@@ -9,7 +9,6 @@ import Quiz from "./components/Quiz"
 import FlashCard from "./components/flashCard"
 import Settings from "./components/setting"
 import LandingPage from "./components/landingPage"
-
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
   return (

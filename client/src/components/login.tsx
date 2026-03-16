@@ -25,10 +25,10 @@ function Login(){
         if(!res.ok){
           throw new Error(result.message||"something went wrong")
         }
-        console.log(result.user)
         localStorage.setItem("token", result.token)
-        alert(JSON.stringify(result.user, null, 2))
-        reset()
+        reset();
+        window.location.href = "/";
+        
       }
         catch(error){
           console.error(error)
@@ -40,7 +40,7 @@ function Login(){
       
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">EchoLearn</h1>
+        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">EchoStudy</h1>
         <p className="text-sm text-gray-500 mt-2">Welcome back to your dashboard</p>
       </div>
 

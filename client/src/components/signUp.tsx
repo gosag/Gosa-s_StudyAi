@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {Link} from "react-router-dom"
+import {Link, useNavigate} from "react-router-dom"
 import {z} from "zod"
 const signUpSchema=z.object({
     email:z.email(),
@@ -12,6 +12,7 @@ const signUpSchema=z.object({
 })
 type typesignUpSchema=z.infer<typeof signUpSchema>
 function SignUp(){
+    const navigate = useNavigate();
     const {
      register,
      handleSubmit,
@@ -32,12 +33,14 @@ function SignUp(){
         if(!res.ok){
           throw new Error (returnedData.message|| "something went wrong sending data to the server")
         }
-        alert(JSON.stringify(returnedData.user, null, 2))
         reset()
+        alert("account created successfully, you can now log in")
+        navigate("/login", { replace: true })
+        
       }
     catch(error){
       console.error(error);
-      alert(error)
+      alert("An error occurred while creating your account. Please try again.")
     }}   
   return (
   <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
@@ -45,7 +48,7 @@ function SignUp(){
       
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">EchoLearn</h1>
+        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">EchoStudy</h1>
         <p className="text-sm text-gray-500 mt-2">Create your account to get started</p>
       </div>
 
