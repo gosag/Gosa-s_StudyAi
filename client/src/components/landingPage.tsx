@@ -1,8 +1,20 @@
 import { motion } from 'framer-motion';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Brain, BookOpen, PenTool, TrendingUp, Presentation, PlayCircle, MessageSquare, Book, Github, Twitter, Linkedin, ChevronRight, Zap } from 'lucide-react';
+import { Brain, BookOpen, PenTool, TrendingUp, Presentation, PlayCircle, MessageSquare, Book, ChevronRight, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+const Github = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.2c3-.3 6-1.5 6-6.5a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 5 3 6.2 6 6.5a4.8 4.8 0 0 0-1 3.2v4"/><path d="M9 18c-4.5 1.5-5-2.5-7-3"/></svg>
+);
+
+const Linkedin = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
+);
+
+const Twitter = ({ className }: { className?: string }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+);
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -29,7 +41,6 @@ const Navbar = () => (
       <nav className="hidden md:flex gap-6 text-sm font-medium text-muted-foreground">
         <a href="#features" className="hover:text-foreground transition-colors">Features</a>
         <a href="#how-it-works" className="hover:text-foreground transition-colors">How It Works</a>
-        <a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a>
         <a href="https://github.com/gosag" target="_blank" rel="noreferrer" className="hover:text-foreground transition-colors flex items-center gap-1">
           <Github className="h-4 w-4" /> GitHub
         </a>
@@ -117,7 +128,7 @@ const Features = () => {
       <div className="container mx-auto px-4">
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl mb-4">Everything you need to master any subject</h2>
-          <p className="text-lg text-muted-foreground">Stop memorizing, start understanding. EchoLearn provides a complete suite of AI tools designed for deep learning.</p>
+          <p className="text-lg text-muted-foreground">Stop memorizing, start understanding. EchoStudy provides a complete suite of AI tools designed for deep learning.</p>
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -307,7 +318,7 @@ const Footer = () => (
           <div className="flex gap-4 pt-2">
             <a href="#" className="text-muted-foreground hover:text-foreground transition-colors"><Twitter className="h-5 w-5" /></a>
             <a href="https://github.com/gosag" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-foreground transition-colors"><Github className="h-5 w-5" /></a>
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors"><Linkedin className="h-5 w-5" /></a>
+            <a href="https://linkedin.com/in/gosa-girma-b7b256326" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-foreground transition-colors"><Linkedin className="h-5 w-5" /></a>
           </div>
         </div>
         
@@ -315,7 +326,6 @@ const Footer = () => (
           <h4 className="font-semibold">Product</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li><a href="#features" className="hover:text-foreground transition-colors">Features</a></li>
-            <li><a href="#pricing" className="hover:text-foreground transition-colors">Pricing</a></li>
             <li><a href="#" className="hover:text-foreground transition-colors">Changelog</a></li>
           </ul>
         </div>
@@ -323,20 +333,10 @@ const Footer = () => (
         <div className="space-y-4">
           <h4 className="font-semibold">Resources</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><a href="#" className="hover:text-foreground transition-colors">Blog</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">Community</a></li>
             <li><a href="#" className="hover:text-foreground transition-colors">Help Center</a></li>
           </ul>
         </div>
-
-        <div className="space-y-4">
-          <h4 className="font-semibold">Legal</h4>
-          <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><a href="#" className="hover:text-foreground transition-colors">Privacy Policy</a></li>
-            <li><a href="#" className="hover:text-foreground transition-colors">Terms of Service</a></li>
-          </ul>
-        </div>
-      </div>
+          </div>
       
       <div className="mt-12 pt-8 border-t text-center text-sm text-muted-foreground">
         <p>&copy; {new Date().getFullYear()} EchoStudy. All rights reserved.</p>

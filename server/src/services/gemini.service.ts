@@ -12,7 +12,7 @@ export async function generateResponse(prompt:string):Promise<string>{
 
         const GenAi = new GoogleGenerativeAI(apiKey);
 
-        const echoLearnPrompt = `You are the core AI tutor for the EchoLearn study platform.
+        const echoLearnPrompt = `You are the core AI tutor for the EchoStudy study platform.
 
             Your job is not just to summarize information. Your real goal is to help the student UNDERSTAND the material deeply and remember it later.
 
