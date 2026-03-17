@@ -330,7 +330,7 @@ export const getFlashcardsForReview = async (req: Request, res: Response, next: 
   endOfDay.setHours(23, 59, 59, 999);
 
   const flashcards=await Flashcard.find({userId,nextReviewDate:{ $lte: endOfDay }}).limit(20);
-  if(!flashcards || flashcards.length===0){
+  if(!flashcards){
     const error=new Error("No flashcards are due for review") as CustomError;
     error.status=404;
     throw error;

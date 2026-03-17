@@ -1,9 +1,14 @@
 import cron from "node-cron"
 import User from "../models/user.model";
 import nodeMailer from "nodemailer"
+import dotenv from "dotenv"
+
+dotenv.config()
 
 const transporter = nodeMailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
@@ -34,6 +39,7 @@ cron.schedule("* * * * *", async () => {
     reminderMinute: minute,
     streakReminderEnabled: true
   })
+  console.log(`Cron running at ${hour}:${minute}`);
   for (const user of users) {
     const lastActivity = new Date(user.lastActivityDate)
 
@@ -43,12 +49,12 @@ cron.schedule("* * * * *", async () => {
     const lastStudy = new Date(lastActivity)
     lastStudy.setHours(0,0,0,0)
 
-    if (lastStudy.getTime() !== today.getTime()) {
+   /*  if (lastStudy.getTime() !== today.getTime()) { */
         if(user.streakReminderEnabled){
             console.log(`Send reminder to ${user.email}`)
             await sendEmail(user.email, "Study Reminder ", "Don't forget to study today! and keep your streak alive! 🔥")
         } 
-    }
+   /*  } */
   }}catch(err){
     console.log("Error in reminder job:", err)
   }
