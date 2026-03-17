@@ -2,10 +2,14 @@ import { useForm } from "react-hook-form";
 import {z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 const loginSchema=z.object({
     email:z.email(),
     password:z.string().min(6,"at least 6 characters are required")
 })
+useEffect(()=>{
+  document.title="EchoStudy - Your Path to Mastery"
+},[])
 type TloginSchema= z.infer<typeof loginSchema>
 function Login(){
     const {
