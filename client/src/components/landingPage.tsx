@@ -30,9 +30,6 @@ const staggerContainer = {
     }
   }
 };
-useEffect(()=>{
-  document.title="EchoStudy - Your Path to Mastery"
-},[])
 
 const Navbar = () => (
   <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -349,6 +346,10 @@ const Footer = () => (
 );
 
 export default function LandingPage() {
+  useEffect(() => {
+    document.title = "EchoStudy - Your Path to Mastery"
+  }, [])
+
   return (
     <div className="min-h-screen bg-background font-sans text-foreground selection:bg-primary/30">
       <Navbar />

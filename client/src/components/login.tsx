@@ -7,9 +7,7 @@ const loginSchema=z.object({
     email:z.email(),
     password:z.string().min(6,"at least 6 characters are required")
 })
-useEffect(()=>{
-  document.title="EchoStudy - Your Path to Mastery"
-},[])
+
 type TloginSchema= z.infer<typeof loginSchema>
 function Login(){
     const {
@@ -41,6 +39,9 @@ function Login(){
           alert(error.message || "An error occurred while logging in. Please try again.")
         }
     }
+    useEffect(()=>{
+      document.title="EchoStudy - Your Path to Mastery"
+     },[])
     return (
   <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
     <div className="w-full max-w-md">
