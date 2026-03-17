@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 
 //to allow only specific domains access the api
 const corsOptions={
-    origin: ['https://www.gosagirma.me', 'https://gosagirma.me',"https://gosa-s-study-ai-git-main-gosa-girmas-projects.vercel.app", "https://gosa-s-study-ai.vercel.app","http://localhost:5173"],
+    origin: ["https://echostudy.gosagirma.me",'https://www.gosagirma.me', 'https://gosagirma.me',"https://gosa-s-study-ai-git-main-gosa-girmas-projects.vercel.app", "https://gosa-s-study-ai.vercel.app","http://localhost:5173"],
     methods:["GET","POST","PUT","PATCH","DELETE"],
     allowedHeaders:["Content-Type","Authorization"],
     credentials:true
