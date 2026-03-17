@@ -97,12 +97,11 @@ npm run dev
 Create loosely-coupled environment variables by defining \.env files in both your \server and \client directories.
 
 ### Backend (server/.env\)
-\\\env
+env
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/echolearn
 JWT_SECRET=your_super_secret_jwt_key
 GEMINI_API_KEY=your_google_gemini_api_key
-\\
 
 ### Frontend (client/.env\)
 \\env
