@@ -18,17 +18,22 @@ function Settings() {
     root.classList.add(theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
+   const streakR= localStorage.getItem("streakReminder")
+  const [streakReminders, setStreakReminders] = useState(!(streakR==="true") || false);
+  const studyT= localStorage.getItem("studyTime")
+  const [studyTime, setStudyTime] = useState(studyT?studyT:"18:00");
 
-  const [streakReminders, setStreakReminders] = useState(true);
-  const [studyTime, setStudyTime] = useState("18:00");
-
-  const toggleTheme = () => setTheme(theme === "light" ? "dark" : "light");
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "dark" : "light")
+    localStorage.setItem("theme", theme === "light" ? "dark" : "light");
+  };
   const saveStudyTime = async() => {
     try{
         console.log("Saved study reminder time:", studyTime);
         const localHour=Number(studyTime.split(":")[0])
         const localMinute=Number(studyTime.split(":")[1])
         // Convert to UTC before sending to the backend
+        localStorage.setItem("studyTime",studyTime)
         const localDate = new Date();
         localDate.setHours(localHour, localMinute, 0, 0);
         
@@ -58,6 +63,8 @@ function Settings() {
   };
 const streakReminderEnable= async()=>{
     try{
+        setStreakReminders(prev=>!prev);
+        localStorage.setItem("streakReminder",JSON.stringify(streakReminders))
         const token=localStorage.getItem("token");
         const res= await fetch(`${import.meta.env.VITE_API_URL}/api/settings/reminder`,{
             method:"PATCH",
@@ -123,10 +130,10 @@ const streakReminderEnable= async()=>{
                 </p>
               </div>
               <Button 
-                onClick={() => {setStreakReminders(prev=>!prev); streakReminderEnable();}}
+                onClick={() => {streakReminderEnable();}}
                 variant={streakReminders ? "default" : "secondary"}
               >
-                {streakReminders ? "Enabled" : "Disabled"}
+                {streakReminders ? "Enable" : "Disable"}
               </Button>
             </div>
 
