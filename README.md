@@ -9,8 +9,6 @@ EchoStudy is an AI-powered study platform designed to help users learn faster, r
 ##  Demo & Live Link
 
 - **Live Platform:** [https://gosa-s-study-ai-git-main-gosa-girmas-projects.vercel.app/](https://gosa-s-study-ai-git-main-gosa-girmas-projects.vercel.app/)
-- **Demo Video:** [Watch on YouTube](https://youtube.com) *(Placeholder)*
-
 ---
 
 ##  Screenshots
@@ -78,24 +76,19 @@ EchoStudy follows a modern client-server architecture:
 - Google Gemini API Key
 
 ### 1. Clone the repository
-\\\ash
-git clone https://github.com/YOUR_USERNAME/EchoLearn.git
+git clone https://github.com/gosag/Gosa-s_StudyAi.git
 cd EchoLearn
 \\\
 
 ### 2. Setup the Backend
-\\\ash
 cd server
 npm install
 npm run dev
-\\\
 
 ### 3. Setup the Frontend
-\\\ash
 cd client
 npm install
 npm run dev
-\\\
 
 ---
 
@@ -126,7 +119,7 @@ VITE_API_BASE_URL=http://localhost:5000/api
 
 ### Upload & Processing
 - \POST /api/upload/pdf\ - Upload and process a PDF document
-- \POST /api/upload/youtube\ - Provide a YouTube link for processing
+- \POST /api/upload/link\ - Provide a YouTube link for processing
 
 ### Materials & Study
 - \GET /api/materials\ - Fetch all processed learning materials
