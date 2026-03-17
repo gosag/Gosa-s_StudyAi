@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Brain, BookOpen, PenTool, TrendingUp, Presentation, PlayCircle, MessageSquare, Book, ChevronRight, Zap } from 'lucide-react';
+import { Brain, BookOpen, PenTool, TrendingUp, Presentation, /* PlayCircle ,*/ MessageSquare, Book, ChevronRight, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Github = ({ className }: { className?: string }) => (
@@ -85,9 +85,9 @@ const Hero = () => (
               Get Started Free <ChevronRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
-          <Button size="lg" variant="outline" className="h-12 px-8 text-base">
+        {/*   <Button size="lg" variant="outline" className="h-12 px-8 text-base">
             See Demo <PlayCircle className="ml-2 h-4 w-4" />
-          </Button>
+          </Button> */}
         </motion.div>
       </motion.div>
     </div>
@@ -316,7 +316,7 @@ const Footer = () => (
             The intelligent study platform that uses AI to help you learn faster and remember longer.
           </p>
           <div className="flex gap-4 pt-2">
-            <a href="#" className="text-muted-foreground hover:text-foreground transition-colors"><Twitter className="h-5 w-5" /></a>
+            <a href="https://twitter.com/GosaGirma110026" className="text-muted-foreground hover:text-foreground transition-colors"><Twitter className="h-5 w-5" /></a>
             <a href="https://github.com/gosag" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-foreground transition-colors"><Github className="h-5 w-5" /></a>
             <a href="https://linkedin.com/in/gosa-girma-b7b256326" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-foreground transition-colors"><Linkedin className="h-5 w-5" /></a>
           </div>
@@ -333,7 +333,7 @@ const Footer = () => (
         <div className="space-y-4">
           <h4 className="font-semibold">Resources</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><a href="#" className="hover:text-foreground transition-colors">Help Center</a></li>
+            <li><a href="https://twitter.com/GosaGirma110026" className="hover:text-foreground transition-colors">Help Center</a></li>
           </ul>
         </div>
           </div>
