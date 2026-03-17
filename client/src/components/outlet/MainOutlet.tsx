@@ -6,7 +6,6 @@ function MainOutLet(){
   const location = useLocation();
   
   useEffect(()=>{
-    document.title="EchoStudy - Your Path to Mastery"
     async function fetchStreak(){
       try{
         const token=localStorage.getItem("token");
