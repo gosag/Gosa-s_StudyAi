@@ -78,7 +78,7 @@ EchoStudy follows a modern client-server architecture:
 ### 1. Clone the repository
 git clone https://github.com/gosag/Gosa-s_StudyAi.git
 cd EchoLearn
-\\\
+\\
 
 ### 2. Setup the Backend
 cd server
@@ -94,38 +94,38 @@ npm run dev
 
 ##  Environment Variables
 
-Create loosely-coupled environment variables by defining \.env\ files in both your \server/\ and \client/\ directories.
+Create loosely-coupled environment variables by defining \.env files in both your \server and \client directories.
 
-### Backend (\server/.env\)
+### Backend (server/.env\)
 \\\env
 PORT=5000
 MONGODB_URI=mongodb://localhost:27017/echolearn
 JWT_SECRET=your_super_secret_jwt_key
 GEMINI_API_KEY=your_google_gemini_api_key
-\\\
+\\
 
-### Frontend (\client/.env\)
-\\\env
+### Frontend (client/.env\)
+\\env
 VITE_API_BASE_URL=http://localhost:5000/api
-\\\
+\\
 
 ---
 
 ##  API Overview
 
 ### Authentication
-- \POST /api/auth/signup\ - Register a new user
-- \POST /api/auth/login\ - Authenticate and receive a token
+- POST /api/auth/signup - Register a new user
+- POST /api/auth/login- Authenticate and receive a token
 
 ### Upload & Processing
-- \POST /api/upload/pdf\ - Upload and process a PDF document
-- \POST /api/upload/link\ - Provide a YouTube link for processing
+- POST /api/upload/pdf- Upload and process a PDF document
+- POST /api/upload/link - Provide a YouTube link for processing
 
 ### Materials & Study
-- \GET /api/materials\ - Fetch all processed learning materials
-- \GET /api/flashcards/review\ - Fetch flashcards due for review (SM-2)
-- \PATCH /api/flashcards/:id/review\ - Submit a review to update SM-2 spacing
-- \POST /api/quizzes/regenerate/:id\ - Generate active recall questions
+- GET /api/materials - Fetch all processed learning materials
+- GET /api/flashcards/review - Fetch flashcards due for review (SM-2)
+- PATCH /api/flashcards/:id/review - Submit a review to update SM-2 spacing
+- POST /api/quizzes/regenerate/:id - Generate active recall questions
 
 *(This is a high-level overview. A detailed Postman/Swagger collection will be added soon.)*
 
@@ -133,7 +133,7 @@ VITE_API_BASE_URL=http://localhost:5000/api
 
 ##  Folder Structure
 
-\\\	ext
+\\	ext
 EchoLearn/
  client/                 # React Frontend
     public/             
@@ -154,7 +154,7 @@ EchoLearn/
         services/       # Core business & AI logic
         app.ts          # Server entry point
      server.ts           
-\\\
+\\
 
 ---
 
