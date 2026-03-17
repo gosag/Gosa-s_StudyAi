@@ -69,10 +69,10 @@ function MaterialContinue(){
     return(
         <>
         <div className="max-w-7xl mb-0 mx-auto p-3 sm:p-6 flex flex-col gap-4 sm:gap-6 w-full max-h-dvh">
-        <Card className="flex flex-col flex-1 gap-1 min-h-[93vh] w-full max-w-6xl mx-auto shadow-sm border-zinc-200 dark:border-zinc-800 overflow-hidden">
-          <CardContent className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 bg-zinc-50/30 dark:bg-zinc-950/30">
+        <Card className="flex flex-col flex-1  gap-1 min-h-[93vh] w-full max-w-6xl mx-auto shadow-sm border-zinc-200 dark:border-zinc-800 overflow-hidden">
+          <CardContent className="flex-1 overflow-y-auto w-full p-4 pr-0 sm:p-6 space-y-6 bg-zinc-50/30 dark:bg-zinc-950/30">
             {material.map((item, index) => (
-              <div key={index} className={`flex w-full ${item.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+              <div key={index} className={`flex w-full ${item.role === 'user' ? 'justify-end' : 'justify-center'}`}>
                 <div className={`shadow-sm ${
                   item.role === 'user' 
                   ? 'max-w-[85%] lg:max-w-[75%] rounded-2xl rounded-tr-sm px-5 py-3.5 bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100' 
