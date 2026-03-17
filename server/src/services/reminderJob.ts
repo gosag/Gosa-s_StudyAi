@@ -50,12 +50,12 @@ cron.schedule("* * * * *", async () => {
     const lastStudy = new Date(lastActivity)
     lastStudy.setHours(0,0,0,0)
 
-   /*  if (lastStudy.getTime() !== today.getTime()) { */
+    if (lastStudy.getTime() !== today.getTime()) {
         if(user.streakReminderEnabled){
             console.log(`Send reminder to ${user.email}`)
             await sendEmail(user.email, "Study Reminder ", "Don't forget to study today! and keep your streak alive! 🔥")
         } 
-   /*  } */
+    }
   }}catch(err){
     console.log("Error in reminder job:", err)
   }
