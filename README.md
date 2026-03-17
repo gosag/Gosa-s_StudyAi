@@ -17,11 +17,11 @@ EchoStudy is an AI-powered study platform designed to help users learn faster, r
 
 | Dashboard | Study Session |
 | --- | --- |
-| ![Dashboard](https://via.placeholder.com/600x300?text=Dashboard+Screenshot) | ![Study Session](https://via.placeholder.com/600x300?text=Study+Session+Screenshot) |
+| ![Dashboard](./screenshots/dashBoard.png) | ![Tutor](./screenshots/continue.png) |
 
 | AI Flashcards | AI Tutor |
 | --- | --- |
-| ![Flashcards](https://via.placeholder.com/600x300?text=Flashcards+Screenshot) | ![Tutor](https://via.placeholder.com/600x300?text=AI+Tutor+Screenshot) |
+| ![Flashcards](./screenshots/flashcards.png) | ![Quizzes](./screenshots/quiz.png) |
 
 ---
 
@@ -123,9 +123,9 @@ VITE_API_BASE_URL=http://localhost:5000/api
 
 ### Materials & Study
 - \GET /api/materials\ - Fetch all processed learning materials
-- \GET /api/flashcards\ - Fetch flashcards due for review (SM-2)
-- \POST /api/flashcards/review\ - Submit a review to update SM-2 spacing
-- \POST /api/quiz/generate\ - Generate active recall questions
+- \GET /api/flashcards/review\ - Fetch flashcards due for review (SM-2)
+- \PATCH /api/flashcards/:id/review\ - Submit a review to update SM-2 spacing
+- \POST /api/quizzes/regenerate/:id\ - Generate active recall questions
 
 *(This is a high-level overview. A detailed Postman/Swagger collection will be added soon.)*
 
