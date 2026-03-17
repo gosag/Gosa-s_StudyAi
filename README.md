@@ -104,9 +104,8 @@ JWT_SECRET=your_super_secret_jwt_key
 GEMINI_API_KEY=your_google_gemini_api_key
 
 ### Frontend (client/.env\)
-\\env
+env 
 VITE_API_BASE_URL=http://localhost:5000/api
-\\
 
 ---
 
@@ -132,7 +131,7 @@ VITE_API_BASE_URL=http://localhost:5000/api
 
 ##  Folder Structure
 
-\\	ext
+ext
 EchoLearn/
  client/                 # React Frontend
     public/             
@@ -153,8 +152,6 @@ EchoLearn/
         services/       # Core business & AI logic
         app.ts          # Server entry point
      server.ts           
-\\
-
 ---
 
 ##  Future Improvements
