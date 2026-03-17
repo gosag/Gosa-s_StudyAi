@@ -22,13 +22,14 @@ function Settings() {
   const [streakReminders, setStreakReminders] = useState(!(streakR==="true") || false);
   const studyT= localStorage.getItem("studyTime")
   const [studyTime, setStudyTime] = useState(studyT?studyT:"18:00");
-
+  const [loading,setLoading]=useState(false)
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light")
     localStorage.setItem("theme", theme === "light" ? "dark" : "light");
   };
   const saveStudyTime = async() => {
     try{
+       setLoading(true)
         console.log("Saved study reminder time:", studyTime);
         const localHour=Number(studyTime.split(":")[0])
         const localMinute=Number(studyTime.split(":")[1])
@@ -60,9 +61,13 @@ function Settings() {
         setUpdateStatus("Failed to save study reminder time. Please try again.");
         setTimeout(() => setUpdateStatus(null), 5000);
     }
+    finally{
+      setLoading(false)
+    }
   };
 const streakReminderEnable= async()=>{
     try{
+      setLoading(true)
         setStreakReminders(prev=>!prev);
         localStorage.setItem("streakReminder",JSON.stringify(streakReminders))
         const token=localStorage.getItem("token");
@@ -83,6 +88,9 @@ const streakReminderEnable= async()=>{
     }catch(err){
         setUpdateStatus("Failed to update streak reminder setting. Please try again.");
         setTimeout(() => setUpdateStatus(null), 5000);
+    }
+    finally{
+      setLoading(false)
     }
 }
   return (
@@ -130,6 +138,7 @@ const streakReminderEnable= async()=>{
                 </p>
               </div>
               <Button 
+                disabled={loading}
                 onClick={() => {streakReminderEnable();}}
                 variant={streakReminders ? "default" : "secondary"}
               >
@@ -150,7 +159,7 @@ const streakReminderEnable= async()=>{
                   className="max-w-37.5"
                 />
               </div>
-              <Button variant="outline" className="hover:scale-105 active:scale-100" onClick={saveStudyTime}>
+              <Button disabled={loading} variant="outline" className="hover:scale-105 active:scale-100" onClick={saveStudyTime}>
                 Save Time
               </Button>
             </div>
