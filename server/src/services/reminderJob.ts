@@ -32,8 +32,9 @@ const sendEmail = async (to:string, subject:string, text:string) => {
 cron.schedule("* * * * *", async () => {
  try{
   const now = new Date()
-  const hour = now.getHours()
-  const minute = now.getMinutes()
+  const hour = now.getUTCHours()     // Use UTC time
+  const minute = now.getUTCMinutes()
+
   const users = await User.find({
     reminderHour: hour,
     reminderMinute: minute,

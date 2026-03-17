@@ -26,8 +26,15 @@ function Settings() {
   const saveStudyTime = async() => {
     try{
         console.log("Saved study reminder time:", studyTime);
-        const reminderHour= Number(studyTime.split(":")[0]);
-        const reminderMinute= Number(studyTime.split(":")[1]); 
+        const localHour=Number(studyTime.split(":")[0])
+        const localMinute=Number(studyTime.split(":")[1])
+        // Convert to UTC before sending to the backend
+        const localDate = new Date();
+        localDate.setHours(localHour, localMinute, 0, 0);
+        
+        const reminderHour = localDate.getUTCHours();
+        const reminderMinute = localDate.getUTCMinutes(); 
+
         const token=localStorage.getItem("token");
         const res= await fetch(`${import.meta.env.VITE_API_URL}/api/settings/reminder`,{
             method:"PATCH",
