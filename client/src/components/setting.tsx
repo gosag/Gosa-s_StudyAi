@@ -23,6 +23,7 @@ function Settings() {
   const studyT= localStorage.getItem("studyTime")
   const [studyTime, setStudyTime] = useState(studyT?studyT:"18:00");
   const [loading,setLoading]=useState(false)
+  const [APIKey,setAPIKey]=useState<string>("null")
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light")
     localStorage.setItem("theme", theme === "light" ? "dark" : "light");
@@ -33,7 +34,6 @@ function Settings() {
         console.log("Saved study reminder time:", studyTime);
         const localHour=Number(studyTime.split(":")[0])
         const localMinute=Number(studyTime.split(":")[1])
-        // Convert to UTC before sending to the backend
         localStorage.setItem("studyTime",studyTime)
         const localDate = new Date();
         localDate.setHours(localHour, localMinute, 0, 0);
@@ -93,6 +93,35 @@ const streakReminderEnable= async()=>{
       setLoading(false)
     }
 }
+const [apiLoading,setAPILoading]=useState(false)
+const connectAPIKey=async ()=>{
+  try{
+    setAPILoading(true)
+    if(APIKey!="null"){
+      const token=localStorage.getItem("token");
+      const res= await fetch(`${import.meta.env.VITE_API_URL}/api/user/api-key`,{
+        method:"PATCH",
+        headers:{
+          "Content-Type":"application/json",
+          "Authorization": `Bearer ${token}`
+      },
+      body:JSON.stringify({ apiKey: APIKey })
+
+      });
+      const data= await res.json();
+      if (!res.ok) {
+        throw new Error("Failed to connect API key");
+      }
+    const serverMeassage=data.message || "API key connected successfully.";
+     alert(serverMeassage);
+  }}
+  catch(err){
+    alert("Failed to connect API key. Please try again.");
+  }
+  finally{
+    setAPILoading(false);
+  }
+}
   return (
     <div className="max-w-3xl py-10 px-4 md:px-8 space-y-8">
       <div>
@@ -103,6 +132,7 @@ const streakReminderEnable= async()=>{
       </div>
 
       <div className="space-y-6">
+        
         <Card>
           <CardHeader>
             <CardTitle>Appearance</CardTitle>
@@ -119,6 +149,26 @@ const streakReminderEnable= async()=>{
             </div>
             <Button onClick={toggleTheme} variant="outline">
               Switch to {theme === "light" ? "Dark" : "Light"} Mode
+            </Button>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Gemini API</CardTitle>
+            <CardDescription>
+              Connect your Gemini API key to enable AI-powered features in EchoLearn.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex items-center justify-between">
+            <Input 
+            type="password" 
+            placeholder=". . . . . . . . . . . . . ." 
+            className="max-w-sm w-full" 
+            value={APIKey}
+            onChange={(e) => setAPIKey(e.target.value)}
+            />
+            <Button variant="outline" onClick={connectAPIKey} disabled={apiLoading}>
+              {apiLoading ? "Connecting..." : "Connect API Key"}
             </Button>
           </CardContent>
         </Card>

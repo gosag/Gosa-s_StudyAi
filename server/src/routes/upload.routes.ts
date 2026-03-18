@@ -12,7 +12,8 @@ import {uploadFile,
         getFlashcardsForReview, 
         updateFlashcardReview,
         getUserStreak,
-        uploadReminderSettings
+        uploadReminderSettings,
+        updateAPIKey
       } from "../controllers/upload.controller";
 const uploadRoute = express.Router();
 const upload = multer({
@@ -44,5 +45,6 @@ const upload = multer({
     uploadRoute.get("/api/flashcards/review",protector, getFlashcardsForReview)
     uploadRoute.patch("/api/flashcards/:id/review", protector, updateFlashcardReview);
     uploadRoute.get("/api/streak", protector, getUserStreak);
-    uploadRoute.patch("/api/settings/reminder",protector, uploadReminderSettings)
+    uploadRoute.patch("/api/settings/reminder",protector, uploadReminderSettings);
+    uploadRoute.patch("/api/user/api-key",protector, updateAPIKey );
     export default uploadRoute;

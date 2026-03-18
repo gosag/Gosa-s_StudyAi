@@ -446,3 +446,24 @@ export const uploadReminderSettings= async(req:Request ,res:Response ,next:NextF
       next(error)
     }
 }
+export const updateAPIKey= async(req:Request ,res:Response ,next:NextFunction)=>{
+    try{
+      if(!req.user || !req.user._id){
+        const error=new Error("Missing user information") as CustomError;
+        error.status=401;
+        throw error
+      }
+      console.log(req.body.apiKey)
+      const user= await User.findByIdAndUpdate(req.user._id, { $set: { apiKey: req.body.apiKey } }, { returnDocument: 'after' })
+      if(!user){
+        const error=new Error("Failed to update API key") as CustomError;
+        error.status=500;
+        throw error;
+      }
+      
+      res.json({message:"API key updated successfully."})
+    }
+    catch(err){
+      next(err)
+    }
+    }

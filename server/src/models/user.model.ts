@@ -7,8 +7,9 @@ import {Schema,Document,Types,model} from "mongoose"
   lastActivityDate:Date,
   streakReminderEnabled: boolean,
   timezone: string,
-  reminderHour: number
-  reminderMinute: number
+  reminderHour: number,
+  reminderMinute: number,
+  apiKey: string | null
  }
  
 const UserSchema = new Schema<IUser>({
@@ -20,7 +21,8 @@ const UserSchema = new Schema<IUser>({
   streakReminderEnabled: { type: Boolean, default: true },
   reminderHour: { type: Number, default: 20 }, // Default to 8 PM
   reminderMinute: { type: Number, default: 0 }, // Default to 0 minutes
-  timezone: { type: String, default: "UTC" }
+  timezone: { type: String, default: "UTC" },
+  apiKey: { type: String, default: null }
 
 });
 
