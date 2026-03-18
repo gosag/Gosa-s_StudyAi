@@ -251,7 +251,7 @@ useEffect(()=>{async function lastMaterial(){
             </div>
 
             <div className="space-y-3">
-              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Paste Link or Type Topic</label>
+              <label className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Paste YouTube Link </label>
               <div className="flex gap-2">
                 <Input
                   placeholder="https://youtube.com/..." 
