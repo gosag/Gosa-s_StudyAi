@@ -53,9 +53,8 @@ const fileHandler=async (file: File)=>{
         })
         const data = await res.json();
         if(!res.ok){
-          setError(data.error || "something went wrong try again");
+          setError(data.message || data.error || "something went wrong try again");
           setLoading(false);
-          console.log("not okay")
           return;
         }
         setAiData([{role: "model",content: data.response}]);
@@ -84,9 +83,9 @@ const linkHandler=async (link: string)=>{
       });
       const data = await res.json();
       if(!res.ok){
-        setError(data.error || "something went wrong try again")
-
-        throw new Error("something went wrong")
+        setError(data.message || data.error || "something went wrong try again");
+        setLoading(false);
+        return;
       }
       if (typeof data.response === "string") {
         setAiData([{role: "model",content: data.response}]);
@@ -116,7 +115,9 @@ const continueHandler=async ()=>{
   })
   const data=await res.json();
   if(!res.ok){
-    setError(data.error || "Failed to continue conversation. Please try again.")
+    setError(data.message || data.error || "Failed to continue conversation. Please try again.");
+    setLoading(false);
+    return;
   }
   setAiData(prev=>[...prev,{role:"model",content:data.response}]);
   localStorage.setItem('summary',JSON.stringify(data.response))
@@ -272,6 +273,7 @@ useEffect(()=>{async function lastMaterial(){
                 <><Send className="w-5 h-5 mr-2" /> Start Learning</>
               )}
             </Button>
+            {error && <p className="text-sm text-red-600 dark:text-red-400 text-center">{error}</p>}
           </Card>
 
           {/* Illustration Container */}
@@ -361,23 +363,7 @@ useEffect(()=>{async function lastMaterial(){
           </CardContent>
           <CardFooter className="p-4   border-t bg-white dark:bg-zinc-900/50 shrink-0 relative">
             <div className="flex items-center gap-2 w-full">
-              <div className="relative">
-                <Button variant="outline" size="icon" className="shrink-0 rounded-full h-11 w-11 relative overflow-hidden bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800">
-                  <FileUp className="w-5 h-5 text-zinc-500" />
-                  <Input 
-                    onChange={(e) => {
-                      if (e.target.files) {
-                        setFile(e.target.files[0])
-                      }
-                    }} 
-                    type="file" 
-                    name="pdf" 
-                    accept="application/pdf"  
-                    className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer"
-                  />
-                  {file && <div className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-zinc-950" />}
-                </Button>
-              </div>
+             
               <Textarea
                 placeholder="Ask a follow-up question..." 
                 value={link}

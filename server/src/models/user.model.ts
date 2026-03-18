@@ -1,4 +1,4 @@
-import {Schema,Document,Types,model} from "mongoose"
+import {Schema,Document,model} from "mongoose"
  export interface IUser extends Document {
   email: string,
   password: string,
@@ -9,7 +9,8 @@ import {Schema,Document,Types,model} from "mongoose"
   timezone: string,
   reminderHour: number,
   reminderMinute: number,
-  apiKey: string | null
+  apiKey: string | null,
+  freeUsageCount: number,
  }
  
 const UserSchema = new Schema<IUser>({
@@ -22,7 +23,8 @@ const UserSchema = new Schema<IUser>({
   reminderHour: { type: Number, default: 20 }, // Default to 8 PM
   reminderMinute: { type: Number, default: 0 }, // Default to 0 minutes
   timezone: { type: String, default: "UTC" },
-  apiKey: { type: String, default: null }
+  apiKey: { type: String, default: null },
+  freeUsageCount: { type: Number, default: 0 },
 
 });
 

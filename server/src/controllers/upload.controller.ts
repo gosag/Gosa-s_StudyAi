@@ -20,16 +20,34 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
     }
     console.log(req.file)
     try{
-        const extractedText = await extractTextFromFile(req.file.buffer, req.file.mimetype);
-        console.log(`Extracted text length: ${extractedText.text.length} characters`);
-        const response = await generateResponse(`Hey Gemini, summarize the following text in a concise manner: ${extractedText.text}`);
-        console.log(`[Gemini Summary] ${response.length} characters`);
-        if (!req.user || !req.user._id) {
+       if (!req.user || !req.user._id) {
           const error = new Error("User information is missing") as CustomError;
           error.status = 401;
           return next(error);
         }
+        const freeUsageLimit=2;
+        const user= await User.findById(req.user._id);
+        if(!user){
+          const error=new Error("User not found") as CustomError;
+          error.status=404;
+          return next(error);
+        }
+        const {freeUsageCount}=user
+        if(!user.apiKey){
+          if(freeUsageCount >= freeUsageLimit){
+          const error=new Error("Free usage limit reached. Please enter your own Gemini API Key.") as CustomError;
+          error.status=403;
+          return next(error);
+        }
+        }
+        
+        const extractedText = await extractTextFromFile(req.file.buffer, req.file.mimetype);
+        console.log(`Extracted text length: ${extractedText.text.length} characters`);
+        const response = await generateResponse(`Hey Gemini, summarize the following text in a concise manner: ${extractedText.text}`);
+        console.log(`[Gemini Summary] ${response.length} characters`);
         const userId = req.user._id;
+        user.freeUsageCount += 1;
+        await user.save();
         const newMatrial=new Material({
           materialType:"file",
           title:req.file.originalname,

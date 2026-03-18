@@ -23,11 +23,12 @@ function Settings() {
   const studyT= localStorage.getItem("studyTime")
   const [studyTime, setStudyTime] = useState(studyT?studyT:"18:00");
   const [loading,setLoading]=useState(false)
-  const [APIKey,setAPIKey]=useState<string>("null")
+  const [APIKey,setAPIKey]=useState<string>("")
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light")
     localStorage.setItem("theme", theme === "light" ? "dark" : "light");
   };
+  useEffect(()=>{localStorage.clear()},[])
   const saveStudyTime = async() => {
     try{
        setLoading(true)
@@ -95,28 +96,36 @@ const streakReminderEnable= async()=>{
 }
 const [apiLoading,setAPILoading]=useState(false)
 const connectAPIKey=async ()=>{
+  if (!APIKey || APIKey.trim() === "") {
+    alert("Please enter an API key.");
+    return;
+  }
+  if (!APIKey.trim().startsWith("AIza") || APIKey.trim().length < 30) {
+    alert("Invalid API key format. Gemini API keys usually start with 'AIza'.");
+    return;
+  }
+
   try{
     setAPILoading(true)
-    if(APIKey!="null"){
-      const token=localStorage.getItem("token");
-      const res= await fetch(`${import.meta.env.VITE_API_URL}/api/user/api-key`,{
-        method:"PATCH",
-        headers:{
-          "Content-Type":"application/json",
-          "Authorization": `Bearer ${token}`
+    const token=localStorage.getItem("token");
+    const res= await fetch(`${import.meta.env.VITE_API_URL}/api/user/api-key`,{
+      method:"PATCH",
+      headers:{
+        "Content-Type":"application/json",
+        "Authorization": `Bearer ${token}`
       },
-      body:JSON.stringify({ apiKey: APIKey })
-
-      });
-      const data= await res.json();
-      if (!res.ok) {
-        throw new Error("Failed to connect API key");
-      }
-    const serverMeassage=data.message || "API key connected successfully.";
-     alert(serverMeassage);
-  }}
-  catch(err){
-    alert("Failed to connect API key. Please try again.");
+      body:JSON.stringify({ apiKey: APIKey.trim() })
+    });
+    const data= await res.json();
+    if (!res.ok) {
+      throw new Error(data.message || "Failed to connect API key");
+    }
+    const serverMessage=data.message || "API key connected successfully.";
+    alert(serverMessage);
+    setAPIKey(""); // Clear the input after success
+  }
+  catch(err: any){
+    alert(err.message || "Failed to connect API key. Please try again.");
   }
   finally{
     setAPILoading(false);
