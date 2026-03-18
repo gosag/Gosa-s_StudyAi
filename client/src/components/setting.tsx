@@ -93,7 +93,7 @@ const streakReminderEnable= async()=>{
     finally{
       setLoading(false)
     }
-}
+} 
 const [apiLoading,setAPILoading]=useState(false)
 const connectAPIKey=async ()=>{
   if (!APIKey || APIKey.trim() === "") {

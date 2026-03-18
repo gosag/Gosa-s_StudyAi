@@ -46,8 +46,7 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
         const response = await generateResponse(`Hey Gemini, summarize the following text in a concise manner: ${extractedText.text}`);
         console.log(`[Gemini Summary] ${response.length} characters`);
         const userId = req.user._id;
-        user.freeUsageCount += 1;
-        await user.save();
+        
         const newMatrial=new Material({
           materialType:"file",
           title:req.file.originalname,
@@ -75,6 +74,8 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
             materialId:newMatrial._id,
           }))
         )}
+        user.freeUsageCount += 1;
+        await user.save();
         res.json({ response, materialId:newMatrial._id });
     }
     catch(error){
@@ -98,7 +99,29 @@ export const uploadLink = async (req: Request, res: Response, next: NextFunction
     error.status=400
     return next(error)
   }
+  
   try {
+     if(!req.user || !req.user._id){
+      const error=new Error("User information is missing") as CustomError
+      error.status=401;
+      throw error
+    }
+    const userId=req.user._id;
+    const freeUsageLimit=3;
+    const user= await User.findById(userId)
+    if(!user){
+      const error= new Error("user info is not found") as CustomError;
+      error.status=404;
+      return next(error);
+    }
+  const freeUsageCount=user.freeUsageCount
+  if(!user.apiKey){
+    if(freeUsageCount >= freeUsageLimit){
+      const error=new Error("Free usage limit reached. Please enter your own Gemini API Key.") as CustomError;
+      error.status=403;
+      return next(error);
+    }
+  }
     const transcript = await getYoutubeTranscript(link);
     if (!transcript || transcript.length < 10) {
       const error=new Error("Transcript was empty or too short.") as CustomError
@@ -109,12 +132,7 @@ export const uploadLink = async (req: Request, res: Response, next: NextFunction
     if(sumamrizedResponse.length){
         console.log("[Echo Learn] Transcript Summarized")
     }
-    if(!req.user || !req.user._id){
-      const error=new Error("User information is missing") as CustomError
-      error.status=401;
-      throw error
-    }
-    const userId=req.user._id;
+   
     const newMatrial= new Material({
         materialType:"link",
         title:"youtube link",
@@ -137,8 +155,12 @@ export const uploadLink = async (req: Request, res: Response, next: NextFunction
             materialId:newMatrial._id,
           }))
         )
+        
+    user.freeUsageCount += 1;
+    await user.save();
     res.json({ transcript, response: sumamrizedResponse ,MaterialId:newMatrial._id});
     console.log(`[SUCCESS] Transcript sent to EchoLearn frontend.`);
+    
     await updateUserStreak(userId as any);
   } catch (err: any) {
     return next(err);
