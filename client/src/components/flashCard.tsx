@@ -165,9 +165,9 @@ function FlashCard(){
                     >
                         <div className="pointer-events-none select-none">
                             <span className="text-xs font-bold text-blue-500 dark:text-blue-400 uppercase tracking-widest block mb-4">Question</span>
-                            <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 dark:text-zinc-100 leading-tight">
-                                {currentCard.front}
-                            </h3>
+                            <div className="text-2xl sm:text-3xl md:text-4xl text-gray-800 dark:text-zinc-100 leading-tight prose prose-xl dark:prose-invert max-w-none prose-p:leading-tight prose-strong:text-blue-600 dark:prose-strong:text-blue-400 prose-p:m-0 font-bold">
+                                <ReactMarkdown>{currentCard.front?.replace(/\\\*/g, '*').trim()}</ReactMarkdown>
+                            </div>
                         </div>
                     </div>
 
@@ -179,8 +179,8 @@ function FlashCard(){
                         <div className="pointer-events-none select-none overflow-y-auto w-full max-h-full scrollbar-transparent">
                             <span className="text-xs font-bold text-indigo-500 dark:text-indigo-400 uppercase tracking-widest block mb-4">Answer</span>
 
-                             <div className={`text-xl sm:text-2xl text-gray-800 dark:text-zinc-100 leading-relaxed font-medium`}>
-                             <ReactMarkdown>{currentCard.back}</ReactMarkdown>
+                             <div className={`text-xl sm:text-2xl text-gray-800 dark:text-zinc-100 leading-relaxed font-medium prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-strong:text-indigo-600 dark:prose-strong:text-indigo-400 prose-p:m-0`}>
+                             <ReactMarkdown>{currentCard.back?.replace(/\\\*/g, '*').trim()}</ReactMarkdown>
                               </div>
                         </div>
                     </div>
