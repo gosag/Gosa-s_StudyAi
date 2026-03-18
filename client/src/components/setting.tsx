@@ -28,7 +28,6 @@ function Settings() {
     setTheme(theme === "light" ? "dark" : "light")
     localStorage.setItem("theme", theme === "light" ? "dark" : "light");
   };
-  useEffect(()=>{localStorage.clear()},[])
   const saveStudyTime = async() => {
     try{
        setLoading(true)

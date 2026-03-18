@@ -20,6 +20,13 @@ const protector=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>
     }
     const SECRET=process.env.SECRET!
     const tokens=req.headers.authorization.split(" ")[1]!
+    
+    if(!tokens || tokens === "null" || tokens === "undefined"){
+        const error=new Error("Invalid or missing token") as requestError;
+        error.status=401;
+        throw error
+    }
+
     const decoded= jwt.verify(tokens,SECRET) as JwtPayload;
     const user=await User.findById(decoded.id).select("-password")
     if(!user){
@@ -28,10 +35,15 @@ const protector=async(req:AuthenticatedRequest,res:Response,next:NextFunction)=>
         throw error
     }
     req.user=user as IUser;
-    next()
+    next();
 }
-catch(error){
-        next(error)
+catch(error: any){
+    if (error.name === "JsonWebTokenError" || error.name === "TokenExpiredError") {
+        const jwtError = new Error("Not authenticated, invalid or expired token") as requestError;
+        jwtError.status = 401;
+        return next(jwtError);
     }
+    next(error);
+}
 }
 export default protector;
