@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { useEffect, useState, useCallback } from "react";
 import { Button } from "./ui/button";
 import { RotateCcw, ArrowRight, ArrowLeft} from "lucide-react";
-
+import ReactMarkdown from "react-markdown";
 function FlashCard(){
     const [flashCards,setFlashCards]=useState<{front:string,back:string,materialId:string,_id:string}[]>([])
     const [loading,setLoading]=useState(true)
@@ -178,9 +178,10 @@ function FlashCard(){
                     >
                         <div className="pointer-events-none select-none overflow-y-auto w-full max-h-full scrollbar-transparent">
                             <span className="text-xs font-bold text-indigo-500 dark:text-indigo-400 uppercase tracking-widest block mb-4">Answer</span>
-                            <p className="text-xl sm:text-2xl text-gray-800 dark:text-zinc-100 leading-relaxed font-medium">
-                                {currentCard.back}
-                            </p>
+
+                             <div className={`text-xl sm:text-2xl text-gray-800 dark:text-zinc-100 leading-relaxed font-medium`}>
+                             <ReactMarkdown>{currentCard.back}</ReactMarkdown>
+                              </div>
                         </div>
                     </div>
                 </motion.div>
