@@ -3,11 +3,13 @@ interface CustomError extends Error{
     status?:number | string,
     statusCode?:number | string
 }
-export async function generateResponse(prompt:string):Promise<string>{
+export async function generateResponse(prompt:string, APIKey:string | undefined):Promise<string>{
     try{
-        const apiKey = process.env.GEMINI_API_KEY;
+        const apiKey = APIKey || process.env.GEMINI_API_KEY;
         if (!apiKey) {
-            throw new Error("GEMINI_API_KEY is completely missing from process.env");
+            const error = new Error("Gemini API key is missing. Please set your API key in the settings or as an environment variable.") as CustomError;
+            error.status = 400;
+            throw error;
         }
 
         const GenAi = new GoogleGenerativeAI(apiKey);
@@ -154,11 +156,14 @@ interface GeneratedQuiz {
 }
 
 export async function quizGenerator(
-  summary: string
+  summary: string,
+  APIKey:string | undefined
 ): Promise<GeneratedQuiz[]> {
-        const apiKey = process.env.GEMINI_API_KEY;
+        const apiKey = APIKey || process.env.GEMINI_API_KEY;
         if (!apiKey) {
-            throw new Error("GEMINI_API_KEY is completely missing from process.env");
+            const error = new Error("Gemini API key is missing. Please set your API key in the settings or as an environment variable.") as CustomError;
+            error.status = 400;
+            throw error;
         }
 
         const genAI = new GoogleGenerativeAI(apiKey);
@@ -215,10 +220,12 @@ export async function quizGenerator(
             throw new Error("Failed to generate quizzes.");
         }
 }
-export async function regenerateQuizzes(summary: string, existingQuizzes:GeneratedQuiz[] ): Promise<GeneratedQuiz[]> {
-    const apiKey = process.env.GEMINI_API_KEY;
+export async function regenerateQuizzes(summary: string, existingQuizzes:GeneratedQuiz[], APIKey: string | undefined): Promise<GeneratedQuiz[]> {
+    const apiKey = APIKey || process.env.GEMINI_API_KEY;
     if(!apiKey){
-        throw new Error("Gemini Api key is missing")
+        const error = new Error("Gemini Api key is missing") as CustomError;
+        error.status = 400;
+        throw error;
     }
     const genAI=new GoogleGenerativeAI(apiKey)
     const model = genAI.getGenerativeModel({
@@ -283,9 +290,14 @@ export async function regenerateQuizzes(summary: string, existingQuizzes:Generat
 }
 export async function generateFlashCards(
   summary: string,
+  APIKey: string | undefined
 ): Promise<{ front: string; back: string }[]> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) throw new Error("Gemini Api key is missing");
+  const apiKey = APIKey || process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    const error = new Error("Gemini Api key is missing") as CustomError;
+    error.status = 400;
+    throw error;
+  }
 
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({
