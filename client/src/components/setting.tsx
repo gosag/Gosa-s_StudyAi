@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import {Eye, EyeOff} from "lucide-react"
 function Settings() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window !== "undefined") {
@@ -23,7 +24,9 @@ function Settings() {
   const studyT= localStorage.getItem("studyTime")
   const [studyTime, setStudyTime] = useState(studyT?studyT:"18:00");
   const [loading,setLoading]=useState(false)
-  const [APIKey,setAPIKey]=useState<string>("")
+  const savedAPIKey=localStorage.getItem("apiKey")
+  const [APIKey,setAPIKey]=useState<string>(savedAPIKey || "")
+  const [showingAPIKey,setShowingAPIKey]=useState(false)
   const toggleTheme = () => {
     setTheme(theme === "light" ? "dark" : "light")
     localStorage.setItem("theme", theme === "light" ? "dark" : "light");
@@ -121,7 +124,7 @@ const connectAPIKey=async ()=>{
     }
     const serverMessage=data.message || "API key connected successfully.";
     alert(serverMessage);
-    setAPIKey(""); // Clear the input after success
+    localStorage.setItem("apiKey", APIKey.trim());
   }
   catch(err: any){
     alert(err.message || "Failed to connect API key. Please try again.");
@@ -168,13 +171,20 @@ const connectAPIKey=async ()=>{
             </CardDescription>
           </CardHeader>
           <CardContent className="flex items-center justify-between">
+            <div className="flex sm:min-w-[70%]">
             <Input 
-            type="password" 
+            type={showingAPIKey ? "text" : "password"} 
             placeholder=". . . . . . . . . . . . . ." 
             className="max-w-sm w-full" 
             value={APIKey}
             onChange={(e) => setAPIKey(e.target.value)}
             />
+            <Button onClick={()=>{setShowingAPIKey(!showingAPIKey)}} variant="outline"
+              className=""
+            >
+              {showingAPIKey ? <EyeOff/> : <Eye/>}
+            </Button>
+            </div>
             <Button variant="outline" onClick={connectAPIKey} disabled={apiLoading}>
               {apiLoading ? "Connecting..." : "Connect API Key"}
             </Button>

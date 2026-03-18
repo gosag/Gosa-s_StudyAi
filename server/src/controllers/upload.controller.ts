@@ -124,7 +124,7 @@ export const uploadLink = async (req: Request, res: Response, next: NextFunction
   }
     const transcript = await getYoutubeTranscript(link);
     if (!transcript || transcript.length < 10) {
-      const error=new Error("Transcript was empty or too short.") as CustomError
+      const error=new Error("The video doesn't have a transcript or the transcript was empty or too short.") as CustomError
       error.status=404
       return next(error)
     }
@@ -132,7 +132,7 @@ export const uploadLink = async (req: Request, res: Response, next: NextFunction
     if(sumamrizedResponse.length){
         console.log("[Echo Learn] Transcript Summarized")
     }
-   
+    
     const newMatrial= new Material({
         materialType:"link",
         title:"youtube link",
