@@ -179,7 +179,7 @@ const connectAPIKey=async ()=>{
             value={APIKey}
             onChange={(e) => setAPIKey(e.target.value)}
             />
-            <Button onClick={()=>{setShowingAPIKey(!showingAPIKey)}} variant="outline"
+            <Button disabled={!APIKey} onClick={()=>{setShowingAPIKey(!showingAPIKey)}} variant="outline"
               className=""
             >
               {showingAPIKey ? <EyeOff/> : <Eye/>}
