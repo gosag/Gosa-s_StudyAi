@@ -347,7 +347,7 @@ useEffect(()=>{async function lastMaterial(){
       ) : (
         /* Chat UI when active */
         <Card className="flex flex-col flex-1 min-h-[70vh] max-h-screen w-full max-w-6xl mx-auto shadow-sm border-zinc-200 gap-1 dark:border-zinc-800 overflow-hidden">
-          <CardContent className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 bg-zinc-50/30 dark:bg-zinc-950/30">
+          <CardContent className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 bg-zinc-50/30 dark:bg-zinc-950/30 custom-scrollbar">
             {aiData.map((item, index) => (
               <div key={index} className={`flex w-full ${item.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`shadow-sm ${
