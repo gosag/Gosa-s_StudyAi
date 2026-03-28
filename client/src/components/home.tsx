@@ -2,8 +2,8 @@ import { Card, CardContent, CardFooter, CardHeader} from "./ui/card"
 import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea";
 import {Input} from "./ui/input"
-import { FileUp, Send, Loader2,FileText,BrainCircuit, PlayCircle, Brain } from "lucide-react";
-import { useEffect, useState } from "react";
+import { FileUp, Send, Loader2,FileText,BrainCircuit, PlayCircle, Brain, ArrowDown } from "lucide-react";
+import { useEffect, useState ,useRef} from "react";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 function Home() {
@@ -25,6 +25,7 @@ function Home() {
   const [lastMaterial, setLastMaterial]=useState<IMaterial | null>(null)
   const [error,setError]=useState<string | null>(null)
   const [materailLoading,setMaterialLoading]=useState(false)
+  const ref=useRef<HTMLDivElement | null>(null);
   function isYoutubeLink(link: string) {
   try {
     const url = new URL(link)
@@ -191,6 +192,25 @@ useEffect(()=>{async function lastMaterial(){
 }
  lastMaterial()
 }, [])
+const [showButton,setShowButton]=useState(false)
+useEffect(()=>{
+  const el=ref.current;
+  if(!el) return
+ const scrollDown=()=>{
+  const {scrollHeight,scrollTop,clientHeight}=el;
+  setShowButton(scrollHeight - scrollTop - clientHeight >= 50)
+  el.addEventListener("scroll",scrollDown)
+ }
+ scrollDown();
+return ()=>el.removeEventListener("scroll",scrollDown)
+},[ref.current])
+  const scrollToBottom = () => {
+    if(!ref.current) return;
+    ref.current.scrollTo({
+      top: ref.current.scrollHeight,
+      behavior: "smooth"
+    })
+  }
   return (
     <div className="max-w-7xl mx-auto p-3 sm:p-6 flex flex-col gap-4 sm:gap-6 w-full min-h-screen">
       {/* Header Section */}
@@ -347,14 +367,14 @@ useEffect(()=>{async function lastMaterial(){
       ) : (
         /* Chat UI when active */
         <Card className="flex flex-col flex-1 min-h-[70vh] max-h-screen w-full max-w-6xl mx-auto shadow-sm border-zinc-200 gap-1 dark:border-zinc-800 overflow-hidden">
-          <CardContent className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 bg-zinc-50/30 dark:bg-zinc-950/30 custom-scrollbar">
+          <CardContent ref={ref} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 bg-zinc-50/30 dark:bg-zinc-950/30 custom-scrollbar">
             {aiData.map((item, index) => (
               <div key={index} className={`flex w-full ${item.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`shadow-sm ${
                   item.role === 'user' 
                   ? 'max-w-[85%] lg:max-w-[75%] rounded-2xl rounded-tr-sm px-5 py-3.5 bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100' 
                   : 'max-w-[95%] lg:max-w-[85%] rounded-2xl rounded-tl-sm px-5 sm:px-6 py-4 bg-white text-zinc-900 border border-zinc-200 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-800'
-                }`}>
+                }`}> 
                   <div className={`prose prose-sm md:prose-base dark:prose-invert max-w-none wrap-break-word ${item.role === 'user' ? 'prose-p:m-0' : ''}`}>
                     <ReactMarkdown>{item.content}</ReactMarkdown>
                   </div>
@@ -362,7 +382,8 @@ useEffect(()=>{async function lastMaterial(){
               </div>
             ))}
           </CardContent>
-          <CardFooter className="p-4   border-t bg-white dark:bg-zinc-900/50 shrink-0 relative">
+          <CardFooter className=" p-4 border-t bg-white dark:bg-zinc-900/50 shrink-0 relative">
+           {showButton&& <button onClick={scrollToBottom} className="absolute bg-zinc-600 rounded-full p-1 -top-9 left-[48%] hover:bg-zinc-500 hover:scale-105 active:scale-100 cursor-pointer transition duration-200"><ArrowDown size={24}/></button>}
             <div className="flex items-center gap-2 w-full">
              
               <Textarea

@@ -1,14 +1,17 @@
 import { useParams ,useNavigate} from "react-router-dom";
-import { useEffect ,useState} from "react";
+import { useEffect ,useState, useRef} from "react";
 import { Card, CardContent, CardFooter } from "./ui/card";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import ReactMarkdown from "react-markdown";
-import {Loader2,Send} from "lucide-react"
+import {Loader2,Send, ArrowDown} from "lucide-react"
+
 function MaterialContinue(){
     const [material,setMaterial]=useState<{role:string,content:string}[]>([])   
     const [chat,setChat]=useState("")
     const [loading,setLoading]=useState(false)
+    const chatRef = useRef<HTMLDivElement | null>(null);
+    const [showButton,setShowButton]=useState(false)
     const navigate=useNavigate()
     const {id}=useParams()
     useEffect(()=>{
@@ -66,11 +69,29 @@ function MaterialContinue(){
       handleUpload()
     }
   }
+useEffect(() => {
+  const el = chatRef.current;
+  if (!el) return;
+  const handleScroll = () => {
+    const { scrollTop, scrollHeight, clientHeight } = el;
+    setShowButton(scrollHeight - scrollTop - clientHeight >= 50);
+  };
+  handleScroll();
+  el.addEventListener("scroll", handleScroll);
+  return () => el.removeEventListener("scroll", handleScroll);
+}, []);
+  const scrollToBottom = () => {
+  if (!chatRef.current) return;
+  chatRef.current.scrollTo({
+    top: chatRef.current.scrollHeight,
+    behavior: "smooth",
+  });
+};
     return(
         <>
         <div className="max-w-7xl mb-0 mx-auto p-3 sm:p-6 flex flex-col  w-full max-h-dvh">
-        <Card className="flex flex-col flex-1 pb-2  gap-1 min-h-[93vh] w-full max-w-6xl mx-auto shadow-sm border-zinc-200 dark:border-zinc-900 overflow-hidden">
-          <CardContent className="flex-1 overflow-y-auto w-full p-4 pr-0 sm:p-6 space-y-6 bg-zinc-50/30 dark:bg-zinc-950/30 custom-scrollbar">
+        <Card className="relative flex flex-col flex-1 pb-2  gap-1 min-h-[93vh] w-full max-w-6xl mx-auto shadow-sm border-zinc-200 dark:border-zinc-900 overflow-hidden">
+          <CardContent ref={chatRef} className="flex-1 overflow-y-auto w-full p-4 pr-0 sm:p-6 space-y-6 bg-zinc-50/30 dark:bg-zinc-950/30 custom-scrollbar">
             {material.map((item, index) => (
               <div key={index} className={`flex w-full ${item.role === 'user' ? 'justify-end' : 'justify-center'}`}>
                 <div className={`shadow-sm ${
@@ -86,6 +107,7 @@ function MaterialContinue(){
             ))}
           </CardContent>
           <CardFooter className="p-3 mx-2 rounded-3xl pt-0 border-t bg-white dark:bg-zinc-950 shrink-0 relative">
+           {chat.length<1 && showButton &&<button onClick={scrollToBottom} title="Go Bottom" className="absolute z-10 bottom-21 left-[49%] rounded-full bg-zinc-500 p-1 hover:scale-105 hover:bg-zinc-400  active:scale-100 cursor-pointer transition duration-200"><ArrowDown /></button>}
             <div className=" flex items-center  gap-3 w-full">
               <Textarea
                 placeholder="Ask a follow-up question..." 
