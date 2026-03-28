@@ -3,6 +3,7 @@ import { Trash2, FileText, PlayCircle, Brain ,LinkIcon } from "lucide-react";
 import {Button} from "../components/ui/button"
 import { useState,useEffect} from "react"
 import { Link } from "react-router-dom";
+import ReactMarkdown from "react-markdown"
 function Library(){
 type MType="link"| "file"
 interface IMaterial {
@@ -86,7 +87,7 @@ useEffect(()=>{
                 </CardHeader>
                 <CardContent className="pt-2 grow">
                     <p className="text-sm text-gray-500 dark:text-zinc-400 line-clamp-2">
-                        {material.summary || "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate."}
+                        <ReactMarkdown>{material.summary || "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate."}</ReactMarkdown>
                     </p>
                 </CardContent>
                 <CardFooter className="pt-4 border-t border-gray-50 dark:border-zinc-800/50 flex gap-3 mt-auto">
