@@ -72,7 +72,7 @@ const linkHandler=async (link: string)=>{
       }
       
       setLoading(true)
-      const token = localStorage.getItem("token"); // Get your token from storage
+      const token = localStorage.getItem("token");
       
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/uploads/link`, {
         method: "POST",

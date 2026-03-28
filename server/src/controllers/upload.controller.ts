@@ -6,7 +6,7 @@ import Flashcard from "../models/flashCard.model";
 import extractTextFromFile from "../services/file.service";
 import { getYoutubeTranscript } from "../services/youtube.service";
 import { generateFlashCards, generateResponse, quizGenerator, regenerateQuizzes } from "../services/gemini.service";
-import {updateUserStreak } from "../services/streak.service";
+import {updateUserStreak, CurrentUserStreak } from "../services/streak.service";
 import type {Request,Response,NextFunction} from "express"
 interface CustomError extends Error {
   status?: number,
@@ -449,8 +449,9 @@ export const getUserStreak = async (req: Request, res: Response, next: NextFunct
       const error=new Error("User information is missing") as CustomError;
       error.status=401;
       throw error
-    }
+    } 
     const userId=req.user._id;
+    await CurrentUserStreak(userId as any);
     const user=await User.findById(userId)
     res.json({currentStreak:user?.currentStreak})
   }catch(error){
