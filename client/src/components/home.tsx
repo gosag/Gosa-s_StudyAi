@@ -42,7 +42,7 @@ const fileHandler=async (file: File)=>{
         const formData = new FormData();
         formData.append("file", file)
         
-        const token = localStorage.getItem("token"); // Get your token from storage
+        const token = localStorage.getItem("token");
         
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/uploads/file`, {
           method: "POST",

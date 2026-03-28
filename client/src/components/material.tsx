@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 import {Loader2,Send} from "lucide-react"
 function MaterialContinue(){
     const [material,setMaterial]=useState<{role:string,content:string}[]>([])   
-    const [link,setLink]=useState("")
+    const [chat,setChat]=useState("")
     const [loading,setLoading]=useState(false)
     const navigate=useNavigate()
     const {id}=useParams()
@@ -40,7 +40,7 @@ function MaterialContinue(){
  const handleUpload=async ()=>{
   try{
   setLoading(true);
-  setMaterial(prev=>[...prev,{role:"user",content:link}]);
+  setMaterial(prev=>[...prev,{role:"user",content:chat}]);
   const token=localStorage.getItem("token");
   const res=await fetch(`${import.meta.env.VITE_API_URL}/api/continue`,{
     method:"POST",
@@ -48,12 +48,12 @@ function MaterialContinue(){
       "Content-Type":"application/json",
       "Authorization":`Bearer ${token}`
     },
-    body:JSON.stringify({materialId:id,userMessage:link})
+    body:JSON.stringify({materialId:id,userMessage:chat})
   })
   const data=await res.json();
   setMaterial(prev=>[...prev,{role:"model",content:data.response}]);
   localStorage.setItem('summary',JSON.stringify(data.response))
-  setLink('');
+  setChat('');
   setLoading(false)
 }
   catch(error){
@@ -61,7 +61,7 @@ function MaterialContinue(){
   }
 }
  function handleEnter(e: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) {
-    if(e.key==="Enter" && !e.shiftKey && (link)){
+    if(e.key==="Enter" && !e.shiftKey && (chat.trim() !== "")){
       e.preventDefault();
       handleUpload()
     }
@@ -89,16 +89,16 @@ function MaterialContinue(){
             <div className=" flex items-center gap-3 w-full">
               <Textarea
                 placeholder="Ask a follow-up question..." 
-                value={link}
+                value={chat}
                 onKeyDown={handleEnter}
-                onChange={(e) => setLink(e.target.value)}
+                onChange={(e) => setChat(e.target.value)}
                 className="flex-1 min-h-11 max-h-32 resize-none rounded-2xl py-3 px-4 shadow-sm border-zinc-200 dark:border-zinc-800 focus-visible:ring-zinc-400"
               />
               <Button 
                 onClick={handleUpload} 
-                disabled={loading || ( !link)} 
+                disabled={loading || ( !chat)} 
                 size="icon"
-                className={`rounded-full h-11 w-11 shrink-0 transition-colors ${link ? "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200" : "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-600"}`}
+                className={`rounded-full h-11 w-11 shrink-0 transition-colors ${chat ? "bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200" : "bg-zinc-100 text-zinc-400 dark:bg-zinc-800 dark:text-zinc-600"}`}
               >
                 {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
               </Button>
