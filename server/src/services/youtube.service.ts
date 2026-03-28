@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import os from "os";
 
-// 1. Setup Proxies
+// 1. Setup Proxies from Environment Variables
 const proxyList: string[] = process.env.YOUTUBE_PROXIES 
   ? process.env.YOUTUBE_PROXIES.split(",").map(p => p.trim())
   : [];
@@ -25,29 +25,28 @@ export async function getYoutubeTranscript(link: string): Promise<string> {
   }
   const videoId = videoIdMatch[1];
 
-  // 2. Resolve Paths (The fix for Render vs Local)
+  // 2. Resolve Paths (The Render vs Windows Fix)
   const tmpDir = os.tmpdir();
   const outputBase = path.join(tmpDir, `sub_${videoId}`);
-  
-  // Detect if we are on Render (Linux) or Local (Windows)
   const isLinux = process.platform === "linux";
-  
-  // On Render, yt-dlp is in the project root folder (process.cwd())
-  // On Windows, it uses your local path
+
+  // Binary Path: Points to the curl-downloaded file on Render, or your local .exe
   const ytDlpPath = isLinux 
     ? path.join(process.cwd(), "yt-dlp") 
     : "C:\\tools\\yt-dlp\\yt-dlp.exe";
 
-  const cookiesPath = path.resolve(process.cwd(), "youtube-cookies.txt");
+  // Cookies Path: Render mounts Secret Files in the project root by default
+  const cookiesPath = path.join(process.cwd(), "youtube-cookies.txt");
 
-  // SAFETY CHECKS
+  // --- DEBUGGING LOGS ---
+  // If things fail, check your Render logs for these messages!
+  console.log(`[DEBUG] Detected Platform: ${process.platform}`);
+  console.log(`[DEBUG] yt-dlp binary exists: ${fs.existsSync(ytDlpPath)} at ${ytDlpPath}`);
+  console.log(`[DEBUG] Cookies file exists: ${fs.existsSync(cookiesPath)} at ${cookiesPath}`);
+
+  // 3. Safety Check
   if (!fs.existsSync(ytDlpPath)) {
-    throw new Error(`[CRITICAL] yt-dlp binary missing at: ${ytDlpPath}. Check Render build command.`);
-  }
-
-  if (!fs.existsSync(cookiesPath)) {
-    console.error(`[CRITICAL] Cookies file missing at: ${cookiesPath}`);
-    throw new Error("Cookies file not found. Ensure youtube-cookies.txt is in your project root.");
+    throw new Error(`[CRITICAL] yt-dlp binary missing at: ${ytDlpPath}. Verify Render Build Command.`);
   }
 
   const maxAttempts = proxyList.length > 0 ? proxyList.length : 1;
@@ -60,20 +59,25 @@ export async function getYoutubeTranscript(link: string): Promise<string> {
       attempt++;
       
       return await new Promise((resolve, reject) => {
-        // 3. Command arguments
+        // 4. Command arguments
         const args = [
           "--skip-download",
           "--write-auto-subs",
           "--sub-format", "vtt",
           "--sub-lang", "en",
-          "--cookies", cookiesPath,
           "--geo-bypass",
-          "--js-runtimes", "node", // Keeps the 'n' challenge happy
+          "--js-runtimes", "node", // Essential for the "n challenge"
         ];
 
+        // Add cookies if the secret file was found
+        if (fs.existsSync(cookiesPath)) {
+          args.push("--cookies", cookiesPath);
+        }
+
+        // Add proxy if available
         if (proxyToUse) {
           args.push("--proxy", proxyToUse);
-          console.log(`[DEBUG] yt-dlp attempt ${attempt}/${maxAttempts} using proxy: ${proxyToUse}`);
+          console.log(`[DEBUG] Attempt ${attempt}/${maxAttempts} using proxy: ${proxyToUse}`);
         } else if (process.env.YOUTUBE_PROXY) {
           args.push("--proxy", process.env.YOUTUBE_PROXY);
         }
@@ -83,31 +87,32 @@ export async function getYoutubeTranscript(link: string): Promise<string> {
         execFile(ytDlpPath, args, (err, stdout, stderr) => {
           if (err) {
             console.error(`[yt-dlp ERROR]: ${stderr || err.message}`);
-            return reject(new Error(`yt-dlp failed to fetch transcript.`));
+            return reject(new Error(`yt-dlp execution failed.`));
           }
 
           try {
-            // 4. Find and read the file
+            // 5. Find and read the generated .vtt file
             const files = fs.readdirSync(tmpDir);
             const subtitleFileName = files.find(f => f.startsWith(`sub_${videoId}`) && f.endsWith(".vtt"));
 
             if (!subtitleFileName) {
-              return reject(new Error("No subtitles file generated. Video might not have English captions."));
+              return reject(new Error("No subtitles found. Video might not have English captions."));
             }
 
             const subtitleFilePath = path.join(tmpDir, subtitleFileName);
             const rawContent = fs.readFileSync(subtitleFilePath, "utf8");
 
-            // 5. Clean & Deduplicate VTT content
+            // 6. Clean & Deduplicate VTT content
             const cleanText = rawContent
               .split("\n")
-              .map(line => line.replace(/<[^>]*>/g, "").trim())
+              .map(line => line.replace(/<[^>]*>/g, "").trim()) // Remove VTT tags
               .filter(line => {
                 const isHeader = line.includes("WEBVTT") || line.includes("Kind:") || line.includes("Language:");
                 const isTimestamp = line.includes("-->");
                 return !isHeader && !isTimestamp && line !== "";
               })
               .reduce((acc: string[], currentLine: string) => {
+                // Prevent duplicate lines often found in auto-generated subs
                 if (acc.length === 0 || acc[acc.length - 1] !== currentLine) {
                   acc.push(currentLine);
                 }
@@ -116,7 +121,7 @@ export async function getYoutubeTranscript(link: string): Promise<string> {
               .join(" ")
               .replace(/\s+/g, " ");
 
-            // 6. Cleanup temp file
+            // 7. Cleanup temp file
             fs.unlinkSync(subtitleFilePath);
             resolve(cleanText);
 
@@ -127,7 +132,7 @@ export async function getYoutubeTranscript(link: string): Promise<string> {
       });
     } catch (error) {
       lastError = error;
-      console.log(`[WARNING] Attempt ${attempt} failed, trying next proxy...`);
+      console.log(`[WARNING] Attempt ${attempt} failed. Retrying...`);
     }
   }
 
