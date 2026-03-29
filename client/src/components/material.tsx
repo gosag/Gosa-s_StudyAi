@@ -44,6 +44,7 @@ function MaterialContinue(){
   try{
   setLoading(true);
   setMaterial(prev=>[...prev,{role:"user",content:chat}]);
+  setTimeout(()=>(scrollToBottom()),200)
   const token=localStorage.getItem("token");
   const res=await fetch(`${import.meta.env.VITE_API_URL}/api/continue`,{
     method:"POST",
@@ -57,6 +58,7 @@ function MaterialContinue(){
   setMaterial(prev=>[...prev,{role:"model",content:data.response}]);
   localStorage.setItem('summary',JSON.stringify(data.response))
   setChat('');
+  setTimeout(()=>(scrollToBottom()),200)
   setLoading(false)
 }
   catch(error){
