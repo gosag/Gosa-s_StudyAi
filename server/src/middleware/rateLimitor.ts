@@ -6,3 +6,10 @@ export const rateLimiter=rateLimit({
     standardHeaders:true,
     legacyHeaders:false
 })
+export const transcriptLimiter=rateLimit({
+    windowMs:1*60*1000,
+    max:1,
+    message:"Please! try after a minute.",
+    standardHeaders:true,
+    legacyHeaders:false
+})

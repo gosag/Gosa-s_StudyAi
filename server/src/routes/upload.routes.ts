@@ -1,6 +1,7 @@
 import express from "express"
 import multer from "multer";
 import protector from "../middleware/authMiddleware";
+import {transcriptLimiter} from "../middleware/rateLimitor"
 import {uploadFile, 
         uploadLink, 
         continueConversation, 
@@ -20,7 +21,6 @@ const upload = multer({
     storage: multer.memoryStorage(),
     limits: { fileSize: 15 * 1024 * 1024 },
     fileFilter: (req, file, cb) => {
-        // Allowed MIME types
         const allowedTypes = [
             "application/pdf", // PDF
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // .docx
@@ -35,7 +35,7 @@ const upload = multer({
     }
 });
     uploadRoute.post("/api/uploads/file",protector, upload.single("file"), uploadFile)
-    uploadRoute.post("/api/uploads/link",protector, uploadLink);
+    uploadRoute.post("/api/uploads/link",transcriptLimiter,protector, uploadLink);
     uploadRoute.post("/api/continue",protector, continueConversation)
     uploadRoute.get("/api/materials",protector, getUserMaterials)
     uploadRoute.delete("/api/delete/:id",protector,deleteMaterial)
