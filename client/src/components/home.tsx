@@ -38,6 +38,15 @@ function Home() {
     return false
   }
 }
+ const scrollToBottom = () => {
+
+    if(!ref.current) return;
+    ref.current.scrollTo({
+      top: ref.current.scrollHeight,
+      behavior: "smooth"
+    })
+    console.log("Scrolled")
+  }
 const fileHandler=async (file: File)=>{
   setLoading(true)
         const formData = new FormData();
@@ -65,6 +74,7 @@ const fileHandler=async (file: File)=>{
         setMaterialId(data.materialId)
         setLoading(false)
         setError(null)
+        
 }
 const linkHandler=async (link: string)=>{
   if(!isYoutubeLink(link)){
@@ -106,6 +116,7 @@ const continueHandler=async ()=>{
   try{
   setLoading(true);
   setAiData(prev=>[...prev,{role:"user",content:link}]);
+  setTimeout(()=>(scrollToBottom()),200)
   const token=localStorage.getItem("token");
   const res=await fetch(`${import.meta.env.VITE_API_URL}/api/continue`,{
     method:"POST",
@@ -116,15 +127,20 @@ const continueHandler=async ()=>{
     body:JSON.stringify({materialId,userMessage:link})
   })
   const data=await res.json();
+  if(error && error.length>2){
+    setError(null)
+  }
   if(!res.ok){
     setError(data.message || data.error || "Failed to continue conversation. Please try again.");
     setLoading(false);
     return;
   }
   setAiData(prev=>[...prev,{role:"model",content:data.response}]);
-  localStorage.setItem('summary',JSON.stringify(data.response))
+  localStorage.setItem('summary',JSON.stringify(data.response));
   setLink('');
+  setTimeout(()=>(scrollToBottom()),200)
   setLoading(false)
+  
 }
   catch(error){
     setError("Failed to continue conversation. Please try again.")
@@ -204,13 +220,7 @@ useEffect(()=>{
  scrollDown();
 return ()=>el.removeEventListener("scroll",scrollDown)
 },[ref.current])
-  const scrollToBottom = () => {
-    if(!ref.current) return;
-    ref.current.scrollTo({
-      top: ref.current.scrollHeight,
-      behavior: "smooth"
-    })
-  }
+ 
   return (
     <div className="max-w-7xl mx-auto p-3 sm:p-6 flex flex-col gap-4 sm:gap-6 w-full min-h-screen">
       {/* Header Section */}
