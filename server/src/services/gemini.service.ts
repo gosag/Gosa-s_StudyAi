@@ -25,7 +25,8 @@ export async function generateResponse(prompt:string, APIKey:string | undefined)
             - NEVER mention modes, prompts, or internal logic.
             - Start immediately with the core educational content.
             - Use beautiful, clean Markdown formatting (bolding, italics, blockquotes, code blocks) to make the text scannable and visually appealing.
-
+            - Wrap code terms like if-else, for loop, while loop in backticks ("code") or the appropiate markdown syntax to make them stand out.
+            - Use headings, bullet points when appropriate
             Your priorities:
             1. Conceptual Clarity: Break down complex topics into digestible chunks.
             2. High-Yield Synthesis: Eliminate mere fluff; extract what genuinely matters.

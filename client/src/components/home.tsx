@@ -220,11 +220,16 @@ useEffect(()=>{
  scrollDown();
 return ()=>el.removeEventListener("scroll",scrollDown)
 },[ref.current])
- 
+
   return (
-    <div className="max-w-7xl mx-auto p-3 sm:p-6 flex flex-col gap-4 sm:gap-6 w-full min-h-screen">
+    <div className="max-w-7xl mx-auto  p-2 flex flex-col gap-4 sm:gap-3 w-full min-h-screen">
       {/* Header Section */}
-      <header className="flex flex-col gap-2 border-b pb-4 shrink-0">
+       
+
+      {/* Main Content Area */}
+      {aiData.length === 0 ? (
+        <div>
+           <header className="flex flex-col gap-2 border-b pb-4 shrink-0">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Your Study Materials</h1>
@@ -232,15 +237,9 @@ return ()=>el.removeEventListener("scroll",scrollDown)
               Upload a PDF or paste a link to generate AI-powered summaries, flashcards, and quizzes.
             </p>
           </div>
-          <Button title="New Chat" variant="outline" disabled={aiData.length === 0} onClick={handleRestart} className="flex gap-2 items-center rounded-lg">
-            <BrainCircuit className="w-4 h-4" />
-            <span className="hidden sm:inline">New Chat</span>
-          </Button>
+          
         </div>
       </header>
-
-      {/* Main Content Area */}
-      {aiData.length === 0 ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* Upload Section - Modern drag-and-drop style */}
           <Card className="flex flex-col gap-6 p-8 border-dashed border-2 bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors shadow-none">
@@ -374,10 +373,15 @@ return ()=>el.removeEventListener("scroll",scrollDown)
             </div>
           )}
         </div>
+        </div>
       ) : (
         /* Chat UI when active */
-        <Card className="flex flex-col flex-1 min-h-[70vh] max-h-screen w-full max-w-6xl mx-auto shadow-sm border-zinc-200 gap-1 dark:border-zinc-800 overflow-hidden">
-          <CardContent ref={ref} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 bg-zinc-50/30 dark:bg-zinc-950/30 custom-scrollbar">
+        <Card className="flex flex-col flex-1 min-h-[70vh] max-h-dvh w-full max-w-6xl mx-auto shadow-sm border-zinc-200 gap-1 dark:border-zinc-800 overflow-hidden relative pb-2">
+          <Button title="New Chat" variant="outline" disabled={aiData.length === 0} onClick={handleRestart} className="flex gap-2 -mt-4 items-center rounded-lg w-fit max-w-40 relative  -right-5">
+            <BrainCircuit className="w-4 h-4" />
+            <span className="hidden sm:inline">New Chat</span>
+          </Button>
+          <CardContent ref={ref} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4 bg-zinc-50/30 dark:bg-zinc-950/30 custom-scrollbar">
             {aiData.map((item, index) => (
               <div key={index} className={`flex w-full ${item.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`shadow-sm ${
@@ -392,7 +396,7 @@ return ()=>el.removeEventListener("scroll",scrollDown)
               </div>
             ))}
           </CardContent>
-          <CardFooter className=" p-4 border-t bg-white dark:bg-zinc-900/50 shrink-0 relative">
+          <CardFooter className=" p-4 border-t bg-zinc-100 dark:bg-zinc-800 rounded-xl shrink-0 relative mx-5">
            {showButton&& <button onClick={scrollToBottom} className="absolute bg-zinc-600 rounded-full p-1 -top-9 left-[48%] hover:bg-zinc-500 hover:scale-105 active:scale-100 cursor-pointer transition duration-200"><ArrowDown size={24}/></button>}
             <div className="flex items-center gap-2 w-full">
              

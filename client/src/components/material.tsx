@@ -4,6 +4,9 @@ import { Card, CardContent, CardFooter } from "./ui/card";
 import { Button } from "./ui/button";
 import { Textarea } from "./ui/textarea";
 import ReactMarkdown from "react-markdown";
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+import 'katex/dist/katex.min.css'
 import {Loader2,Send, ArrowDown} from "lucide-react"
 
 function MaterialContinue(){
@@ -78,6 +81,7 @@ useEffect(() => {
     const { scrollTop, scrollHeight, clientHeight } = el;
     setShowButton(scrollHeight - scrollTop - clientHeight >= 50);
   };
+  
   handleScroll();
   el.addEventListener("scroll", handleScroll);
   return () => el.removeEventListener("scroll", handleScroll);
@@ -89,6 +93,13 @@ useEffect(() => {
     behavior: "smooth",
   });
 };
+const getCleanCode=(text:string)=>{
+  return text
+    .replace(/[‘’]/g, "<p className='text-blue-500'></p> ")
+    .replace(/[“”]/g, '<p className="text-blue-500"></p> ')
+    .replace(/[`]/g, '')
+    .replace(/[]/g, '')
+}
     return(
         <>
         <div className="max-w-7xl mb-0 mx-auto p-3 sm:p-6 flex flex-col  w-full max-h-dvh">
@@ -102,7 +113,10 @@ useEffect(() => {
                   : 'max-w-[95%] lg:max-w-[85%] rounded-2xl rounded-tl-sm px-5 sm:px-6 py-4 bg-white text-zinc-900 border border-zinc-200 dark:bg-zinc-900 dark:text-zinc-100 dark:border-zinc-800'
                 }`}>
                   <div className={`prose prose-sm md:prose-base dark:prose-invert max-w-none wrap-break-word ${item.role === 'user' ? 'prose-p:m-0' : ''}`}>
-                    <ReactMarkdown>{item.content}</ReactMarkdown>
+                    <ReactMarkdown
+                            remarkPlugins={[remarkMath]} 
+                            rehypePlugins={[rehypeKatex]}
+                    >{getCleanCode(item.content)}</ReactMarkdown>
                   </div>
                 </div>
               </div>
