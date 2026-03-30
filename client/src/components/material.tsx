@@ -7,7 +7,7 @@ import ReactMarkdown from "react-markdown";
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import 'katex/dist/katex.min.css'
-import {Loader2,Send, ArrowDown} from "lucide-react"
+import {Loader2,Send, ArrowDown, BrainCircuit} from "lucide-react"
 
 function MaterialContinue(){
     const [material,setMaterial]=useState<{role:string,content:string}[]>([])   
@@ -100,10 +100,17 @@ const getCleanCode=(text:string)=>{
     .replace(/[`]/g, '')
     .replace(/[]/g, '')
 }
+const handleRestart=()=>{
+  return navigate("/home")
+}
     return(
         <>
         <div className="max-w-7xl mb-0 mx-auto p-3 sm:p-6 flex flex-col  w-full max-h-dvh">
         <Card className="relative flex flex-col flex-1 pb-2  gap-1 min-h-[93vh] w-full max-w-6xl mx-auto shadow-sm border-zinc-200 dark:border-zinc-900 overflow-hidden">
+          <Button title="New Chat" variant="outline" onClick={handleRestart} className="flex gap-2 -mt-4 items-center rounded-lg w-fit max-w-40 relative  -right-5">
+            <BrainCircuit className="w-4 h-4" />
+            <span className="hidden sm:inline">New Chat</span>
+          </Button>
           <CardContent ref={chatRef} className="flex-1 overflow-y-auto w-full p-4 pr-0 sm:p-6 space-y-6 bg-zinc-50/30 dark:bg-zinc-950/30 custom-scrollbar">
             {material.map((item, index) => (
               <div key={index} className={`flex w-full ${item.role === 'user' ? 'justify-end' : 'justify-center'}`}>
