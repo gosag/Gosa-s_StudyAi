@@ -106,7 +106,7 @@ const handleRestart=()=>{
     return(
         <>
         <div className="max-w-7xl mb-0 mx-auto p-3 sm:p-6 flex flex-col  w-full max-h-dvh">
-        <Card className="relative flex flex-col flex-1 pb-2  gap-1 min-h-[93vh] w-full max-w-6xl mx-auto shadow-sm border-zinc-200 dark:border-zinc-900 overflow-hidden">
+        <Card className="relative flex flex-col flex-1 pb-2  gap-1 min-h-[93vh] w-full max-w-6xl mx-auto shadow-sm  border-zinc-200 dark:border-zinc-900 overflow-hidden">
           <Button title="New Chat" variant="outline" onClick={handleRestart} className="flex gap-2 -mt-4 items-center rounded-lg w-fit max-w-40 relative  -right-5">
             <BrainCircuit className="w-4 h-4" />
             <span className="hidden sm:inline">New Chat</span>
@@ -124,13 +124,13 @@ const handleRestart=()=>{
                             remarkPlugins={[remarkMath]} 
                             rehypePlugins={[rehypeKatex]}
                     >{getCleanCode(item.content)}</ReactMarkdown>
-                  </div>
+                  </div> 
                 </div>
               </div>
             ))}
           </CardContent>
           <CardFooter className="p-3 mx-2 rounded-3xl pt-0 border-t bg-white dark:bg-zinc-950 shrink-0 relative">
-           {chat.length<1 && showButton &&<button onClick={scrollToBottom} title="Go Bottom" className="absolute z-10 bottom-21 left-[49%] rounded-full bg-zinc-500 p-1 hover:scale-105 hover:bg-zinc-400  active:scale-100 cursor-pointer transition duration-200"><ArrowDown /></button>}
+           {chat.length<1 && showButton && <button onClick={scrollToBottom} title="Go Bottom" className="absolute z-10 bottom-21 left-[49%] rounded-full bg-zinc-300  p-1 hover:scale-105 hover:bg-zinc-400 dark:bg-zinc-600 dark:hover:bg-zinc-700 active:scale-100 cursor-pointer transition duration-200"><ArrowDown /></button>}
             <div className=" flex items-center  gap-3 w-full">
               <Textarea
                 placeholder="Ask a follow-up question..." 

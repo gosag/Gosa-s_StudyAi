@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import {z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 const loginSchema=z.object({
     email:z.email(),
     password:z.string().min(6,"at least 6 characters are required")
@@ -9,6 +11,7 @@ const loginSchema=z.object({
 
 type TloginSchema= z.infer<typeof loginSchema>
 function Login(){
+  const [loading, setLoading] = useState(false);
     const {
         register,
         handleSubmit,
@@ -17,6 +20,7 @@ function Login(){
     }=useForm<TloginSchema>({resolver:zodResolver(loginSchema)})
     const submitHandler=async(data:TloginSchema)=>{
       try{
+        setLoading(true);
         const res=await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`,{
           method:"POST",
           headers:{"Content-Type":"application/json"},
@@ -36,6 +40,9 @@ function Login(){
         catch(error: any){
           console.error(error)
           alert(error.message || "An error occurred while logging in. Please try again.")
+        }
+        finally{
+          setLoading(false);
         }
     }
     return (
@@ -100,7 +107,11 @@ function Login(){
             type="submit"
             className="flex w-full justify-center rounded-xl bg-black px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-black transition-all active:scale-[0.98]"
           >
-            Sign in
+            {loading ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              "Sign in"
+            )}
           </button>
         </form>
 

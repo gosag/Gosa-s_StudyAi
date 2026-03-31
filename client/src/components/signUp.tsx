@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {Link, useNavigate} from "react-router-dom"
 import {z} from "zod"
+import { Loader2 } from "lucide-react";
+import { useState } from "react";
 const signUpSchema=z.object({
     email:z.email(),
     password:z.string().min(6,"at least 6 characters are required"),
@@ -19,8 +21,11 @@ function SignUp(){
      reset,
      formState:{errors}
     }=useForm<typesignUpSchema>({resolver:zodResolver(signUpSchema)})
+    const [loading, setLoading] = useState(false);
     const onSubmit=async (data:typesignUpSchema)=>{
+
         try{
+        setLoading(true);
         const res=await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`,{
           method:"POST",
           headers:{
@@ -43,7 +48,11 @@ function SignUp(){
     catch(error: any){
       console.error(error);
       alert(error.message || "An error occurred while creating your account. Please try again.")
-    }}   
+    }
+     finally{
+      setLoading(false);
+    }}  
+     
   return (
   <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
     <div className="w-full max-w-md">
@@ -127,7 +136,11 @@ function SignUp(){
             type="submit"
             className="flex w-full justify-center rounded-xl bg-black px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black transition-all active:scale-[0.98]"
           >
-            Create account
+            {loading ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              "Create account"
+            )}
           </button>
         </form>
 
