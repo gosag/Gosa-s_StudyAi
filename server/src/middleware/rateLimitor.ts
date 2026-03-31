@@ -1,7 +1,7 @@
 import rateLimit from "express-rate-limit";
 export const rateLimiter=rateLimit({
     windowMs:5*60*1000,
-    max:3,
+    max:6,
     message:"Too many Request try after 5 minutes!",
     standardHeaders:true,
     legacyHeaders:false
