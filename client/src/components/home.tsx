@@ -239,7 +239,7 @@ return ()=>el.removeEventListener("scroll",scrollDown)
           
         </div>
       </header>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-5 items-start">
           {/* Upload Section - Modern drag-and-drop style */}
           <Card className="flex flex-col gap-6 p-8 border-dashed border-2 bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors shadow-none">
             <div className="flex flex-col items-center justify-center text-center space-y-4">

@@ -189,6 +189,12 @@ const connectAPIKey=async ()=>{
               {apiLoading ? "Connecting..." : "Connect API Key"}
             </Button>
           </CardContent>
+          <a href="https://youtu.be/yIyZvwHJnYA?si=su9nqpFM1k28q1Bl" target="_blank" rel="noopener noreferrer"
+          
+            className="text-sm text-blue-600 hover:underline mt-2 block text-center"
+          >
+            Don't know how to get an API key? Learn How to Get One.
+          </a>
         </Card>
         <Card>
           <CardHeader>
