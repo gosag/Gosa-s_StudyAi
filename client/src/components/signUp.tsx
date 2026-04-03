@@ -20,7 +20,10 @@ function SignUp(){
      handleSubmit,
      reset,
      formState:{errors}
-    }=useForm<typesignUpSchema>({resolver:zodResolver(signUpSchema)})
+    }=useForm<typesignUpSchema>({
+      resolver:zodResolver(signUpSchema),
+      shouldUnregister: false
+    })
     const [loading, setLoading] = useState(false);
     const [verifying, setVerifying] = useState(false);
     
@@ -66,7 +69,7 @@ function SignUp(){
       e.preventDefault();
       
       // Ensure codes match
-      if (verificationCode !== expectedCode) {
+      if (verificationCode.trim() !== expectedCode?.trim()) {
         alert("Invalid verification code. Please try again.");
         return;
       }
@@ -75,13 +78,15 @@ function SignUp(){
 
       try {
         setVerifying(true);
+        // Exclude confirmPassword from the payload
+        const { confirmPassword, ...registerData } = formData;
         // 3. Register user after successful verification
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(registerData)
         });
         
         const returnedData = await res.json();
