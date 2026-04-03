@@ -21,7 +21,7 @@ authRouter.post("/api/auth/login",rateLimiter,validate(loginSchema,"body"), logi
 authRouter.get("/api/auth/:id",protector,getUserData);
 authRouter.delete("/api/auth/Logout",async (req,res,next)=>{
     try{
-    const email=req.body;
+    const {email}=req.body;
     const user= await User.findOne({email})
     console.log(user)
     if(!user){
