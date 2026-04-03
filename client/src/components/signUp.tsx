@@ -44,7 +44,14 @@ function SignUp(){
           },
           body:JSON.stringify({ email: data.email })
         })
-        const returnedData=await res.json()
+        
+        let returnedData;
+        try {
+          returnedData = await res.json();
+        } catch (e) {
+          throw new Error(`Server returned a non-JSON response (status ${res.status}). This often means the server crashed or timed out in production because it blocks outgoing email or connection.`);
+        }
+        
         if(!res.ok){
           console.log("Server responded with HTTP ", res.status, returnedData);
           const errMsg = returnedData.message || returnedData.error || (returnedData.errors && returnedData.errors[0]?.message) || "something went wrong sending data to the server";
@@ -89,7 +96,12 @@ function SignUp(){
           body: JSON.stringify(registerData)
         });
         
-        const returnedData = await res.json();
+        let returnedData;
+        try {
+          returnedData = await res.json();
+        } catch (e) {
+          throw new Error(`Server returned a non-JSON response (status ${res.status}). Error in production environment.`);
+        }
         
         if (!res.ok) {
           const errMsg = returnedData.message || returnedData.error || (returnedData.errors && returnedData.errors[0]?.message) || "something went wrong sending data to the server";

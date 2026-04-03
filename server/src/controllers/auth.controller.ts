@@ -24,7 +24,7 @@ export const verificationController=asyncHandler(async(req:Request,res:Response,
     }
     const transporter=nodeMailer.createTransport({
         host: "smtp.gmail.com",
-        port: 465,
+        port: 465, // Note: some production environments (like Vercel) block ports 465 and 587
         secure: true,
         auth:{
             user:process.env.EMAIL_USER,
