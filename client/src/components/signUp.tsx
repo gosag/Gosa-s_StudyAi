@@ -23,17 +23,23 @@ function SignUp(){
     }=useForm<typesignUpSchema>({resolver:zodResolver(signUpSchema)})
     const [loading, setLoading] = useState(false);
     const [verifying, setVerifying] = useState(false);
-    const onSubmit=async (data:typesignUpSchema)=>{
+    
+    // New states for verification logic
+    const [step, setStep] = useState<"register" | "verify">("register");
+    const [expectedCode, setExpectedCode] = useState<string | null>(null);
+    const [verificationCode, setVerificationCode] = useState("");
+    const [formData, setFormData] = useState<typesignUpSchema | null>(null);
 
+    const onSubmit=async (data:typesignUpSchema)=>{
         try{
         setLoading(true);
-        const res=await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`,{
+        // 1. Send verification email first
+        const res=await fetch(`${import.meta.env.VITE_API_URL}/api/auth/verify-email`,{
           method:"POST",
           headers:{
             "Content-Type":"application/json"
           },
-          body:JSON.stringify(data)
-
+          body:JSON.stringify({ email: data.email })
         })
         const returnedData=await res.json()
         if(!res.ok){
@@ -41,18 +47,60 @@ function SignUp(){
           const errMsg = returnedData.message || returnedData.error || (returnedData.errors && returnedData.errors[0]?.message) || "something went wrong sending data to the server";
           throw new Error(errMsg);
         }
-        reset()
-        alert("account created successfully, you can now log in")
-        navigate("/login", { replace: true })
         
+        // 2. Switch to verification step and save data
+        setExpectedCode(String(returnedData.code));
+        setFormData(data);
+        setStep("verify");
+        alert("Verification code has been sent to your email!");
       }
     catch(error: any){
       console.error(error);
-      alert(error.message || "An error occurred while creating your account. Please try again.")
+      alert(error.message || "An error occurred. Please try again.")
     }
      finally{
       setLoading(false);
-    }}  
+    }} 
+
+    const handleVerify = async (e: React.FormEvent) => {
+      e.preventDefault();
+      
+      // Ensure codes match
+      if (verificationCode !== expectedCode) {
+        alert("Invalid verification code. Please try again.");
+        return;
+      }
+
+      if (!formData) return;
+
+      try {
+        setVerifying(true);
+        // 3. Register user after successful verification
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        const returnedData = await res.json();
+        
+        if (!res.ok) {
+          const errMsg = returnedData.message || returnedData.error || (returnedData.errors && returnedData.errors[0]?.message) || "something went wrong sending data to the server";
+          throw new Error(errMsg);
+        }
+
+        reset();
+        alert("Account verified and created successfully. You can now log in!");
+        navigate("/login", { replace: true });
+      } catch (error: any) {
+        console.error(error);
+        alert(error.message || "An error occurred while creating your account. Please try again.");
+      } finally {
+        setVerifying(false);
+      }
+    } 
      
   return (
   <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
@@ -65,10 +113,11 @@ function SignUp(){
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-900/5 p-8 sm:p-10">
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {step === "register" ? (
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
 
-          {/* Email */}
-          <div>
+            {/* Email */}
+            <div>
             <label className="block text-sm font-medium text-gray-900 mb-2">
               Email address
             </label>
@@ -131,20 +180,68 @@ function SignUp(){
               </p>
             )}
           </div>
-
+          
           {/* Button */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="flex w-full justify-center rounded-xl bg-black px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black transition-all active:scale-[0.98]"
-          >
-            {loading ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              "Create account"
-            )}
-          </button>
-        </form>
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex w-full justify-center rounded-xl bg-black px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black transition-all active:scale-[0.98]"
+            >
+              {loading ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Continue to Verify"
+              )}
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleVerify} className="space-y-6">
+            <div className="text-center">
+              <p className="text-sm text-gray-600 mb-4">
+                We've sent a code to <span className="font-semibold">{formData?.email}</span>.
+              </p>
+            </div>
+            
+            {/* Verification Code */}
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2 text-center">
+                Verification Code
+              </label>
+              <input
+                type="text"
+                autoFocus
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+                placeholder="Ex. 1234"
+                required
+                className="block w-full text-center rounded-xl border-0 py-2.5 px-3.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-black sm:text-lg sm:leading-6 transition-all tracking-widest font-mono"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={verifying}
+              className="flex w-full justify-center rounded-xl bg-black px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black transition-all active:scale-[0.98]"
+            >
+              {verifying ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Verify & Create account"
+              )}
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setStep("register");
+                setVerificationCode("");
+              }}
+              className="mt-4 flex w-full justify-center text-sm font-semibold text-gray-600 hover:text-black transition-colors"
+            >
+              Go back
+            </button>
+          </form>
+        )}
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-500 mt-8">
@@ -154,7 +251,9 @@ function SignUp(){
           </Link>
         </p>
       </div>
+      
     </div>
+    
   </div>
 );
 }
