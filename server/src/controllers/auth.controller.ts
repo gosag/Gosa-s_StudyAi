@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken"
 import type { Request ,Response ,NextFunction} from "express";
 import bcrypt from "bcryptjs"
 import type { Types } from "mongoose";
+import nodeMailer from "nodemailer"
 const authRouter=express.Router();
 interface RequestError extends Error{
     status?:number,
@@ -14,11 +15,50 @@ const tokenGenerator=(id:Types.ObjectId)=>{
     const SECRET=process.env.SECRET!
     return jwt.sign({id:id.toString()},SECRET,{expiresIn:"30d"})
 }
+export const verificationController=asyncHandler(async(req:Request,res:Response,next:NextFunction)=>{
+    const {email}=req.body;
+    if(!email){
+        const error= new Error("Email is not sent") as RequestError
+        error.status=400;
+        throw error;
+    }
+    const transporter=nodeMailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth:{
+            user:process.env.EMAIL_USER,
+            pass:process.env.EMAIL_PASS
+        }
+    })
+    let randomNumber=Math.floor(Math.random()*9000)+999;
+    if(randomNumber<1000){
+        randomNumber+=1
+    }
+    console.log(randomNumber);
+    const sendEmail=async()=>{
+        const emailObject={
+        to:email,
+        from:process.env.EMAIL_USER!,
+        subject:"Your verification Code from EchoStudy",
+        text:`Your verification code is ${randomNumber}. It will expire in 5 minutes.`
+    }
+    try{
+        await transporter.sendMail(emailObject)
+        console.log("Email sent successfully");
+        res.json({message:`Verification code sent to ${email}. Please check your inbox.`,code:randomNumber})
+    }
+    catch(err){
+        next(err)
+    }
+    }
+    await sendEmail()
+})
 export const registerController= asyncHandler(async(req:Request,res:Response)=>{
     const {email,password}=req.body;
     const userExists=await User.findOne({email})
     if(userExists){
-        const error= new Error("user withthis email already exists") as RequestError;
+        const error= new Error("user with this email already exists") as RequestError;
         error.status=409;
         throw error;
     }

@@ -22,6 +22,7 @@ function SignUp(){
      formState:{errors}
     }=useForm<typesignUpSchema>({resolver:zodResolver(signUpSchema)})
     const [loading, setLoading] = useState(false);
+    const [verifying, setVerifying] = useState(false);
     const onSubmit=async (data:typesignUpSchema)=>{
 
         try{
