@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken"
 import type { Request ,Response ,NextFunction} from "express";
 import bcrypt from "bcryptjs"
 import type { Types } from "mongoose";
-import nodeMailer from "nodemailer"
+import { Resend } from "resend"
 const authRouter=express.Router();
 interface RequestError extends Error{
     status?:number,
@@ -22,36 +22,28 @@ export const verificationController=asyncHandler(async(req:Request,res:Response,
         error.status=400;
         throw error;
     }
-    const transporter=nodeMailer.createTransport({
-        service: "gmail",
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
-        auth:{
-            user:process.env.EMAIL_USER,
-            pass:process.env.EMAIL_PASS
-        }
-    })
+    
+    const resend = new Resend(process.env.RESEND_API_KEY!);
+
     let randomNumber=Math.floor(Math.random()*9000)+999;
     if(randomNumber<1000){
         randomNumber+=1
     }
     console.log(randomNumber);
     const sendEmail=async()=>{
-        const emailObject={
-        to:email,
-        from:process.env.EMAIL_USER!,
-        subject:"Your verification Code from EchoStudy",
-        text:`Your verification code is ${randomNumber}. It will expire in 5 minutes.`
-    }
-    try{
-        await transporter.sendMail(emailObject)
-        console.log("Email sent successfully");
-        res.json({message:`Verification code sent to ${email}. Please check your inbox.`,code:randomNumber})
-    }
-    catch(err){
-        next(err)
-    }
+        try{
+            await resend.emails.send({
+                from: process.env.EMAIL_USER!,
+                to: email,
+                subject: "Your verification Code from EchoStudy",
+                text: `Your verification code is ${randomNumber}. It will expire in 5 minutes.`
+            });
+            console.log("Email sent successfully");
+            res.json({message:`Verification code sent to ${email}. Please check your inbox.`,code:randomNumber})
+        }
+        catch(err){
+            next(err)
+        }
     }
     await sendEmail()
 })
