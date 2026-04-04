@@ -30,6 +30,7 @@
     "nodemailer": "^8.0.2",
     "parse-pdf": "^3.1.0",
     "pdf-parse-new": "^2.0.0",
+    "resend": "^6.10.0",
     "youtube-caption-extractor": "^1.9.1",
     "youtube-captions-scraper": "^2.0.3",
     "youtube-transcript": "^1.2.1",
