@@ -85,15 +85,13 @@ function SignUp(){
 
       try {
         setVerifying(true);
-        // Exclude confirmPassword from the payload
-        const { confirmPassword, ...registerData } = formData;
         // 3. Register user after successful verification
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(registerData)
+          body: JSON.stringify(formData)
         });
         
         let returnedData;
