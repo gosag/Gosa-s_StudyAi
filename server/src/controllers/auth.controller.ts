@@ -23,7 +23,7 @@ export const verificationController=asyncHandler(async(req:Request,res:Response,
         throw error;
     }
     
-    const resend = new Resend(process.env.RESEND_API_KEY!);
+    const resend = new Resend(`${process.env.RESEND_API_KEY!}`);
 
     let randomNumber=Math.floor(Math.random()*9000)+999;
     if(randomNumber<1000){
@@ -32,16 +32,23 @@ export const verificationController=asyncHandler(async(req:Request,res:Response,
     console.log(randomNumber);
     const sendEmail=async()=>{
         try{
-            await resend.emails.send({
-                from: process.env.EMAIL_USER!,
+            const { data, error } = await resend.emails.send({
+                from: "EchoStudy <onboarding@resend.dev>", // Required by Resend for testing without a domain
                 to: email,
                 subject: "Your verification Code from EchoStudy",
                 text: `Your verification code is ${randomNumber}. It will expire in 5 minutes.`
             });
-            console.log("Email sent successfully");
+
+            if (error) {
+                console.error("Resend API Error:", error);
+                throw error;
+            }
+
+            console.log("Email sent successfully:", data);
             res.json({message:`Verification code sent to ${email}. Please check your inbox.`,code:randomNumber})
         }
         catch(err){
+            console.error("Failed to send email:", err);
             next(err)
         }
     }
