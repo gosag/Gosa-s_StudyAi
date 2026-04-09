@@ -112,8 +112,8 @@ VITE_API_BASE_URL=http://localhost:5000/api
 ##  API Overview
 
 ### Authentication
-- POST /api/auth/signup - Register a new user
-- POST /api/auth/login- Authenticate and receive a token
+- POST /api/auth/signup - Register a new user after verifying it
+- POST /api/auth/login- Authenticate and go to the main page
 
 ### Upload & Processing
 - POST /api/upload/pdf- Upload and process a PDF document
