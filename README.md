@@ -120,11 +120,12 @@ VITE_API_BASE_URL=http://localhost:5000/api
 - POST /api/upload/link - Provide a YouTube link for processing
 
 ### Materials & Study
+- Post /api//continue -connue the chat that has been started with the    file or link
 - GET /api/materials - Fetch all processed learning materials
 - GET /api/flashcards/review - Fetch flashcards due for review (SM-2)
 - PATCH /api/flashcards/:id/review - Submit a review to update SM-2 spacing
 - POST /api/quizzes/regenerate/:id - Generate active recall questions
-
+- Get /api/materials/:id -Get material by their id to continue the chat 
 *(This is a high-level overview. A detailed Postman/Swagger collection will be added soon.)*
 
 ---
