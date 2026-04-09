@@ -240,6 +240,14 @@ const connectAPIKey=async ()=>{
           </CardContent>
           {updateStatus && <p className="text-sm text-muted-foreground text-center">{updateStatus}</p>}
         </Card>
+         <Card>
+            <p className="ml-6 font-bold ">Wanna be in touch with the developer?</p>
+            <div className="ml-6 space-x-3">
+             <Button variant="outline" > <a target="_blank" href="https://www.linkedin.com/in/gosa-girma-b7b256326" rel="noopener noreferer">Linkedin</a></Button>
+              <Button variant="outline"><a target="_blank" href="https://x.com/GosaGirma110026" rel="noopener noreferer">X</a></Button>
+              <Button variant="outline"><a target="_blank" href="mailto:gosagirma441@gmail.com" rel="noopener noreferer">Email</a></Button>
+            </div>
+        </Card>
       </div>
     </div>
   );
