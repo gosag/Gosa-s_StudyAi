@@ -33,7 +33,7 @@ export const verificationController=asyncHandler(async(req:Request,res:Response,
     const sendEmail=async()=>{
         try{
             const { data, error } = await resend.emails.send({
-                from: "EchoStudy <onboarding@resend.dev>", // Required by Resend for testing without a domain
+                from: "EchoStudy <noreply@echostudy.gosagirma.me>",
                 to: email,
                 subject: "Your verification Code from EchoStudy",
                 text: `Your verification code is ${randomNumber}. It will expire in 5 minutes.`
