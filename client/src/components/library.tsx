@@ -70,7 +70,7 @@ useEffect(()=>{
             {materials.length>0?(
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {materials.map((material)=>(
-                <Card key={material._id} className="w-full rounded-2xl shadow-sm  hover:shadow-lg transition-all duration-200 hover:-translate-y-1 bg-white dark:bg-neutral-900 border border-gray-100 dark:border-zinc-800 flex flex-col">
+                <Card key={material._id} className="w-full rounded-2xl shadow-sm  hover:shadow-lg transition-all duration-200 hover:-translate-y-1 bg-[radial-gradient(circle_at_bottom_left,var(--color-blue-50),var(--color-zinc-100),var(--color-white))] dark:bg-[radial-gradient(ellipse_at_bottom_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] border border-gray-100 dark:border-zinc-800 flex flex-col">
                 <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
                     <div className="flex items-start gap-3 w-[85%]">
                         <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg shrink-0">
@@ -103,7 +103,7 @@ useEffect(()=>{
                             Quiz
                         </Button>
                     </Link>
-                </CardFooter>
+                </CardFooter>  
             </Card>))}</div>):(
                 <div>
                 {loading?(
@@ -129,7 +129,7 @@ useEffect(()=>{
                 ))}
                </div>
                 ):(
-                    <div className="flex flex-col items-center justify-center py-20 px-4 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-2xl bg-gray-50/50 dark:bg-zinc-900/50 max-w-3xl mx-auto mt-8">
+                    <div className="flex flex-col items-center justify-center py-20 px-4 text-center border-2 border-dashed border-gray-200 dark:border-zinc-800 rounded-2xl bg-[radial-gradient(circle_at_bottom_left,var(--color-blue-50),var(--color-zinc-100),var(--color-white))] dark:bg-[radial-gradient(ellipse_at_bottom_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] max-w-3xl mx-auto mt-8">
                         <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-full mb-5">
                             <FileText className="w-10 h-10 text-blue-600 dark:text-blue-400" />
                         </div>

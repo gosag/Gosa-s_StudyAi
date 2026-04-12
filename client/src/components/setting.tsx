@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
-import {Eye, EyeOff} from "lucide-react"
+import {Eye, EyeOff, Linkedin, Mail, XIcon} from "lucide-react"
 function Settings() {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window !== "undefined") {
@@ -243,9 +243,9 @@ const connectAPIKey=async ()=>{
          <Card className="pr-3 flex flex-col sm:flex-row justify-evenly bg-[radial-gradient(circle_at_bottom_left,var(--color-blue-50),var(--color-zinc-100),var(--color-white))] dark:bg-[radial-gradient(ellipse_at_bottom_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] border-none">
             <p className="ml-6 font-bold ">Wanna be in touch with the developer?</p>
             <div className="ml-6 sm:ml-0 flex gap-3">
-             <Button variant="outline" > <a target="_blank" href="https://www.linkedin.com/in/gosa-girma-b7b256326" rel="noopener noreferer">Linkedin</a></Button>
-              <Button variant="outline"><a target="_blank" href="https://x.com/GosaGirma110026" rel="noopener noreferer">X</a></Button>
-              <Button variant="outline"><a target="_blank" href="mailto:gosagirma441@gmail.com" rel="noopener noreferer">Email</a></Button>
+             <Button variant="outline" className="w-10 h-10"> <a target="_blank" href="https://www.linkedin.com/in/gosa-girma-b7b256326" rel="noopener noreferer"><Linkedin/></a></Button>
+              <Button variant="outline" className="w-10 h-10"><a target="_blank" href="https://x.com/GosaGirma110026" rel="noopener noreferer"><XIcon/></a></Button>
+              <Button variant="outline" className="w-10 h-10"><a target="_blank" href="mailto:gosagirma441@gmail.com" rel="noopener noreferer"><Mail/></a></Button>
             </div>
         </Card>
       </div>
