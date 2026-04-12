@@ -144,7 +144,7 @@ const connectAPIKey=async ()=>{
 
       <div className="space-y-6">
         
-        <Card>
+        <Card className="bg-[radial-gradient(circle_at_bottom_left,var(--color-blue-50),var(--color-zinc-100),var(--color-white))] dark:bg-[radial-gradient(ellipse_at_bottom_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] border-none">
           <CardHeader>
             <CardTitle>Appearance</CardTitle>
             <CardDescription>
@@ -163,7 +163,7 @@ const connectAPIKey=async ()=>{
             </Button>
           </CardContent>
         </Card>
-        <Card>
+        <Card    className="bg-[radial-gradient(circle_at_bottom_left,var(--color-blue-50),var(--color-zinc-100),var(--color-white))] dark:bg-[radial-gradient(ellipse_at_bottom_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] border-none">
           <CardHeader>
             <CardTitle>Gemini API</CardTitle>
             <CardDescription>
@@ -180,7 +180,7 @@ const connectAPIKey=async ()=>{
             onChange={(e) => setAPIKey(e.target.value)}
             />
             <Button disabled={!APIKey} onClick={()=>{setShowingAPIKey(!showingAPIKey)}} variant="outline"
-              className=""
+            
             >
               {showingAPIKey ? <EyeOff/> : <Eye/>}
             </Button>
@@ -196,7 +196,7 @@ const connectAPIKey=async ()=>{
             Don't know how to get an API key? Learn How to Get One.
           </a>
         </Card>
-        <Card>
+        <Card    className="bg-[radial-gradient(circle_at_bottom_left,var(--color-blue-50),var(--color-zinc-100),var(--color-white))] dark:bg-[radial-gradient(ellipse_at_bottom_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] border-none">
           <CardHeader>
             <CardTitle>Notifications & Reminders</CardTitle>
             <CardDescription>
@@ -240,7 +240,7 @@ const connectAPIKey=async ()=>{
           </CardContent>
           {updateStatus && <p className="text-sm text-muted-foreground text-center">{updateStatus}</p>}
         </Card>
-         <Card className="pr-3 flex flex-col sm:flex-row justify-evenly">
+         <Card className="pr-3 flex flex-col sm:flex-row justify-evenly bg-[radial-gradient(circle_at_bottom_left,var(--color-blue-50),var(--color-zinc-100),var(--color-white))] dark:bg-[radial-gradient(ellipse_at_bottom_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] border-none">
             <p className="ml-6 font-bold ">Wanna be in touch with the developer?</p>
             <div className="ml-6 sm:ml-0 flex gap-3">
              <Button variant="outline" > <a target="_blank" href="https://www.linkedin.com/in/gosa-girma-b7b256326" rel="noopener noreferer">Linkedin</a></Button>
