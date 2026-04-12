@@ -41,8 +41,8 @@ function MainOutLet(){
     return(
 <>
 
-<div className="flex min-h-screen bg-white dark:bg-zinc-950 text-gray-900 dark:text-zinc-100">
-    <aside className="sticky top-0 h-screen w-16 md:w-60 bg-white dark:bg-zinc-950 shadow-[4px_0_24px_rgba(0,0,0,0.05)] dark:shadow-none dark:border-r dark:border-zinc-800 flex flex-col transition-all duration-300 shrink-0 z-50">
+<div className="flex min-h-screen bg-gray-100 dark:bg-zinc-950 text-gray-900 dark:text-zinc-100">
+    <aside className="sticky top-0 h-screen w-16 md:w-60 bg-[radial-gradient(ellipse_at_center_left,var(--color-blue-100),var(--color-zinc-100),var(--color-zinc-50))] dark:bg-[radial-gradient(ellipse_at_center_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] shadow-[4px_0_24px_rgba(0,0,0,0.05)] dark:shadow-none dark:border-r dark:border-zinc-800 flex flex-col transition-all duration-300 shrink-0 z-50">
 
       {/* 🔥 Realistic Fire Animation Styles */}
       <style>{`
