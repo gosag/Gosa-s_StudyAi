@@ -255,7 +255,7 @@ return ()=>el.removeEventListener("scroll",scrollDown)
       </header>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-5 items-start">
           {/* Upload Section - Modern drag-and-drop style */}
-          <Card className="flex flex-col gap-6 p-8 border-dashed border-2 bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors shadow-none">
+          <Card className="flex flex-col gap-6 p-8 ml-3 border-dashed border-2 hover:scale-[101%] bg-[radial-gradient(ellipse_at_bottom_left,var(--color-zinc-100),var(--color-zinc-50),var(--color-blue-100))] dark:bg-[radial-gradient(ellipse_at_top_right,var(--color-zinc-800),var(--color-zinc-900),var(--color-black))] dark:border-zinc-900 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition duration-200 shadow-none">
             <div className="flex flex-col items-center justify-center text-center space-y-4">
               <div className="p-4 bg-zinc-100 dark:bg-zinc-800 rounded-full border border-zinc-200 dark:border-zinc-700">
                 <FileUp className="w-8 h-8 text-zinc-600 dark:text-zinc-400" />
@@ -354,7 +354,7 @@ return ()=>el.removeEventListener("scroll",scrollDown)
           </div>):(
             <div>
               {materailLoading?(
-                <div className="hidden lg:flex items-center justify-center p-8 bg-zinc-50/50 dark:bg-zinc-900/50 rounded-xl h-full border border-zinc-200 dark:border-zinc-800 border-dashed">
+                <div className="hidden min-h-115 lg:flex items-center justify-center p-8 bg-[radial-gradient(circle_at_center,var(--color-blue-100),var(--color-zinc-100),var(--color-zinc-50))] dark:bg-[radial-gradient(circle_at_center,var(--color-zinc-700),var(--color-zinc-800),var(--color-zinc-900))] rounded-xl h-full border border-zinc-200 dark:border-zinc-800 border-dashed">
                 <Card className="w-full max-w-md p-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 animate-pulse">
                   <CardHeader className="p-0 mb-4">
                     <div className="h-6 w-32 rounded-full bg-zinc-200 dark:bg-zinc-800"></div>
@@ -371,7 +371,7 @@ return ()=>el.removeEventListener("scroll",scrollDown)
                 </Card>
                </div>
               ):(
-                <div className="hidden min-h-115 lg:flex flex-col items-center justify-center p-8 bg-zinc-50/50 dark:bg-zinc-900/50 rounded-xl h-full border border-zinc-200 dark:border-zinc-800 border-dashed text-center gap-4">
+                <div className="hidden min-h-115 hover:scale-[101%] lg:flex flex-col items-center justify-center p-8 bg-[radial-gradient(circle_at_center,var(--color-blue-100),var(--color-zinc-100),var(--color-zinc-50))] dark:bg-[radial-gradient(circle_at_center,var(--color-zinc-700),var(--color-zinc-800),var(--color-zinc-900))] rounded-xl h-full border border-zinc-200 dark:border-zinc-800 border-dashed text-center gap-4 transition-all duration-200">
                   <div className="p-4 bg-zinc-100 dark:bg-zinc-800 rounded-full">
                     <Brain className="w-8 h-8 text-zinc-400 dark:text-zinc-500" />
                   </div>
