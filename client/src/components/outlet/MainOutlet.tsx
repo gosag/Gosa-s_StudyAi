@@ -208,7 +208,7 @@ function MainOutLet(){
       </div>
 
     </aside>
-    <main className="flex-1 w-full min-w-0">
+    <main className="flex-1 w-full min-w-0 dark:bg-zinc-950">
       <Outlet/>
     </main>
 </div>
