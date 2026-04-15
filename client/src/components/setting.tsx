@@ -240,12 +240,24 @@ const connectAPIKey=async ()=>{
           </CardContent>
           {updateStatus && <p className="text-sm text-muted-foreground text-center">{updateStatus}</p>}
         </Card>
-         <Card className="pr-3 flex flex-col sm:flex-row justify-evenly bg-[radial-gradient(circle_at_bottom_left,var(--color-blue-50),var(--color-zinc-100),var(--color-white))] dark:bg-[radial-gradient(ellipse_at_bottom_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] border-none">
-            <p className="ml-6 font-bold ">Wanna be in touch with the developer?</p>
-            <div className="ml-6 sm:ml-0 flex gap-3">
-             <Button variant="outline" className="w-10 h-10"> <a target="_blank" href="https://www.linkedin.com/in/gosa-girma-b7b256326" rel="noopener noreferer"><Linkedin/></a></Button>
-              <Button variant="outline" className="w-10 h-10"><a target="_blank" href="https://x.com/GosaGirma110026" rel="noopener noreferer"><XIcon/></a></Button>
-              <Button variant="outline" className="w-10 h-10"><a target="_blank" href="mailto:gosagirma441@gmail.com" rel="noopener noreferer"><Mail/></a></Button>
+        <Card className="p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[radial-gradient(circle_at_bottom_left,var(--color-blue-50),var(--color-zinc-100),var(--color-white))] dark:bg-[radial-gradient(ellipse_at_bottom_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] border-none">
+            <p className="font-bold text-center sm:text-left">Wanna be in touch with the developer?</p>
+            <div className="flex gap-3">
+              <Button variant="outline" className="w-10 h-10 p-0" asChild>
+                <a target="_blank" href="https://www.linkedin.com/in/gosa-girma-b7b256326" rel="noopener noreferrer" aria-label="LinkedIn">
+                  <Linkedin className="w-5 h-5" />
+                </a>
+              </Button>
+              <Button variant="outline" className="w-10 h-10 p-0" asChild>
+                <a target="_blank" href="https://x.com/GosaGirma110026" rel="noopener noreferrer" aria-label="X (Twitter)">
+                  <XIcon className="w-5 h-5" />
+                </a>
+              </Button>
+              <Button variant="outline" className="w-10 h-10 p-0" asChild>
+                <a target="_blank" href="mailto:gosagirma441@gmail.com" rel="noopener noreferrer" aria-label="Email">
+                  <Mail className="w-5 h-5" />
+                </a>
+              </Button>
             </div>
         </Card>
       </div>
