@@ -351,7 +351,7 @@ return ()=>el.removeEventListener("scroll",scrollDown)
           </div>):(
             <div>
               {materailLoading?(
-                <div className="hidden min-h-115 lg:flex items-center justify-center p-8 bg-[radial-gradient(circle_at_center,var(--color-blue-100),var(--color-zinc-100),var(--color-zinc-50))] dark:bg-[radial-gradient(circle_at_center,var(--color-zinc-700),var(--color-zinc-800),var(--color-zinc-900))] rounded-xl h-full border border-zinc-200 dark:border-zinc-800 border-dashed">
+                <div className="hidden min-h-115 hover:scale-[101%] lg:flex items-center justify-center p-8 bg-[radial-gradient(circle_at_center,var(--color-blue-100),var(--color-zinc-100),var(--color-zinc-50))] dark:bg-[radial-gradient(circle_at_center,var(--color-zinc-700),var(--color-zinc-800),var(--color-zinc-900))] rounded-xl h-full border border-zinc-200 dark:border-zinc-800 border-dashed transition-all duration-200">
                 <Card className="w-full max-w-md p-6 bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-zinc-200 dark:border-zinc-800 animate-pulse">
                   <CardHeader className="p-0 mb-4">
                     <div className="h-6 w-32 rounded-full bg-zinc-200 dark:bg-zinc-800"></div>
