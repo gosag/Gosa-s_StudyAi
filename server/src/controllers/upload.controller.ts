@@ -51,9 +51,10 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
         const summary=parsedResponse.summary;
         const newMatrial=new Material({
           materialType:"file",
-          title:parsedResponse.title,
+          title:req.file.originalname,
           originalText:extractedText.text,
           userId:req.user._id,
+          materialTitle:parsedResponse.title,
           summary:parsedResponse.summary,
         })
          if(!newMatrial){
