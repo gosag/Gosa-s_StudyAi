@@ -11,6 +11,7 @@ interface IMaterial {
   title: string;
   originalText: string;
   summary: string;
+  materialTitle:string;
   userId: string;
   timestamps: Date;
   materialType:MType
@@ -87,7 +88,7 @@ useEffect(()=>{
                 </CardHeader>
                 <CardContent className="pt-2 grow">
                     <p className="text-sm text-gray-500 dark:text-zinc-400 line-clamp-2">
-                        <ReactMarkdown>{material.summary || "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate."}</ReactMarkdown>
+                        <ReactMarkdown>{material.materialType==="link"?material.summary || "Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas, voluptate.":material.materialTitle}</ReactMarkdown>
                     </p>
                 </CardContent>
                 <CardFooter className="pt-4 border-t border-gray-50 dark:border-zinc-800/50 flex gap-3 mt-auto">
