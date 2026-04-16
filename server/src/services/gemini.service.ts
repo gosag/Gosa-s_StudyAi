@@ -61,6 +61,13 @@ export async function generateResponse(prompt:string, APIKey:string | undefined)
 
             # ⚡ Quick Recap
             3 to 5 powerful, dense, and punchy bullet points summarizing the absolute must-know facts.
+            When the chat is just starting Return ONLY a valid JSON object note that you follow this format
+            only wehen the material is uploaded for the first time.
+                FORMAT:
+                  {
+                    "summary": "the summary you generated following the rules mentioned",
+                    "title": "generate a title for the chat with less than 5 words depending on the thing the text tlks about"
+                  }
 
             ---------------------------------------------------------------------
 
