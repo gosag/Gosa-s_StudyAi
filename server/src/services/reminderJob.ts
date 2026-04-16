@@ -1,33 +1,18 @@
 import cron from "node-cron"
 import User from "../models/user.model";
-import nodeMailer from "nodemailer"
+import { Resend } from "resend"
 import dotenv from "dotenv"
 
 dotenv.config()
 
-const transporter = nodeMailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-})
-const sendEmail = async (to:string, subject:string, text:string) => {
-    const mailOptions = {
-        from: process.env.EMAIL_USER,
+const resend = new Resend(`${process.env.RESEND_API_KEY!}`);
+const sendEmail=async(to:string, subject:string, text:string)=>{
+      await resend.emails.send({
+        from: "EchoStudy <noreply@echostudy.gosagirma.me>",
         to,
         subject,
         text
-    }
-    try {
-        const info = await transporter.sendMail(mailOptions)
-        console.log(`Email sent to ${to}:`, info.response)
-    } catch (error) {
-        console.error(`Error sending email to ${to}:`, error)
-    }
-}
+     });}
 cron.schedule("* * * * *", async () => {
  try{
   const now = new Date()
