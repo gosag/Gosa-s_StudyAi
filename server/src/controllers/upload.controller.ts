@@ -47,15 +47,20 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
         const parsedResponse=JSON.parse(response);
         console.log(`[Gemini Summary] ${response.length} characters`);
         const userId = req.user._id;
-        const newT=parsedResponse.title;
-        const summary=parsedResponse.summary;
+        let newT;
+        let summary;
+        parsedResponse.map((item:{summary:String, title:String})=>{
+          newT=item.title;
+          summary=item.summary;
+        })
+        
         const newMatrial=new Material({
           materialType:"file",
           title:req.file.originalname,
           originalText:extractedText.text,
           userId:req.user._id,
-          materialTitle:parsedResponse.title,
-          summary:parsedResponse.summary,
+          materialTitle:newT,
+          summary,
         })
          if(!newMatrial){
           const error=new Error("Failed to save material to database") as CustomError
@@ -78,7 +83,7 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
         )}
         user.freeUsageCount += 1;
         await user.save();
-        res.json({ response, materialId:newMatrial._id });
+        res.json({ response:summary, materialId:newMatrial._id });
     }
     catch(error){
         const customError = error as CustomError;
@@ -132,16 +137,20 @@ export const uploadLink = async (req: Request, res: Response, next: NextFunction
     }
     const sumamrizedResponse = await generateResponse(`Hey Gemini, summarize the following YouTube transcript in a concise manner: ${transcript}`, user.apiKey || undefined);
     const parsedResponse=JSON.parse(sumamrizedResponse);
-    if(sumamrizedResponse.length){
-        console.log("[Echo Learn] Transcript Summarized")
-    }
-    
+   
+    let newT;
+    let summary;
+    parsedResponse.map((item:{summary:String, title:String})=>{
+      newT=item.title;
+      summary=item.summary;
+    })
+  
     const newMatrial= new Material({
         materialType:"link",
-        title:parsedResponse.title,
+        title:newT || "YouTube Video",
         originalText:transcript,
-        materialTitle:parsedResponse.title,
-        summary:parsedResponse.summary,
+        materialTitle:newT,
+        summary:summary,
         userId
     })
     await newMatrial.save();
@@ -162,9 +171,8 @@ export const uploadLink = async (req: Request, res: Response, next: NextFunction
         
     user.freeUsageCount += 1;
     await user.save();
-    res.json({ transcript, response: sumamrizedResponse ,MaterialId:newMatrial._id});
+    res.json({ transcript, response:summary ,MaterialId:newMatrial._id});
     console.log(`[SUCCESS] Transcript sent to EchoLearn frontend.`);
-    
     await updateUserStreak(userId as any);
   } catch (err: any) {
     return next(err);

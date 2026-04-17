@@ -7,12 +7,16 @@ dotenv.config()
 
 const resend = new Resend(`${process.env.RESEND_API_KEY!}`);
 const sendEmail=async(to:string, subject:string, text:string)=>{
+    try{
       await resend.emails.send({
         from: "EchoStudy <noreply@echostudy.gosagirma.me>",
         to,
         subject,
         text
-     });}
+     })}
+     catch(err){
+        console.log(err)
+     };}
 cron.schedule("* * * * *", async () => {
  try{
   const now = new Date()
