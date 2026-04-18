@@ -14,7 +14,6 @@ type TloginSchema= z.infer<typeof loginSchema>
 function Login(){
   const [loading, setLoading] = useState(false);
   const [CurrentState,setCurrentState]=useState<"login" | "emailEnter" | "verification">("login")
-  const [formData,setFormData]=useState<null | TloginSchema>(null)
     const {
         register,
         handleSubmit,
@@ -27,7 +26,6 @@ function Login(){
     const submitHandler=async(data:TloginSchema)=>{
       try{
         setLoading(true);
-        setFormData(data);
         const res=await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`,{
           method:"POST",
           headers:{"Content-Type":"application/json"},
@@ -76,12 +74,17 @@ function Login(){
           }catch(err){
             console.log(err)
           }}
-          await getCode()
+          getCode()
         }
-      }
-      
-
-    }
+      if(CurrentState==="verification"){
+        if(verificationCode===expectedCode.toString()){
+          alert("Verification successful! You can now reset your password.")
+          setCurrentState("login")
+        }
+        else{
+          alert("Invalid verification code. Please check your email and try again.")
+        }
+      }}
     return (
   <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
     <div className="w-full max-w-md">
@@ -165,11 +168,11 @@ function Login(){
             {CurrentState==="verification" && (
               <div>
                 <label className="mr-2 font-semibold ">Code:</label>
-                <input className="ring-2 ring-gray-400 w-62.5  h-8 rounded-md text-center " placeholder="EX 3465"/>
+                <input onChange={(e)=>{setVerificationCode(e.target.value)}} className="ring-2 ring-gray-400 w-62.5  h-8 rounded-md text-center " placeholder="EX 3465"/>
               </div>
 
             )}
-            <Button variant="default" className="mt-4 px-6" type="submit" onClick={}>{CurrentState==="verification"?"Verify":"Send Code"}</Button>
+            <Button variant="default" className="mt-4 px-6" type="submit" onClick={resetHandler}>{CurrentState==="verification"?"Verify":"Send Code"}</Button>
           </form>
           </div>
         )}
