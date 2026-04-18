@@ -55,6 +55,29 @@ export const verificationController=asyncHandler(async(req:Request,res:Response,
     }
     await sendEmail()
 })
+export const resetPasswordController=asyncHandler(async(req:Request,res:Response, next:NextFunction)=>{
+    const {email}=req.body;
+    if(!email){
+        const error= new Error("Email is not sent") as RequestError
+        error.status=400;
+        throw error;
+    }
+    const resend= new Resend(`${process.env.RESEND_API_KEY!}`)
+    let randomNum=Math.floor(Math.random()*9000) + 1000;
+    const {data,error} = await resend.emails.send({
+               from: "EchoStudy <noreply@echostudy.gosagirma.me>",
+                to: email,
+                subject: "Your verification Code from EchoStudy",
+                text: `Your verification code is ${randomNum}. It will expire in 5 minutes. 
+                Please! Don't share this code with anyone.`,
+            });
+    if(error){
+        console.log("Resend API Error ",error)
+        throw error;
+    }
+    console.log("Email sent Succesfully ", data)
+    res.json({message:"verification Code is sent",code:randomNum})
+})
 export const registerController= asyncHandler(async(req:Request,res:Response)=>{
     const {email,password}=req.body;
     const userExists=await User.findOne({email})

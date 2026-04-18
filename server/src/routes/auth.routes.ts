@@ -12,12 +12,14 @@ import {
     registerController,
     loginController,
     getUserData,
-    verificationController
+    verificationController,
+    resetPasswordController
 } from "../controllers/auth.controller"
 const authRouter=express.Router();
 authRouter.post("/api/auth/verify-email",verificationController)
 authRouter.post("/api/auth/register",validate(signUpSchema,"body"), registerController);
 authRouter.post("/api/auth/login",rateLimiter,validate(loginSchema,"body"), loginController);
+authRouter.post("/api/auth/pass-reset",resetPasswordController)
 authRouter.get("/api/auth/:id",protector,getUserData);
 authRouter.delete("/api/auth/Logout",async (req,res,next)=>{
     try{

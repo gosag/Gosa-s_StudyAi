@@ -52,7 +52,36 @@ function Login(){
           setLoading(false);
         }
     }
-    
+    const resetHandler=()=>{
+      if(!email && !email.includes("@gmail.com")){
+        alert("Please enter valid and your email first.")
+        return;
+      }
+      if(CurrentState==="emailEnter"){
+        const getCode=async()=>{
+          try{
+          const res= await  fetch(`${import.meta.env.VITE_API_URL}`,{
+            method:"POST",
+            headers:{"Content-Type":"Application/json"},
+            body:JSON.stringify({email})
+          })
+          const data= await res.json()
+          if(!res.ok){
+            console.log("Server responded with HTTP ", res.status, data);
+             const errMsg = data.message || data.error || (data.errors && data.errors[0]?.message) || "something went wrong";
+            throw new Error(errMsg);
+           }
+           setExpectedCode(data.code);
+           setCurrentState("verification")
+          }catch(err){
+            console.log(err)
+          }}
+          await getCode()
+        }
+      }
+      
+
+    }
     return (
   <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
     <div className="w-full max-w-md">
@@ -126,16 +155,21 @@ function Login(){
         </form>):(
           <div>
           <form className="w-full flex justify-center items-center flex-col">
-            <p className="font-medium mb-4">We have sent an email to {formData?.email}</p>
+            {CurrentState==="verification"?<p className="font-medium mb-4">We have sent an email to {email}</p>:
+              <p className="font-medium mb-4">Please! Enter your email.</p>
+            }
             <div>
               <label className="mr-2 font-semibold ">Email:</label>
-              <input className="ring-2 ring-gray-400 w-62.5 h-8 rounded-md text-center mb-4" placeholder="example@gmail.com" />
+              <input className="ring-2 ring-gray-400 w-62.5 h-8 rounded-md text-center mb-4" placeholder="example@gmail.com" onChange={(e)=>{setEmail(e.target.value)}} />
             </div>
-            <div>
-              <label className="mr-2 font-semibold ">Code:</label>
-              <input className="ring-2 ring-gray-400 w-62.5  h-8 rounded-md text-center " placeholder="EX 3465"/>
-            </div>
-            <Button variant="default" className="mt-4 px-6">verify</Button>
+            {CurrentState==="verification" && (
+              <div>
+                <label className="mr-2 font-semibold ">Code:</label>
+                <input className="ring-2 ring-gray-400 w-62.5  h-8 rounded-md text-center " placeholder="EX 3465"/>
+              </div>
+
+            )}
+            <Button variant="default" className="mt-4 px-6" type="submit" onClick={}>{CurrentState==="verification"?"Verify":"Send Code"}</Button>
           </form>
           </div>
         )}
