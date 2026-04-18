@@ -76,6 +76,7 @@ export const resetPasswordController=asyncHandler(async(req:Request,res:Response
         throw error;
     }
     console.log("Email sent Succesfully ", data)
+    console.log(`Code ${randomNum}`)
     res.json({message:"verification Code is sent",code:randomNum})
 })
 export const registerController= asyncHandler(async(req:Request,res:Response)=>{

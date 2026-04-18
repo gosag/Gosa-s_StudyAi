@@ -50,7 +50,8 @@ function Login(){
           setLoading(false);
         }
     }
-    const resetHandler=()=>{
+    const resetHandler=(e:any)=>{
+      e.preventDefault()
       if(!email && !email.includes("@gmail.com")){
         alert("Please enter valid and your email first.")
         return;
@@ -58,7 +59,7 @@ function Login(){
       if(CurrentState==="emailEnter"){
         const getCode=async()=>{
           try{
-          const res= await  fetch(`${import.meta.env.VITE_API_URL}`,{
+          const res= await  fetch(`${import.meta.env.VITE_API_URL}/api/auth/pass-reset`,{
             method:"POST",
             headers:{"Content-Type":"Application/json"},
             body:JSON.stringify({email})
