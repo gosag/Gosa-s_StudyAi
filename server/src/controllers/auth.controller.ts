@@ -36,7 +36,8 @@ export const verificationController=asyncHandler(async(req:Request,res:Response,
                 from: "EchoStudy <noreply@echostudy.gosagirma.me>",
                 to: email,
                 subject: "Your verification Code from EchoStudy",
-                text: `Your verification code is ${randomNumber}. It will expire in 5 minutes.`
+                text: `Your verification code is ${randomNumber}. It will expire in 5 minutes. 
+                Please! Don't share this code with anyone.`,
             });
 
             if (error) {

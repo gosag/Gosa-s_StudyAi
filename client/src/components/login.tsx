@@ -1,9 +1,10 @@
 import { useForm } from "react-hook-form";
-import {z} from "zod";
+import { z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
+import { Button } from "./ui/button";
 const loginSchema=z.object({
     email:z.email(),
     password:z.string().min(6,"at least 6 characters are required")
@@ -12,15 +13,21 @@ const loginSchema=z.object({
 type TloginSchema= z.infer<typeof loginSchema>
 function Login(){
   const [loading, setLoading] = useState(false);
+  const [CurrentState,setCurrentState]=useState<"login" | "emailEnter" | "verification">("login")
+  const [formData,setFormData]=useState<null | TloginSchema>(null)
     const {
         register,
         handleSubmit,
         formState:{errors},
         reset
-    }=useForm<TloginSchema>({resolver:zodResolver(loginSchema)})
+    }=useForm<TloginSchema>({resolver:zodResolver(loginSchema)});
+  const [expectedCode,setExpectedCode]=useState("");
+  const [verificationCode,setVerificationCode]=useState("");
+  const [email,setEmail]=useState("")
     const submitHandler=async(data:TloginSchema)=>{
       try{
         setLoading(true);
+        setFormData(data);
         const res=await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`,{
           method:"POST",
           headers:{"Content-Type":"application/json"},
@@ -45,6 +52,7 @@ function Login(){
           setLoading(false);
         }
     }
+    
     return (
   <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
     <div className="w-full max-w-md">
@@ -57,6 +65,7 @@ function Login(){
 
       <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-900/5 p-8 sm:p-10">
         {/* Form */}
+        {CurrentState==="login"?(
         <form onSubmit={handleSubmit(submitHandler)} className="space-y-6">
 
           {/* Email */}
@@ -114,10 +123,28 @@ function Login(){
               "Sign in"
             )}
           </button>
-        </form>
+        </form>):(
+          <div>
+          <form className="w-full flex justify-center items-center flex-col">
+            <p className="font-medium mb-4">We have sent an email to {formData?.email}</p>
+            <div>
+              <label className="mr-2 font-semibold ">Email:</label>
+              <input className="ring-2 ring-gray-400 w-62.5 h-8 rounded-md text-center mb-4" placeholder="example@gmail.com" />
+            </div>
+            <div>
+              <label className="mr-2 font-semibold ">Code:</label>
+              <input className="ring-2 ring-gray-400 w-62.5  h-8 rounded-md text-center " placeholder="EX 3465"/>
+            </div>
+            <Button variant="default" className="mt-4 px-6">verify</Button>
+          </form>
+          </div>
+        )}
 
         {/* Footer */}
-        <p className="text-center text-sm text-gray-500 mt-8">
+        {CurrentState==="login" && <button onClick={()=>{setCurrentState("emailEnter")}} className="w-full hover:scale-105 transition-all duration-200">
+        <p className="text-center mb-0 mt-4 text-red-500">Forgot password? </p>
+        </button>}
+        <p className="text-center text-sm text-gray-500 mt-2">
           Don’t have an account?{" "}
           <Link to="/signUp" className="font-semibold text-black hover:underline">
             Sign up
