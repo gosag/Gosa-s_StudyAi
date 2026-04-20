@@ -103,7 +103,7 @@ export const updatePasswordcontroller=asyncHandler(async(req:Request, res:Respon
     }
     const id=user._id;
     const hashedPassword= await bcrypt.hash(password,10);
-    const updatedUser= await User.findByIdAndUpdate({id},{password:hashedPassword})
+    const updatedUser= await User.findByIdAndUpdate(id,{password:hashedPassword})
     if(!updatedUser){
         const error= new Error("Couldn't update user info");
         throw error;

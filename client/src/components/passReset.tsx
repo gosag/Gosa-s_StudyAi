@@ -2,9 +2,9 @@ import {useForm} from "react-hook-form"
 import { z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {useState} from "react"
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { Loader2 } from "lucide-react";
-const PassReset=({email}:{email:string})=>{
+const PassReset=({email, setCurrentState}:{email:string, setCurrentState: React.Dispatch<React.SetStateAction<"login" | "emailEnter" | "verification" | "newReset">>})=>{
     const resetPassSchema=z.object({
         password:z.string().min(6,"Password should at least contain 6 characters"),
         confirmPassword:z.string()
@@ -12,7 +12,6 @@ const PassReset=({email}:{email:string})=>{
     message:"password must match",
     path:["confirmPassword"]
 })
-const navigate=useNavigate()
 const [loading,setLoading]=useState(false)
 type typeResetPassSchema=z.infer<typeof resetPassSchema>
     const{
@@ -44,7 +43,7 @@ const onSubmit=async (data:typeResetPassSchema)=>{
             throw new Error(errMsg);
         }
         alert("Password updated successfully. Please login with your new password.");
-        navigate("/login");
+        setCurrentState("login");
     }catch(err){
         console.log(err)
     }finally{

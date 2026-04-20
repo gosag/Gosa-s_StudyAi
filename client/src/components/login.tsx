@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link ,useNavigate} from "react-router-dom";
+import { Link} from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
@@ -25,7 +25,6 @@ function Login(){
   const [verificationCode,setVerificationCode]=useState("");
   const [email,setEmail]=useState("")
   const [error,setError]=useState("")
-  const navigate=useNavigate()
     const submitHandler=async(data:TloginSchema)=>{
       try{
         setLoading(true);
@@ -88,7 +87,7 @@ function Login(){
       if(CurrentState==="verification"){
         if(verificationCode===expectedCode.toString()){
           alert("Verification successful! You can now reset your password.")
-          navigate("/pass-reset")
+          setCurrentState("newReset")
         }
         else{
           alert("Invalid verification code. Please check your email and try again.")
@@ -203,7 +202,7 @@ function Login(){
     </div>
   </div>):(
     <div>
-      <PassReset email={email}/>
+      <PassReset email={email} setCurrentState={setCurrentState}/>
     </div>
   )
 }
