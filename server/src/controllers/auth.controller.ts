@@ -62,6 +62,12 @@ export const resetPasswordController=asyncHandler(async(req:Request,res:Response
         error.status=400;
         throw error;
     }
+    const findEmail= await User.find({email})
+    if(findEmail.length===0){
+        const error= new Error("user with this email is not found") as RequestError
+        error.status=404;
+        throw error;
+    }
     const resend= new Resend(`${process.env.RESEND_API_KEY!}`)
     let randomNum=Math.floor(Math.random()*9000) + 1000;
     const {data,error} = await resend.emails.send({
