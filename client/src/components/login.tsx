@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
@@ -23,6 +23,8 @@ function Login(){
   const [expectedCode,setExpectedCode]=useState("");
   const [verificationCode,setVerificationCode]=useState("");
   const [email,setEmail]=useState("")
+  const [error,setError]=useState("")
+  const navigate=useNavigate()
     const submitHandler=async(data:TloginSchema)=>{
       try{
         setLoading(true);
@@ -52,6 +54,7 @@ function Login(){
     }
     const resetHandler=(e:any)=>{
       e.preventDefault()
+      setError("")
       if(!email && !email.includes("@gmail.com")){
         alert("Please enter valid and your email first.")
         return;
@@ -59,6 +62,7 @@ function Login(){
       if(CurrentState==="emailEnter"){
         const getCode=async()=>{
           try{
+          setLoading(true);
           const res= await  fetch(`${import.meta.env.VITE_API_URL}/api/auth/pass-reset`,{
             method:"POST",
             headers:{"Content-Type":"Application/json"},
@@ -72,15 +76,18 @@ function Login(){
            }
            setExpectedCode(data.code);
            setCurrentState("verification")
-          }catch(err){
-            console.log(err)
+          }catch(err:any){
+            console.log(err);
+            setError(err.message || "An error occurred while requesting password reset. Please try again.")
+          }finally{
+            setLoading(false)
           }}
           getCode()
         }
       if(CurrentState==="verification"){
         if(verificationCode===expectedCode.toString()){
           alert("Verification successful! You can now reset your password.")
-          setCurrentState("login")
+          navigate("/pass-reset")
         }
         else{
           alert("Invalid verification code. Please check your email and try again.")
@@ -95,7 +102,7 @@ function Login(){
         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">EchoStudy</h1>
         <p className="text-sm text-gray-500 mt-2">Welcome back to your dashboard</p>
       </div>
-
+     {error && <p className="text-red-500 text-center mb-1">{error}</p>}
       <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-900/5 p-8 sm:p-10">
         {/* Form */}
         {CurrentState==="login"?(
@@ -173,7 +180,7 @@ function Login(){
               </div>
 
             )}
-            <Button variant="default" className="mt-4 px-6" type="submit" onClick={resetHandler}>{CurrentState==="verification"?"Verify":"Send Code"}</Button>
+            <Button variant="default" className="mt-4 px-6 min-w-28" type="submit" onClick={resetHandler}>{loading?<Loader2 className="animate-spin"/>:<span>{CurrentState==="verification"?"Verify":"Send Code"}</span>}</Button>
           </form>
           </div>
         )}

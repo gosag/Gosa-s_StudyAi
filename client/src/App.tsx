@@ -9,6 +9,7 @@ import Quiz from "./components/Quiz"
 import FlashCard from "./components/flashCard"
 import Settings from "./components/setting"
 import LandingPage from "./components/landingPage"
+import PassReset from "./components/passReset"
 function App() {
   const isAuthenticated = !!localStorage.getItem("token");
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="login" element={<Login />} />
           <Route path="signUp" element={<SignUp />} />
+          <Route path="pass-reset" element={<PassReset />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </>
       ) : (
