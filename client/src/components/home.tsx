@@ -61,6 +61,7 @@ function Home() {
     })
     console.log("Scrolled")
   }
+  
 const fileHandler=async (file: File)=>{
   setLoading(true)
         const formData = new FormData();

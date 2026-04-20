@@ -5,6 +5,7 @@ import { Link ,useNavigate} from "react-router-dom";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "./ui/button";
+import PassReset from "./passReset";
 const loginSchema=z.object({
     email:z.email(),
     password:z.string().min(6,"at least 6 characters are required")
@@ -13,7 +14,7 @@ const loginSchema=z.object({
 type TloginSchema= z.infer<typeof loginSchema>
 function Login(){
   const [loading, setLoading] = useState(false);
-  const [CurrentState,setCurrentState]=useState<"login" | "emailEnter" | "verification">("login")
+  const [CurrentState,setCurrentState]=useState<"login" | "emailEnter" | "verification" | "newReset">("login")
     const {
         register,
         handleSubmit,
@@ -94,6 +95,8 @@ function Login(){
         }
       }}
     return (
+  <>
+  {CurrentState!=="newReset"?(
   <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
     <div className="w-full max-w-md">
       
@@ -198,7 +201,13 @@ function Login(){
       </div>
 
     </div>
-  </div>
+  </div>):(
+    <div>
+      <PassReset email={email}/>
+    </div>
+  )
+}
+  </>
 );
 }
 export default Login;

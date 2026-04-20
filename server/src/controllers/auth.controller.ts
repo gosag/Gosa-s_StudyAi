@@ -85,6 +85,31 @@ export const resetPasswordController=asyncHandler(async(req:Request,res:Response
     console.log(`Code ${randomNum}`)
     res.json({message:"verification Code is sent",code:randomNum})
 })
+export const updatePasswordcontroller=asyncHandler(async(req:Request, res:Response, next:NextFunction)=>{
+    const {password, email}= req.body;
+    if(!password || password.length<6 ){
+        const error= new Error("Password is not sent! ") as RequestError;
+        error.status=400;
+        throw error;
+    }
+    if(!email){
+        const error= new Error("Email is not sent! ") as RequestError;
+        error.status=400;
+        throw error
+    }
+    const user = await User.findOne({email});
+    if(!user){
+        throw new Error("User not found")
+    }
+    const id=user._id;
+    const hashedPassword= await bcrypt.hash(password,10);
+    const updatedUser= await User.findByIdAndUpdate({id},{password:hashedPassword})
+    if(!updatedUser){
+        const error= new Error("Couldn't update user info");
+        throw error;
+    }
+    res.json({message:"Password updated succesfully"})
+})
 export const registerController= asyncHandler(async(req:Request,res:Response)=>{
     const {email,password}=req.body;
     const userExists=await User.findOne({email})
@@ -131,6 +156,7 @@ export const loginController= asyncHandler(async(req:Request,res:Response)=>{
     }
     res.json({user,token:tokenGenerator(id)})
 })
+
 export const  getUserData= asyncHandler(async(req:Request,res:Response)=>{
 const id=req.params.id;
 const user=await User.findById(id)

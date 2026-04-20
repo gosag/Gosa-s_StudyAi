@@ -2,9 +2,9 @@ import {useForm} from "react-hook-form"
 import { z} from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {useState} from "react"
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
-const PassReset=()=>{
+const PassReset=({email}:{email:string})=>{
     const resetPassSchema=z.object({
         password:z.string().min(6,"Password should at least contain 6 characters"),
         confirmPassword:z.string()
@@ -12,19 +12,44 @@ const PassReset=()=>{
     message:"password must match",
     path:["confirmPassword"]
 })
+const navigate=useNavigate()
 const [loading,setLoading]=useState(false)
 type typeResetPassSchema=z.infer<typeof resetPassSchema>
     const{
-         register,
+             register,
              handleSubmit,
-             reset,
              formState:{errors}
             }=useForm<typeResetPassSchema>({
               resolver:zodResolver(resetPassSchema),
               shouldUnregister: false
         })
-const onSubmit=()=>{
-    console.log("Hello world")
+const onSubmit=async (data:typeResetPassSchema)=>{
+    if(!email){
+        alert("Email is a must.")
+        return
+    }
+    try{
+        setLoading(true);
+        const res= await fetch(`${import.meta.env.VITE_API_URL}/api/auth/pass-update`,{
+            method:"PATCH",
+            headers:{
+                "Content-Type":"Application/json"
+            },
+            body:JSON.stringify({email,password:data.password})
+        })
+        const result = await res.json();
+        if(!res.ok){
+            console.log("Server responded with HTTP ", res.status, result);
+            const errMsg = result.message || result.error || (result.errors && result.errors[0]?.message) || "something went wrong";
+            throw new Error(errMsg);
+        }
+        alert("Password updated successfully. Please login with your new password.");
+        navigate("/login");
+    }catch(err){
+        console.log(err)
+    }finally{
+        setLoading(false)
+    }
 }
  return(
     <>
@@ -34,7 +59,7 @@ const onSubmit=()=>{
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">EchoStudy</h1>
-        <p className="text-sm text-gray-500 mt-2">Create your account to get started</p>
+        <p className="text-sm text-gray-500 mt-2">Enter a new password and confirm it</p>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-900/5 p-8 sm:p-10">
@@ -92,7 +117,7 @@ const onSubmit=()=>{
               {loading ? (
                 <Loader2 className="animate-spin" />
               ) : (
-                "Continue to Verify"
+                "Change Password"
               )}
             </button>
           </form>
