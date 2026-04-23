@@ -1,10 +1,10 @@
 import { Outlet ,NavLink, useLocation} from "react-router-dom";
-import { Home, Library, Layers, Settings } from "lucide-react";
+import { Home, Library, Layers, Settings, Menu, X } from "lucide-react";
 import {useEffect ,useState} from "react"
 function MainOutLet(){
   const [currentStreak,setCurrentStreak]=useState<number | null>(null)
+  const [showMenu,setShowMenu]=useState(false)
   const location = useLocation();
-  
   useEffect(()=>{
     async function fetchStreak(){
       try{
@@ -41,7 +41,16 @@ function MainOutLet(){
     return(
 <>
 
-<div className="flex min-h-screen bg-gray-100 dark:bg-zinc-950 text-gray-900 dark:text-zinc-100">
+<div className="flex min-h-screen items-start bg-gray-100 dark:bg-zinc-950 text-gray-900 dark:text-zinc-100">
+   {!showMenu ? (
+     <div 
+       className="fixed top-4 left-4 z-50 p-2 cursor-pointer bg-white dark:bg-zinc-800 rounded-lg shadow-md transition-all hover:bg-gray-50 dark:hover:bg-zinc-700" 
+       onClick={() => setShowMenu(true)}
+       title="Open Menu"
+     >
+       <Menu className="w-6 h-6 text-gray-800 dark:text-zinc-200" />
+     </div>
+   ) : (
     <aside className="sticky top-0 h-screen w-16 md:w-60 bg-[radial-gradient(ellipse_at_center_left,var(--color-blue-100),var(--color-zinc-100),var(--color-zinc-50))] dark:bg-[radial-gradient(ellipse_at_center_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] shadow-[4px_0_24px_rgba(0,0,0,0.05)] dark:shadow-none dark:border-r dark:border-zinc-800 flex flex-col transition-all duration-300 shrink-0 z-50">
 
       {/* 🔥 Realistic Fire Animation Styles */}
@@ -89,13 +98,22 @@ function MainOutLet(){
 `}</style>
 
       {/* Logo */}
-      <div className="flex items-center justify-center md:justify-start gap-3 px-2 md:px-4 py-6 border-b dark:border-zinc-800">
-        <div className="h-9 w-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-md shrink-0">
-          <span className="text-white font-bold text-lg">E</span>
+      <div className="flex items-center justify-between px-2 md:px-4 py-6 border-b dark:border-zinc-800">
+        <div className="flex items-center justify-center md:justify-start gap-3">
+          <div className="h-9 w-9 rounded-xl bg-blue-600 flex items-center justify-center shadow-md shrink-0">
+            <span className="text-white font-bold text-lg">E</span>
+          </div>
+          <span className="hidden md:block text-lg font-bold text-gray-800 dark:text-zinc-100 tracking-wide truncate">
+            Echo<span className="text-blue-600 dark:text-blue-400"> Study</span>
+          </span>
         </div>
-        <span className="hidden md:block text-lg font-bold text-gray-800 dark:text-zinc-100 tracking-wide truncate">
-          Echo<span className="text-blue-600 dark:text-blue-400"> Study</span>
-        </span>
+        <button
+          onClick={() => setShowMenu(false)}
+          className="p-1 rounded-md text-gray-500 hover:text-gray-800 hover:bg-gray-200 dark:text-zinc-400 dark:hover:text-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+          title="Close Sidebar"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Navigation */}
@@ -207,7 +225,7 @@ function MainOutLet(){
         </div>
       </div>
 
-    </aside>
+    </aside>)}
     <main className="flex-1 w-full min-w-0 dark:bg-zinc-950">
       <Outlet/>
     </main>
