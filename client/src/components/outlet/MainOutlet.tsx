@@ -188,7 +188,7 @@ function MainOutLet(){
       </nav>
 
       {/* 🔥 Streak Section */}
-      <div className="px-2 md:px-4 pb-6 mt-auto shrink-0">
+      <div className="px-2 mb-6 sm:mb-0 md:px-4 pb-6 mt-auto shrink-0">
         <div
           className="bg-linear-to-br from-orange-50 to-orange-100 dark:from-orange-950/40 dark:to-orange-900/20 border border-orange-200 dark:border-orange-900/50 shadow-md rounded-xl p-2 md:p-3 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3"
           title="5 Day Study Streak!"
