@@ -135,7 +135,7 @@ const connectAPIKey=async ()=>{
 }
   return (
     <div className="max-w-3xl py-10 px-4 md:px-8 space-y-8">
-      <div>
+      <div className="ml-12">
         <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
         <p className="text-muted-foreground mt-2">
           Manage your app appearance and notification preferences.
