@@ -102,7 +102,7 @@ function FlashCard(){
 
     if (loading) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] w-full p-6">
+            <div className="flex mt-12 flex-col items-center justify-center min-h-[60vh] w-full p-6">
                 <div className="w-full max-w-2xl h-80 bg-gray-100 dark:bg-zinc-900 rounded-3xl animate-pulse shadow-sm border border-gray-200 dark:border-zinc-800"></div>
                 <div className="flex gap-4 mt-8">
                     <div className="w-12 h-12 bg-gray-100 dark:bg-zinc-900 rounded-full animate-pulse"></div>
@@ -115,7 +115,7 @@ function FlashCard(){
 
     if (!flashCards || flashCards.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-[60vh] text-center p-6">
+            <div className="flex mt-12 flex-col items-center justify-center min-h-[60vh] text-center p-6">
                 <div className="w-24 h-24 mb-6 rounded-full bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center">
                     <RotateCcw className="w-12 h-12 text-blue-500" />
                 </div>
@@ -128,8 +128,8 @@ function FlashCard(){
     const progress = ((currentCardIndex + 1) / flashCards.length) * 100;
 
     return (
-        <div className="flex relative flex-col items-center justify-between w-full max-w-3xl mx-auto p-4 md:p-4 font-sans overflow-hidden">
-            <div className=" relative w-full -mt-2  mb-3 ml-32 ">
+        <div className="flex relative flex-col items-center justify-between w-full max-w-3xl mx-auto p-4 md:p-4 font-sans overflow-hidden  min-h-dvh">
+            <div className=" relative w-[80%] -mt-2  mb-3 ml-32 ">
                 <div className="flex justify-between items-end mb-2">
                     <span className="text-sm font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Reviewing</span>
                     <span className="text-sm font-semibold text-gray-700 dark:text-zinc-300 bg-gray-100 dark:bg-zinc-900 px-3 py-1 rounded-full">
@@ -188,7 +188,7 @@ function FlashCard(){
             </div>
 
            
-            <div className="w-full flex flex-col relative  items-center gap-4  sm:gap-6 pb-4 sm:pb-8 pt-4">
+            <div className="w-full  flex flex-col relative  items-center gap-4  sm:gap-6 mt-10 pb-4 sm:pb-8 pt-4">
                 
                 <div className="flex items-center justify-center gap-4 sm:gap-6">
                     <Button

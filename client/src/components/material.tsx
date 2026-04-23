@@ -107,7 +107,7 @@ const handleRestart=()=>{
         <>
         <div className="max-w-7xl mb-0 mx-auto p-3 sm:p-6 flex flex-col  w-full max-h-dvh">
         <Card className="relative flex flex-col flex-1 pb-2  gap-1 min-h-[93vh] w-full max-w-6xl mx-auto shadow-sm  border-zinc-200 dark:border-zinc-900 overflow-hidden">
-          <Button title="New Chat" variant="outline" onClick={handleRestart} className="flex gap-2 -mt-4 items-center rounded-lg w-fit max-w-40 relative  -right-5">
+          <Button title="New Chat" variant="outline" onClick={handleRestart} className="flex gap-2 -mt-4 ml-10 items-center rounded-lg w-fit max-w-40 relative  -right-5">
             <BrainCircuit className="w-4 h-4" />
             <span className="hidden sm:inline">New Chat</span>
           </Button>

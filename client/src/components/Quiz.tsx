@@ -81,7 +81,7 @@ function Quiz() {
   return (
     <div className=" overflow-y-auto bg-gray-50/50 dark:bg-black border-gray-100 dark:border-zinc-800 p-4 sm:p-2 flex flex-col items-center">
       <div className="w-full max-w-2xl shrink-0 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4 sm:mb-6">
-        <Button variant="ghost" onClick={() => navigate(-1)} className="gap-2">
+        <Button variant="ghost" onClick={() => navigate(-1)} className="gap-2 ml-12 sm:ml-0">
           <ArrowLeft className="w-4 h-4" /> Go Back
         </Button>
         <div className="flex gap-2 w-full sm:w-auto">
