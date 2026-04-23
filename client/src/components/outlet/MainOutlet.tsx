@@ -51,7 +51,7 @@ function MainOutLet(){
        <Menu className="w-6 h-6 text-gray-800 dark:text-zinc-200" />
      </div>
    ) : (
-    <aside className="sticky top-0 h-screen w-16 md:w-60 bg-[radial-gradient(ellipse_at_center_left,var(--color-blue-100),var(--color-zinc-100),var(--color-zinc-50))] dark:bg-[radial-gradient(ellipse_at_center_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] shadow-[4px_0_24px_rgba(0,0,0,0.05)] dark:shadow-none dark:border-r dark:border-zinc-800 flex flex-col transition-all duration-300 shrink-0 z-50">
+    <aside className="sticky top-0 h-screen pb-6 sm:pb-2 w-16 md:w-60 bg-[radial-gradient(ellipse_at_center_left,var(--color-blue-100),var(--color-zinc-100),var(--color-zinc-50))] dark:bg-[radial-gradient(ellipse_at_center_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] shadow-[4px_0_24px_rgba(0,0,0,0.05)] dark:shadow-none dark:border-r dark:border-zinc-800 flex flex-col transition-all duration-300 shrink-0 z-50">
 
       {/* 🔥 Realistic Fire Animation Styles */}
       <style>{`
@@ -188,7 +188,7 @@ function MainOutLet(){
       </nav>
 
       {/* 🔥 Streak Section */}
-      <div className="px-2 mb-6 sm:mb-0 md:px-4 pb-6 mt-auto shrink-0">
+      <div className="px-2 sm:mb-0 md:px-4 pb-6 mt-auto shrink-0">
         <div
           className="bg-linear-to-br from-orange-50 to-orange-100 dark:from-orange-950/40 dark:to-orange-900/20 border border-orange-200 dark:border-orange-900/50 shadow-md rounded-xl p-2 md:p-3 flex flex-col md:flex-row items-center justify-center md:justify-start gap-1 md:gap-3"
           title="5 Day Study Streak!"
