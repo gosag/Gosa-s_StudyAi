@@ -240,7 +240,7 @@ return ()=>el.removeEventListener("scroll",scrollDown)
       {/* Main Content Area */}
       {aiData.length === 0 ? (
         <div>
-        <header className="flex flex-col gap-2 border-b pb-4 shrink-0 bg-[radial-gradient(circle_at_top_right,var(--color-blue-50),var(--color-zinc-100),var(--color-gray-100))] dark:bg-[radial-gradient(ellipse_at_top_right,var(--color-zinc-900),var(--color-zinc-950),var(--color-black))] rounded-md">
+        <header className="flex flex-col ml-12 gap-2 border-b pb-4 shrink-0 bg-[radial-gradient(circle_at_top_right,var(--color-blue-50),var(--color-zinc-100),var(--color-gray-100))] dark:bg-[radial-gradient(ellipse_at_top_right,var(--color-zinc-900),var(--color-zinc-950),var(--color-black))] rounded-md">
         <div className="flex items-center justify-between">
           <div className=" pl-3">
             <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Your Study Materials</h1>

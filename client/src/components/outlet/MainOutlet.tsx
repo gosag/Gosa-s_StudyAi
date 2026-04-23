@@ -44,7 +44,7 @@ function MainOutLet(){
 <div className="flex min-h-screen items-start bg-gray-100 dark:bg-zinc-950 text-gray-900 dark:text-zinc-100">
    {!showMenu ? (
      <div 
-       className="fixed top-4 left-4 z-50 p-2 cursor-pointer bg-white dark:bg-zinc-800 rounded-lg shadow-md transition-all hover:bg-gray-50 dark:hover:bg-zinc-700" 
+       className="fixed top-4 left-4 z-50 p-2 cursor-pointer bg-white dark:bg-zinc-800 rounded-lg shadow-md  hover:bg-gray-50 dark:hover:bg-zinc-700 hover:scale-[101%] transition-all duration-200" 
        onClick={() => setShowMenu(true)}
        title="Open Menu"
      >
