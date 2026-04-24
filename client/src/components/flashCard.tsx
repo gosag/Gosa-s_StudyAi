@@ -160,7 +160,7 @@ function FlashCard(){
                 >
                     {/* Front */}
                     <div
-                        className=" sm:h-65  inset-0 flex items-center justify-center p-12 sm:p-8  text-center rounded-3xl bg-white dark:bg-neutral-900  dark:hover:bg-zinc-900 border border-gray-100 dark:border-zinc-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300"
+                        className=" sm:h-65  inset-0 flex items-center justify-center p-4  sm:p-8  text-center rounded-3xl bg-white dark:bg-neutral-900  dark:hover:bg-zinc-900 border border-gray-100 dark:border-zinc-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300"
                         style={{ backfaceVisibility: "hidden" }}
                     >
                         <div className="pointer-events-none select-none">
@@ -173,7 +173,7 @@ function FlashCard(){
 
                     {/* Back */}
                     <div 
-                        className="absolute inset-0 sm:h-65  flex flex-col items-center justify-center p-12 sm:p-8 text-center rounded-3xl bg-linear-to-br from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 border border-blue-100 dark:border-blue-900/50 shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
+                        className="absolute inset-0 sm:h-65  flex flex-col items-center justify-center p-4 sm:p-8 text-center rounded-3xl bg-linear-to-br from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 border border-blue-100 dark:border-blue-900/50 shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
                         style={{ backfaceVisibility: "hidden", transform: "rotateX(180deg)" }}
                     >
                         <div className="pointer-events-none select-none overflow-y-auto w-full max-h-full scrollbar-transparent">
