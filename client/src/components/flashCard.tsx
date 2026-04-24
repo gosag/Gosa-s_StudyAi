@@ -129,7 +129,7 @@ function FlashCard(){
 
     return (
         <div className="flex relative flex-col items-center justify-between w-full max-w-3xl mx-auto p-4 md:p-4 font-sans overflow-hidden  min-h-dvh">
-            <div className=" relative min-w-[60%] -mt-2  mb-3 mx-12 ">
+            <div className=" relative min-w-[80%] -mt-2  mb-3 mx-2">
                 <div className="flex justify-between items-end mb-2">
                     <span className="text-sm font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Reviewing</span>
                     <span className="text-sm font-semibold text-gray-700 dark:text-zinc-300 bg-gray-100 dark:bg-zinc-900 px-3 py-1 rounded-full">
