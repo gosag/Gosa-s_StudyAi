@@ -241,6 +241,18 @@ const connectAPIKey=async ()=>{
           {updateStatus && <p className="text-sm text-muted-foreground text-center">{updateStatus}</p>}
         </Card>
         <Card className="p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[radial-gradient(circle_at_bottom_left,var(--color-blue-50),var(--color-zinc-100),var(--color-white))] dark:bg-[radial-gradient(ellipse_at_bottom_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] border-none">
+            <div>
+              <p className="font-bold text-center sm:text-left">Account</p>
+              <p className="text-sm text-muted-foreground text-center sm:text-left">Log out to clear your data from this device.</p>
+            </div>
+            <Button variant="destructive" className="hover:scale-[103%] transition-all duration-200" onClick={() => {
+              localStorage.clear();
+              window.location.href = "/login";
+            }}>
+              Logout
+            </Button>
+        </Card>
+        <Card className="p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-[radial-gradient(circle_at_bottom_left,var(--color-blue-50),var(--color-zinc-100),var(--color-white))] dark:bg-[radial-gradient(ellipse_at_bottom_left,var(--color-zinc-800),var(--color-zinc-900),var(--color-zinc-950))] border-none">
             <p className="font-bold text-center sm:text-left">Wanna be in touch with the developer?</p>
             <div className="flex gap-3">
               <Button variant="outline" className="w-10 h-10 p-0" asChild>
