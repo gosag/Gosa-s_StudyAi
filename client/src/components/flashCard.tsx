@@ -216,9 +216,7 @@ function FlashCard(){
                     </div>
                 </motion.div>
             </div>
-
-            {/* Bottom Controls Area - Now relative so it doesn't overlap on small screens */}
-            <div className="w-full flex flex-col justify-start items-center gap-4 relative z-50 mb-2 mt-4 sm:mt-8">
+            <div className="w-full flex flex-col justify-start items-center gap-4 relative z-20 mb-2 mt-4 sm:mt-8">
                 
                 {/* Primary Navigation Dock */}
                 <div className="pointer-events-auto flex items-center p-2 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-full shadow-lg dark:shadow-[0_8px_32px_rgb(0,0,0,0.4)] border border-white/60 dark:border-white/5 gap-2 w-max mx-auto relative z-20">
@@ -251,7 +249,7 @@ function FlashCard(){
                     </Button>
                 </div>
 
-                {/* Difficulty Popover - Now appears below the navigation deck */}
+            
                 <div className="w-full max-w-85 sm:max-w-md flex justify-center h-18 sm:h-21 items-start relative z-10 -mt-2">
                 <AnimatePresence>
                     {showAnswer && (

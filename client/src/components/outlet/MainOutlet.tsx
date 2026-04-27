@@ -150,23 +150,34 @@ function MainOutLet() {
           <div className="p-4 mt-auto">
             <div className={`
               relative overflow-hidden rounded-2xl p-4 flex items-center gap-4 transition-all duration-300
-              ${currentStreak === 0 
+              ${!currentStreak || currentStreak === 0 
                 ? "bg-gray-50 dark:bg-zinc-900/50 border border-gray-200 dark:border-zinc-800" 
                 : "bg-linear-to-br from-orange-50 to-amber-50/50 dark:from-orange-950/20 dark:to-orange-900/10 border border-orange-200/60 dark:border-orange-500/20 shadow-xs"}
             `}>
               <div className="fire-wrapper w-8 h-8 shrink-0 relative z-10">
-                <svg viewBox="0 0 24 24" fill="currentColor" className={`${currentStreak === 0 ? "text-gray-300 dark:text-zinc-700 blur-sm" : "text-orange-400"} fire-glow blur-md`}>
+                <svg viewBox="0 0 24 24" fill="currentColor" className={`${!currentStreak || currentStreak === 0 ? "text-gray-300 dark:text-zinc-700 blur-sm" : "text-orange-500 dark:text-orange-500"} fire-glow blur-md`}>
                   <path d="M12.963 2.286a.75.75 0 00-1.071-.136 9.742 9.742 0 00-3.539 6.177A7.547 7.547 0 016.648 6.61a.75.75 0 00-1.152.082A9 9 0 1015.68 4.534a7.46 7.46 0 01-2.717-2.248z" />
                 </svg>
-                <svg viewBox="0 0 24 24" fill="currentColor" className={`fire-core relative ${currentStreak === 0 ? "text-gray-400 dark:text-zinc-600" : "text-linear-to-t from-orange-600 to-amber-400 dark:from-orange-500 dark:to-orange-300"}`}>
-                  <path d="M12.963 2.286a.75.75 0 00-1.071-.136 9.742 9.742 0 00-3.539 6.177A7.547 7.547 0 016.648 6.61a.75.75 0 00-1.152.082A9 9 0 1015.68 4.534a7.46 7.46 0 01-2.717-2.248z" />
+                <svg viewBox="0 0 24 24" className={`fire-core relative ${!currentStreak || currentStreak === 0 ? "text-gray-400 dark:text-zinc-600 fill-currentColor" : ""}`}>
+                  {currentStreak && currentStreak >= 1 && (
+                    <defs>
+                      <linearGradient id="fire-gradient" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <stop offset="0%" stopColor="#facc15" /> {/* yellow-400 */}
+                        <stop offset="40%" stopColor="#f97316" /> {/* orange-500 */}
+                        <stop offset="100%" stopColor="#ef4444" /> {/* red-500 */}
+                      </linearGradient>
+                    </defs>
+                  )}
+                  <path 
+                    fill={currentStreak && currentStreak >= 1 ? "url(#fire-gradient)" : "currentColor"}
+                    d="M12.963 2.286a.75.75 0 00-1.071-.136 9.742 9.742 0 00-3.539 6.177A7.547 7.547 0 016.648 6.61a.75.75 0 00-1.152.082A9 9 0 1015.68 4.534a7.46 7.46 0 01-2.717-2.248z" />
                 </svg>
               </div>
               <div className="flex flex-col relative z-10">
-                <span className={`text-xl font-bold tracking-tight leading-none ${currentStreak === 0 ? "text-gray-500 dark:text-zinc-400" : "text-orange-600 dark:text-orange-400"}`}>
+                <span className={`text-xl font-bold tracking-tight leading-none ${!currentStreak || currentStreak === 0 ? "text-gray-500 dark:text-zinc-400" : "text-orange-600 dark:text-orange-400"}`}>
                   {currentStreak || 0}
                 </span>
-                <span className={`text-xs font-medium tracking-wide mt-1 ${currentStreak === 0 ? "text-gray-400 dark:text-zinc-500" : "text-orange-800/80 dark:text-orange-300/80"}`}>
+                <span className={`text-xs font-medium tracking-wide mt-1 ${!currentStreak || currentStreak === 0 ? "text-gray-400 dark:text-zinc-500" : "text-orange-800/80 dark:text-orange-300/80"}`}>
                   Day Streak!
                 </span>
               </div>
