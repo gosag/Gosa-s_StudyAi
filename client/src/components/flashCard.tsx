@@ -128,160 +128,162 @@ function FlashCard(){
     const progress = ((currentCardIndex + 1) / flashCards.length) * 100;
 
     return (
-        <div className="flex relative flex-col items-center justify-between w-full max-w-3xl mx-auto p-4 md:p-4 font-sans overflow-hidden  min-h-dvh">
-            <div className=" relative min-w-[80%] -mt-2  mb-3 mx-2">
-                <div className="flex justify-between items-end mb-2">
-                    <span className="text-sm font-medium text-gray-500 dark:text-zinc-400 uppercase tracking-wider">Reviewing</span>
-                    <span className="text-sm font-semibold text-gray-700 dark:text-zinc-300 bg-gray-100 dark:bg-zinc-900 px-3 py-1 rounded-full">
-                        {currentCardIndex + 1} / {flashCards.length}
-                    </span>
+        <div className="relative min-h-dvh w-full bg-slate-50 dark:bg-[#0A0A0C] flex flex-col items-center py-8 px-4 sm:px-8 font-sans overflow-hidden selection:bg-indigo-500/30">
+            {/* Ambient Background Glows */}
+            <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/10 dark:bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none" />
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 dark:bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
+
+            {/* Header / Progress Area */}
+            <div className="w-full max-w-4xl flex items-center justify-between mb-8 sm:mb-12 relative z-10 mt-4 sm:mt-8">
+                <div className="flex flex-col gap-2 w-full max-w-45 sm:max-w-xs">
+                    <span className="text-[10px] sm:text-xs font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest pl-1">Mastery Progress</span>
+                    <div className="h-1.5 w-full bg-slate-200/50 dark:bg-zinc-800/50 rounded-full overflow-hidden backdrop-blur-sm">
+                        <motion.div 
+                            className="h-full bg-linear-to-r from-indigo-500 to-purple-500 rounded-full"
+                            initial={{ width: 0 }}
+                            animate={{ width: `${progress}%` }}
+                            transition={{ duration: 0.5, ease: "circOut" }}
+                        />
+                    </div>
                 </div>
-                <div className="w-full h-2 bg-gray-100 dark:bg-zinc-900  rounded-full overflow-hidden">
-                    <motion.div 
-                        className="h-full bg-blue-600 rounded-full"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${progress}%` }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                    />
+                <div className="flex items-center gap-3 bg-white/60 dark:bg-zinc-900/60 backdrop-blur-md px-4 py-2 rounded-2xl shadow-sm border border-slate-200/50 dark:border-zinc-800/50">
+                    <span className="text-xs sm:text-sm font-semibold text-slate-600 dark:text-zinc-300">
+                        {currentCardIndex + 1} <span className="text-slate-400 dark:text-zinc-500 font-normal mx-1">of</span> {flashCards.length}
+                    </span>
                 </div>
             </div>
 
+            {/* Status Message Floating */}
+            <div className="absolute top-20 sm:top-24 left-1/2 -translate-x-1/2 z-50 w-full flex justify-center pointer-events-none">
+                <AnimatePresence>
+                    {updateMessage && (
+                        <motion.div 
+                            initial={{ opacity: 0, y: -10, scale: 0.9 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -10, scale: 0.9 }}
+                            className="flex items-center gap-2 bg-emerald-500/10 dark:bg-emerald-500/20 backdrop-blur-md px-4 py-2 sm:px-5 sm:py-2.5 rounded-full border border-emerald-500/20 shadow-sm mx-4 text-center"
+                        >
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                            <span className="text-[10px] sm:text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                                {updateMessage}
+                            </span>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </div>
+
+            {/* Main Flashcard Container */}
             <div 
-                className="relative w-full flex-1 max-h-[50vh] sm:max-h-[60vh] z-10" 
-                style={{ perspective: "1000px" }}
+                className="w-full max-w-3xl flex-1 flex flex-col justify-center items-center relative perspective-distant mb-8 z-20 min-h-75 sm:min-h-100"
+                style={{ perspective: "1200px" }}
             >
+                {/* Decorative Deck Cards */}
+                <div className="absolute inset-0 bg-white/40 dark:bg-zinc-900/40 rounded-[2rem] sm:rounded-[2.5rem] transform translate-y-4 sm:translate-y-8 scale-[0.92] sm:scale-[0.94] border border-slate-200/30 dark:border-zinc-800/30 blur-[2px] z-0" />
+                <div className="absolute inset-0 bg-white/60 dark:bg-zinc-900/60 rounded-[2rem] sm:rounded-[2.5rem] transform translate-y-2 sm:translate-y-4 scale-[0.96] sm:scale-[0.97] border border-slate-200/50 dark:border-zinc-800/50 blur-[1px] z-0" />
+
                 <motion.div
-                    className="w-full h-full relative cursor-pointer"
+                    className="w-full h-full relative grid cursor-pointer z-10 rounded-[2rem] sm:rounded-[2.5rem]"
                     onClick={handleFlip}
                     initial={false}
-                    animate={{ rotateX: showAnswer ? 180 : 0 }}
-                    transition={{ duration: 0.6, type: "spring", stiffness: 200, damping: 20 }}
+                    animate={{ rotateY: showAnswer ? 180 : 0 }}
+                    transition={{ duration: 0.7, type: "spring", stiffness: 150, damping: 20 }}
                     style={{ transformStyle: "preserve-3d" }}
                 >
-                    {/* Front */}
+                    {/* Front Face (Question) */}
                     <div
-                        className=" sm:h-65  inset-0 flex items-center justify-center p-4  sm:p-8  text-center rounded-3xl bg-white dark:bg-neutral-900  dark:hover:bg-zinc-900 border border-gray-100 dark:border-zinc-800 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-shadow duration-300"
+                        className="col-start-1 row-start-1 w-full h-full flex flex-col items-center justify-center p-6 sm:p-12 text-center rounded-[2rem] sm:rounded-[2.5rem] bg-white dark:bg-zinc-900 shadow-2xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-slate-100 dark:border-zinc-800 transition-colors"
                         style={{ backfaceVisibility: "hidden" }}
                     >
-                        <div className="pointer-events-none select-none">
-                            <span className="text-xs font-bold text-blue-500 dark:text-blue-400 uppercase tracking-widest block mb-4">Question</span>
-                            <div className="text-2xl sm:text-3xl md:text-4xl text-gray-800 dark:text-zinc-100 leading-tight prose prose-xl dark:prose-invert max-w-none prose-p:leading-tight prose-strong:text-blue-600 dark:prose-strong:text-blue-400 prose-p:m-0 font-bold">
+                        <div className="w-full flex-1 flex flex-col items-center justify-center pointer-events-none select-none max-h-[60vh] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-zinc-800 py-4">
+                            <span className="text-[10px] sm:text-xs font-bold text-indigo-500 dark:text-indigo-400 uppercase tracking-[0.2em] mb-4 sm:mb-8 opacity-80 shrink-0">Question</span>
+                            <div className="text-xl sm:text-3xl md:text-4xl text-slate-800 dark:text-zinc-100 leading-snug sm:leading-tight prose prose-lg dark:prose-invert max-w-prose prose-p:leading-snug prose-strong:text-indigo-600 dark:prose-strong:text-indigo-400 font-semibold wrap-break-words wrap-break-words">
                                 <ReactMarkdown>{currentCard.front?.replace(/\\\*/g, '*').trim()}</ReactMarkdown>
                             </div>
                         </div>
                     </div>
 
-                    {/* Back */}
+                    {/* Back Face (Answer) */}
                     <div 
-                        className="absolute inset-0 sm:h-65  flex flex-col items-center justify-center p-4 sm:p-8 text-center rounded-3xl bg-linear-to-br from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 border border-blue-100 dark:border-blue-900/50 shadow-[0_8px_30px_rgb(0,0,0,0.08)]"
-                        style={{ backfaceVisibility: "hidden", transform: "rotateX(180deg)" }}
+                        className="col-start-1 row-start-1 w-full h-full flex flex-col items-center justify-center p-6 sm:p-12 text-center rounded-[2rem] sm:rounded-[2.5rem] bg-linear-to-b from-indigo-50/50 to-purple-50/50 dark:from-indigo-950/20 dark:to-purple-950/20 shadow-xl dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-indigo-100/50 dark:border-indigo-500/10"
+                        style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
                     >
-                        <div className="pointer-events-none select-none overflow-y-auto w-full max-h-full scrollbar-transparent">
-                            <span className="text-xs font-bold text-indigo-500 dark:text-indigo-400 uppercase tracking-widest block mb-4">Answer</span>
-
-                             <div className={`text-xl sm:text-2xl text-gray-800 dark:text-zinc-100 leading-relaxed font-medium prose prose-lg dark:prose-invert max-w-none prose-p:leading-relaxed prose-strong:text-indigo-600 dark:prose-strong:text-indigo-400 prose-p:m-0`}>
-                             <ReactMarkdown>{currentCard.back?.replace(/\\\*/g, '*').trim()}</ReactMarkdown>
-                              </div>
+                        <div className="w-full flex-1 pointer-events-none select-none overflow-y-auto max-h-[60vh] scrollbar-thin scrollbar-track-transparent scrollbar-thumb-indigo-200 dark:scrollbar-thumb-indigo-900/50 px-2 sm:px-6 py-4">
+                            <span className="text-[10px] sm:text-xs font-bold text-purple-500 dark:text-purple-400 uppercase tracking-[0.2em] mb-4 sm:mb-8 block opacity-80 shrink-0">Answer / Explanation</span>
+                            <div className="text-[15px] leading-relaxed sm:text-xl md:text-2xl text-slate-700 dark:text-zinc-300 sm:leading-loose font-medium prose prose-md sm:prose-lg dark:prose-invert max-w-prose prose-p:leading-relaxed prose-strong:text-purple-600 dark:prose-strong:text-purple-400 wrap-break-words wrap-break-words origin-center">
+                                <ReactMarkdown>{currentCard.back?.replace(/\\\*/g, '*').trim()}</ReactMarkdown>
+                            </div>
                         </div>
                     </div>
                 </motion.div>
             </div>
 
-           
-            <div className="w-full  flex flex-col relative  items-center gap-4  sm:gap-6 mt-10 pb-4 sm:pb-8 pt-4">
+            {/* Bottom Controls Area - Now relative so it doesn't overlap on small screens */}
+            <div className="w-full flex flex-col justify-start items-center gap-4 relative z-50 mb-2 mt-4 sm:mt-8">
                 
-                <div className="flex items-center justify-center gap-4 sm:gap-6">
+                {/* Primary Navigation Dock */}
+                <div className="pointer-events-auto flex items-center p-2 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-full shadow-lg dark:shadow-[0_8px_32px_rgb(0,0,0,0.4)] border border-white/60 dark:border-white/5 gap-2 w-max mx-auto relative z-20">
                     <Button
-                        variant="outline"
+                        variant="ghost"
                         size="icon"
-                        className="rounded-full w-12 h-12 border-gray-200 dark:border-zinc-800 text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-100 hover:bg-gray-50 dark:hover:bg-zinc-800 shadow-sm"
+                        className="rounded-full shrink-0 w-12 h-12 sm:w-14 sm:h-14 text-slate-400 hover:text-slate-800 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors"
                         onClick={(e) => { e.stopPropagation(); handlePrev(); }}
                         disabled={currentCardIndex === 0}
                     >
-                        <ArrowLeft className="w-5 h-5" />
+                        <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
                     </Button>
                     
                     <Button 
                         onClick={(e) => { e.stopPropagation(); handleFlip(); }}
-                        className="rounded-2xl px-8 h-12 bg-gray-900 dark:bg-zinc-100 hover:bg-gray-800 dark:hover:bg-white text-white dark:text-black shadow-md transition-all active:scale-95 flex items-center gap-2"
+                        className="rounded-full w-40 sm:w-55 h-12 sm:h-14 bg-linear-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 text-white shadow-md shadow-indigo-500/25 dark:shadow-indigo-900/50 transition-all active:scale-95 flex items-center justify-center gap-2 group"
                     >
-                        <RotateCcw className={`w-4 h-4 ${showAnswer ? '-rotate-180' : ''} transition-transform duration-500`} />
-                        <span className="font-semibold tracking-wide">{showAnswer ? "Show Question" : "Reveal Answer"}</span>
+                        <RotateCcw className={`w-4 h-4 sm:w-5 sm:h-5 ${showAnswer ? '-rotate-180' : ''} transition-transform duration-700 ease-in-out`} />
+                        <span className="font-bold tracking-wide text-[11px] sm:text-sm uppercase leading-none mt-px">{showAnswer ? "Question" : "Reveal Answer"}</span>
                     </Button>
                     
                     <Button
-                        variant="outline"
+                        variant="ghost"
                         size="icon"
-                        className="rounded-full w-12 h-12 border-gray-200 dark:border-zinc-800 text-gray-500 dark:text-zinc-400 hover:text-gray-900 dark:hover:text-zinc-100 hover:bg-gray-50 dark:hover:bg-zinc-800 shadow-sm"
+                        className="rounded-full shrink-0 w-12 h-12 sm:w-14 sm:h-14 text-slate-400 hover:text-slate-800 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors"
                         onClick={(e) => { e.stopPropagation(); handleNext(); }}
                         disabled={currentCardIndex === flashCards.length - 1}
                     >
-                        <ArrowRight className="w-5 h-5" />
+                        <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6" />
                     </Button>
                 </div>
 
-                {/* Difficulty Rating */}
-                <div className="h-16 flex  items-center justify-center overflow-visible">
-                    <AnimatePresence>
-                        {showAnswer && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -20, scale: 0.9 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 25 }}
-                                className="flex gap-2 sm:gap-3 p-2 bg-white dark:bg-zinc-900/50  dark:hover:bg-zinc-900 rounded-2xl shadow-lg border border-gray-100 dark:border-zinc-800"
-                            >
-                                <Button 
-                                    variant="ghost" 
-                                    onClick={() => handleDifficulty("again")}
-                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-red-50 dark:hover:bg-red-900/40 hover:text-red-600 dark:hover:text-red-400 transition-colors rounded-xl"
-                                >
-                                    <span className="text-2xl">🔄</span>
-                                    <span className="text-xs font-semibold">Again</span>
-                                </Button>
-                                <Button 
-                                    variant="ghost" 
-                                    onClick={() => handleDifficulty("hard")}
-                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-orange-50 dark:hover:bg-orange-900/40 hover:text-orange-600 dark:hover:text-orange-400 transition-colors rounded-xl"
-                                >
-                                    <span className="text-2xl">😓</span>
-                                    <span className="text-xs font-semibold">Hard</span>
-                                </Button>
-                                <Button 
-                                    variant="ghost" 
-                                    onClick={() => handleDifficulty("good")}
-                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-blue-50 dark:hover:bg-blue-900/40 hover:text-blue-600 dark:hover:text-blue-400 transition-colors rounded-xl"
-                                >
-                                    <span className="text-2xl">🤔</span>
-                                    <span className="text-xs font-semibold">Good</span>
-                                </Button>
-                                <Button 
-                                    variant="ghost"
-                                    onClick={() => handleDifficulty("easy")}
-                                    className="flex flex-col items-center gap-1 h-auto py-3 px-4 hover:bg-green-50 dark:hover:bg-green-900/40 hover:text-green-600 dark:hover:text-green-400 transition-colors rounded-xl"
-                                >
-                                    <span className="text-2xl">😄</span>
-                                    <span className="text-xs font-semibold">Easy</span>
-                                </Button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
-                </div>
-
-                {/* Status Message */}
-                <div className="h-6 flex items-center justify-center">
-                    <AnimatePresence>
-                        {updateMessage && (
-                            <motion.p 
-                                initial={{ opacity: 0, y: 5 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: 5 }}
-                                className="text-sm font-medium text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100"
-                            >
-                                {updateMessage}
-                            </motion.p>
-                        )}
-                    </AnimatePresence>
+                {/* Difficulty Popover - Now appears below the navigation deck */}
+                <div className="w-full max-w-85 sm:max-w-md flex justify-center h-18 sm:h-21 items-start relative z-10 -mt-2">
+                <AnimatePresence>
+                    {showAnswer && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -15, scale: 0.95 }}
+                            transition={{ duration: 0.3, type: "spring", stiffness: 300, damping: 25 }}
+                            className="pointer-events-auto flex items-center justify-between p-1.5 sm:p-2 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl rounded-full shadow-lg dark:shadow-[0_8px_32px_rgb(0,0,0,0.4)] border border-white/60 dark:border-white/5 w-full gap-1 sm:gap-2"
+                        >
+                            <Button variant="ghost" onClick={() => handleDifficulty("again")} className="flex-1 flex flex-col items-center justify-center gap-1 h-14 sm:h-16 rounded-full hover:bg-red-50 dark:hover:bg-red-500/10 text-slate-500 hover:text-red-500 transition-colors group">
+                                <span className="text-xl sm:text-2xl leading-none group-hover:scale-110 transition-transform">🔄</span>
+                                <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider leading-none">Again</span>
+                            </Button>
+                            <div className="w-px h-8 bg-slate-200 dark:bg-zinc-800 shrink-0" />
+                            <Button variant="ghost" onClick={() => handleDifficulty("hard")} className="flex-1 flex flex-col items-center justify-center gap-1 h-14 sm:h-16 rounded-full hover:bg-orange-50 dark:hover:bg-orange-500/10 text-slate-500 hover:text-orange-500 transition-colors group">
+                                <span className="text-xl sm:text-2xl leading-none group-hover:scale-110 transition-transform">😓</span>
+                                <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider leading-none">Hard</span>
+                            </Button>
+                            <div className="w-px h-8 bg-slate-200 dark:bg-zinc-800 shrink-0" />
+                            <Button variant="ghost" onClick={() => handleDifficulty("good")} className="flex-1 flex flex-col items-center justify-center gap-1 h-14 sm:h-16 rounded-full hover:bg-blue-50 dark:hover:bg-blue-500/10 text-slate-500 hover:text-blue-500 transition-colors group">
+                                <span className="text-xl sm:text-2xl leading-none group-hover:scale-110 transition-transform">🤔</span>
+                                <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider leading-none">Good</span>
+                            </Button>
+                            <div className="w-px h-8 bg-slate-200 dark:bg-zinc-800 shrink-0" />
+                            <Button variant="ghost" onClick={() => handleDifficulty("easy")} className="flex-1 flex flex-col items-center justify-center gap-1 h-14 sm:h-16 rounded-full hover:bg-emerald-50 dark:hover:bg-emerald-500/10 text-slate-500 hover:text-emerald-500 transition-colors group">
+                                <span className="text-xl sm:text-2xl leading-none group-hover:scale-110 transition-transform">😄</span>
+                                <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider leading-none">Easy</span>
+                            </Button>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
                 </div>
             </div>
             
