@@ -262,32 +262,34 @@ export async function generateFlashCards(
   });
 
   const prompt = `
-    ACT AS: A Senior Cognitive Scientist and expert in Spaced Repetition Systems (SRS) and memory retrieval.
-
-    TASK: Generate an extensive, high-yield set of flashcards (aim for 15-25 cards depending on content density) based on the provided material. The flashcards must be designed for deep conceptual understanding and long-term retention, not just trivia.
-
-    CORE PRINCIPLES OF KNOWLEDGE FORMULATION:
-    1. ATOMICITY BUT CONTEXTUAL: Each card must test one distinct, isolated concept, but the question should provide enough context so it's not confusing. 
-    2. QUESTION QUALITY (The "Front"): 
-       - Don't just ask "What is X?". Instead, ask "What is the primary function of X in [context]?" or "Why does Y occur when Z happens?"
-       - Use active recall triggers. Use clear, unambiguous prompts. 
-       - If a concept has multiple parts, split it into multiple cards (e.g., "What are the 3 main advantages of X?" can be a card, but keep answers brief).
-    3. ANSWER QUALITY (The "Back"):
-       - The answer MUST be highly concise, strictly getting to the point. Ideally 1-2 short sentences or a few bullet points. 
-       - Use formatting cues like bolding for key terms in the answer.
-       - AVOID full conversational paragraphs. Minimize cognitive load.
-    4. DIVERSITY OF ANGLES:
-       - Factual Cards (Definitions, Terms, Dates)
-       - Functional Cards (Why? How does it work? Cause & Effect)
-       - Comparative Cards (What is the difference between A and B?)
-    5. NO DUD CARDS: Every card must feel like a "must-know" exam question.
-
+    You are an expert in cognitive science, learning design, and Spaced Repetition Systems (SRS).
+    
+    YOUR TASK: Generate a highly effective set of flashcards based STRICTLY and ONLY on the provided summary.
+    
+    CRITICAL CONSTRAINT - NO HALLUCINATION:
+    - You MUST NOT include any information, concepts, or facts that are not explicitly mentioned or directly supported by the provided summary.
+    - Do NOT invent facts to reach a certain number of cards. If the summary only has enough material for 5 good cards, only generate 5. Aim for up to 15-25 only if the density of the material supports it.
+    
+    PRINCIPLES FOR PERFECT SRS FLASHCARDS:
+    1. ATOMICITY: Each card must test one, and only one, specific concept (Minimum Information Principle).
+    2. CONTEXTUAL CLARITY: The question (front) should be unambiguous. e.g., Instead of "What is it?", use "What is the primary function of [Concept] in the context of [Topic]?"
+    3. ACTIVE RECALL: Phrase questions to force the brain to retrieve the answer, rather than just recognizing it.
+    4. CONCISE ANSWERS: The answer (back) MUST be extremely brief—ideally 1 short sentence or a few keywords. No paragraphs or fluff.
+    5. TARGET COMPREHENSION: Create a mix of cards:
+       - Definitional (What is X?)
+       - Functional (Why does X happen? How does Y work?)
+       - Relational/Comparative (What is the difference between X and Y?)
+    
     INPUT DATA:
     ---
-    KEY SUMMARY: ${summary}
+    SUMMARY: ${summary}
     ---
 
-    OUTPUT FORMAT: Return ONLY a valid JSON array of objects, with no markdown wrapping and no text outside the JSON. Each object MUST have exactly two keys: "front" (the question/prompt) and "back" (the concise answer).
+    OUTPUT FORMAT: 
+    Return ONLY a valid JSON array of objects. Do NOT include markdown blocks (\`\`\`json), greetings, or explanations.
+    Each object MUST have exactly two keys:
+    - "front": The specific, context-rich question.
+    - "back": The highly concise, accurate answer based entirely on the summary.
   `;
 
   try {
