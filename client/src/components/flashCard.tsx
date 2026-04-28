@@ -128,13 +128,13 @@ function FlashCard(){
     const progress = ((currentCardIndex + 1) / flashCards.length) * 100;
 
     return (
-        <div className="relative min-h-dvh w-full bg-slate-50 dark:bg-[#0A0A0C] flex flex-col items-center py-8 px-4 sm:px-8 font-sans overflow-hidden selection:bg-indigo-500/30">
+        <div className="relative min-h-dvh w-full bg-slate-50 dark:bg-[#0A0A0C] flex flex-col items-center pb-8 px-4 sm:px-8 font-sans overflow-hidden selection:bg-indigo-500/30">
             {/* Ambient Background Glows */}
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/10 dark:bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none" />
             <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 dark:bg-purple-600/10 rounded-full blur-[120px] pointer-events-none" />
 
             {/* Header / Progress Area */}
-            <div className="w-full max-w-4xl flex items-center justify-between mb-8 sm:mb-12 relative z-10 mt-4 sm:mt-8">
+            <div className="w-full max-w-4xl flex items-center justify-between mb-4 sm:mb-6 relative z-10 mt-2 sm:mt-8">
                 <div className="flex flex-col gap-2 w-full max-w-45 sm:max-w-xs">
                     <span className="text-[10px] sm:text-xs font-bold text-slate-400 dark:text-zinc-500 uppercase tracking-widest pl-1">Mastery Progress</span>
                     <div className="h-1.5 w-full bg-slate-200/50 dark:bg-zinc-800/50 rounded-full overflow-hidden backdrop-blur-sm">
