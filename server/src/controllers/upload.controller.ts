@@ -44,7 +44,8 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
         const extractedText = await extractTextFromFile(req.file.buffer, req.file.mimetype);
         console.log(`Extracted text length: ${extractedText.text.length} characters`);
         const response = await generateResponse(`Hey Gemini, summarize the following text in a concise manner: ${extractedText.text}`,user.apiKey || undefined) ;
-        const parsedResponse=JSON.parse(response);
+        const cleanResponse = response.replace(/```json\n?|```\n?/g, '').trim();
+        const parsedResponse = JSON.parse(cleanResponse);
         console.log(`[Gemini Summary] ${response.length} characters`);
         const userId = req.user._id;
         let newT;
@@ -141,7 +142,8 @@ export const uploadLink = async (req: Request, res: Response, next: NextFunction
       return next(error)
     }
     const sumamrizedResponse = await generateResponse(`Hey Gemini, summarize the following YouTube transcript in a concise manner: ${transcript}`, user.apiKey || undefined);
-    const parsedResponse=JSON.parse(sumamrizedResponse);
+    const cleanSumamrizedResponse = sumamrizedResponse.replace(/```json\n?|```\n?/g, '').trim();
+    const parsedResponse = JSON.parse(cleanSumamrizedResponse);
    
     let newT;
     let summary;

@@ -64,6 +64,7 @@ export async function generateResponse(prompt:string, APIKey:string | undefined)
             When the chat is just starting Return ONLY a raw, valid JSON array of objects.
             DO NOT wrap the JSON in markdown code blocks (e.g., do not use \`\`\`json). Just return the raw JSON text so it can be parsed.
             The "summary" property must still contain the markdown formatting you generated.
+            IMPORTANT: You MUST properly escape all double quotes (") and backslashes (\\) inside the "summary" string to ensure it is valid JSON.
             Only use this format when the material is uploaded for the first time.
                 FORMAT:
                   [{

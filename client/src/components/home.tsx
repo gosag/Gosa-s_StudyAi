@@ -82,7 +82,8 @@ const fileHandler=async (file: File)=>{
           setLoading(false);
           return;
         }
-        setAiData([{role: "model",content: data.response}]);
+        setAiData([{role: "user",content: `Uploaded file: ${file.name}`}]);
+        setAiData((prev)=>[...prev, {role: "model",content: data.response}]);
         localStorage.setItem('summary',JSON.stringify(data.response))
         localStorage.setItem('materialId',JSON.stringify(data.materialId));
         setFile(null)
