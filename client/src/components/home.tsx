@@ -2,7 +2,7 @@ import { Card, CardContent, CardFooter, CardHeader} from "./ui/card"
 import { Button } from "./ui/button"
 import { Textarea } from "./ui/textarea";
 import {Input} from "./ui/input"
-import { FileUp, Send, Loader2,FileText,BrainCircuit, PlayCircle, Brain, ArrowDown } from "lucide-react";
+import { FileUp, Send, Loader2,FileText,BrainCircuit, PlayCircle, Brain, ArrowDown, X } from "lucide-react";
 import { useEffect, useState ,useRef} from "react";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
@@ -277,9 +277,12 @@ return ()=>el.removeEventListener("scroll",scrollDown)
                 />
               </div>
               {file && (
-                <div className="flex items-center gap-2 mt-2 px-3 py-1.5 bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400 rounded-md text-sm font-medium border border-green-200 dark:border-green-500/20">
+                <div className="flex relative  items-center gap-2 mt-2 px-3 py-1.5 bg-green-50 text-green-700 dark:bg-green-500/10 dark:text-green-400 rounded-md text-sm font-medium border border-green-200 dark:border-green-500/20">
                   <FileText className="w-4 h-4" />
                   <span className="truncate max-w-50">{file.name}</span>
+                  <span onClick={()=>{setFile(null)}} className="absolute -right-6 top-1/2 transform -translate-y-1/2 border border-green-400 rounded-full hover:scale-105 transition-all duration-200">
+                    <X className="w-4 h-4 text-green-500 dark:text-green-400" />
+                  </span>
                 </div>
               )}
             </div>
