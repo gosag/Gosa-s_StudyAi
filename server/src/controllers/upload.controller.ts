@@ -97,7 +97,7 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
             return next(customError);
         }
         else{
-            const err = new Error("Failed to process request: " + (error instanceof Error ? error.message : "Unknown error")) as CustomError;
+            const err = new Error("Failed to process request. Please try again later.") as CustomError;
             err.status = 500;
             return next(err);
         }
