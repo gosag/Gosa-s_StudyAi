@@ -22,7 +22,12 @@ export const verificationController=asyncHandler(async(req:Request,res:Response,
         error.status=400;
         throw error;
     }
-    
+    const findEmail= await User.findOne({email})
+    if(findEmail){
+        const error= new Error("User with this email already exists. Please log in instead.") as RequestError
+        error.status=409;
+        throw error;
+    }
     const resend = new Resend(`${process.env.RESEND_API_KEY!}`);
 
     let randomNumber=Math.floor(Math.random()*9000)+999;
@@ -36,7 +41,7 @@ export const verificationController=asyncHandler(async(req:Request,res:Response,
                 from: "EchoStudy <noreply@echostudy.gosagirma.me>",
                 to: email,
                 subject: "Your verification Code from EchoStudy",
-                text: `Your verification code is ${randomNumber}. It will expire in 5 minutes. 
+                html: `Your verification code is <span style="font-weight:bold; color:red; font-size:16px;">${randomNumber}</span>. It will expire in 5 minutes. 
                 Please! Don't share this code with anyone.`,
             });
 
@@ -74,7 +79,7 @@ export const resetPasswordController=asyncHandler(async(req:Request,res:Response
                from: "EchoStudy <noreply@echostudy.gosagirma.me>",
                 to: email,
                 subject: "Your verification Code from EchoStudy",
-                text: `Your verification code is ${randomNum}. It will expire in 5 minutes. 
+                html: `Your verification code is <span style="font-weight:bold; color:red; font-size:16px;">${randomNum}</span>. It will expire in 5 minutes. 
                 Please! Don't share this code with anyone.`,
             });
     if(error){

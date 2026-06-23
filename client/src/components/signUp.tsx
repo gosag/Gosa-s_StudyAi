@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import  { useNavigate} from "react-router-dom";
 import {Link} from "react-router-dom"
 import {z} from "zod"
 import { Loader2 } from "lucide-react";
@@ -25,7 +26,7 @@ function SignUp(){
     })
     const [loading, setLoading] = useState(false);
     const [verifying, setVerifying] = useState(false);
-    
+    const navigate = useNavigate();
     // New states for verification logic
     const [step, setStep] = useState<"register" | "verify">("register");
     const [expectedCode, setExpectedCode] = useState<string | null>(null);
@@ -112,7 +113,13 @@ function SignUp(){
         window.location.href = "/";
       } catch (error: any) {
         console.error(error);
-        alert(error.message || "An error occurred while creating your account. Please try again.");
+        if (error.message.includes("User with this email already exists. Please log in instead.")) {
+          alert("User with this email already exists. Please log in instead. Redirecting to login page.");
+          navigate("/login")
+          return;
+        }
+        alert(error.message || "An error occurred while creating your account. Please try again.")
+        
       } finally {
         setVerifying(false);
       }
