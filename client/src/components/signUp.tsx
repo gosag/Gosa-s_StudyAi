@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {Link, useNavigate} from "react-router-dom"
+import {Link} from "react-router-dom"
 import {z} from "zod"
 import { Loader2 } from "lucide-react";
 import { useState } from "react";
@@ -14,7 +14,6 @@ const signUpSchema=z.object({
 })
 type typesignUpSchema=z.infer<typeof signUpSchema>
 function SignUp(){
-    const navigate = useNavigate();
     const {
      register,
      handleSubmit,
@@ -95,8 +94,10 @@ function SignUp(){
         });
         
         let returnedData;
+
         try {
           returnedData = await res.json();
+          localStorage.setItem("token", returnedData.token);
         } catch (e) {
           throw new Error(`Server returned a non-JSON response (status ${res.status}). Error in production environment.`);
         }
@@ -107,8 +108,8 @@ function SignUp(){
         }
 
         reset();
-        alert("Account verified and created successfully. You can now log in!");
-        navigate("/login", { replace: true });
+        alert("Account verified and created successfully.");
+        window.location.href = "/";
       } catch (error: any) {
         console.error(error);
         alert(error.message || "An error occurred while creating your account. Please try again.");

@@ -129,7 +129,7 @@ export const registerController= asyncHandler(async(req:Request,res:Response)=>{
         error.status=400;
         throw error
     }
-    res.json({user})
+    res.json({user, token:tokenGenerator(user._id)})
 })
 interface userIF{
     email?:string,
@@ -165,5 +165,5 @@ const user=await User.findById(id)
         error.status=404;
         throw error
     }
-    res.json({user})
+    res.json({user, token:tokenGenerator(user._id)})
 })

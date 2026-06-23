@@ -1,5 +1,5 @@
 import { Outlet, NavLink, useLocation } from "react-router-dom";
-import { Home, Library, Layers, Settings, Menu, X } from "lucide-react";
+import { Home, Library, Layers, Settings, Menu, PanelLeftClose } from "lucide-react";
 import { useEffect, useState } from "react";
 
 function MainOutLet() {
@@ -121,7 +121,7 @@ function MainOutLet() {
               onClick={() => setShowMenu(false)}
               className="md:hidden p-2 -mr-2 rounded-xl text-gray-500 hover:bg-gray-100 dark:text-zinc-400 dark:hover:bg-zinc-800/50 transition-colors"
             >
-              <X className="w-5 h-5" />
+              <PanelLeftClose className="w-5 h-5" />
             </button>
           </div>
 
