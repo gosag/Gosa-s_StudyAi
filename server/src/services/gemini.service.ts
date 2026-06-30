@@ -3,6 +3,24 @@ interface CustomError extends Error{
     status?:number | string,
     statusCode?:number | string
 }
+
+async function summarizeChunk(
+    model: any,
+    chunk: string,
+    chunkIndex: number,
+    totalChunks: number
+): Promise<string> {
+    const chunkPrompt = `You are a study assistant. Summarize the following portion of a document (part ${chunkIndex + 1} of ${totalChunks}).
+      Extract the key concepts, important details, and any critical information. Be thorough but concise.
+      Do NOT format as a full study guide yet — just extract the essential knowledge as clear bullet points and paragraphs.
+      This partial summary will be merged with others later.
+
+=== DOCUMENT CHUNK ${chunkIndex + 1}/${totalChunks} ===
+${chunk}`;
+
+    const result = await model.generateContent(chunkPrompt);
+    return result.response.text();
+}
 export async function generateResponse(prompt:string, APIKey:string | undefined):Promise<string>{
     try{
         const apiKey = APIKey || process.env.GEMINI_API_KEY;

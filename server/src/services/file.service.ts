@@ -17,7 +17,7 @@ const extractTextFromFile = async (buffer: Buffer, mimetype: string) => {
             const data = await mammoth.extractRawText({ buffer: buffer });
             return {
                 text: data.value,
-                numpages: null, // Word docs don't give a simple page count this way
+                numpages: null, 
                 info: "Parsed DOCX",
             };
         } 
@@ -37,3 +37,38 @@ const extractTextFromFile = async (buffer: Buffer, mimetype: string) => {
 }
 
 export default extractTextFromFile;
+
+export const chunkText = (text: string, maxChunkSize: number = 12000): string[] => {
+  const chunks: string[] = [];
+  const paragraphs = text.split(/\n\s*\n/);
+  let currentChunk = "";
+
+  for (const paragraph of paragraphs) {
+    if (paragraph.length > maxChunkSize) {
+      if (currentChunk) {
+        chunks.push(currentChunk.trim());
+        currentChunk = "";
+      }
+      const sentences = paragraph.match(/[^.!?]+[.!?]+/g) || [paragraph];
+      for (const sentence of sentences) {
+        if ((currentChunk + sentence).length > maxChunkSize) {
+          if (currentChunk) chunks.push(currentChunk.trim());
+          currentChunk = sentence;
+        } else {
+          currentChunk += " " + sentence;
+        }
+      }
+      continue;
+    }
+
+    if ((currentChunk + "\n\n" + paragraph).length > maxChunkSize) {
+      chunks.push(currentChunk.trim());
+      currentChunk = paragraph;
+    } else {
+      currentChunk += "\n\n" + paragraph;
+    }
+  }
+
+  if (currentChunk.trim()) chunks.push(currentChunk.trim());
+  return chunks;
+};

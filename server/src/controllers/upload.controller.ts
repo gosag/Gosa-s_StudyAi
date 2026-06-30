@@ -43,7 +43,7 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
 
         const extractedText = await extractTextFromFile(req.file.buffer, req.file.mimetype);
         console.log(`Extracted text length: ${extractedText.text.length} characters`);
-        const response = await generateResponse(`Hey Gemini, summarize the following text in a concise manner: ${extractedText.text}`,user.apiKey || undefined) ;
+        const response = await generateResponse(extractedText.text, user.apiKey || undefined);
         const cleanResponse = response.replace(/```json\n?|```\n?/g, '').trim();
         const parsedResponse = JSON.parse(cleanResponse);
         console.log(`[Gemini Summary] ${response.length} characters`);
