@@ -33,19 +33,32 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
           return next(error);
         }
         const {freeUsageCount}=user;
-        if(!user.apiKey){
+        /* if(!user.apiKey){
           if(freeUsageCount >= freeUsageLimit){
           const error=new Error("Free usage limit reached. Please enter your own Gemini API Key.") as CustomError;
           error.status=403;
           return next(error);
         }
-        }
+        } */
 
         const extractedText = await extractTextFromFile(req.file.buffer, req.file.mimetype);
         console.log(`Extracted text length: ${extractedText.text.length} characters`);
         const response = await generateResponse(extractedText.text, user.apiKey || undefined);
+        console.log("[DEBUG] Raw Gemini response:", response);
         const cleanResponse = response.replace(/```json\n?|```\n?/g, '').trim();
-        const parsedResponse = JSON.parse(cleanResponse);
+        
+        console.log("[DEBUG] Cleaned response:", cleanResponse); 
+        let parsedResponse;
+        try {
+            parsedResponse = JSON.parse(cleanResponse);
+        } catch (parseError) {
+            console.error("[DEBUG] JSON parse failed, attempting fallback:", parseError);
+            parsedResponse = [{
+                summary: response,
+                title: req.file.originalname.replace(/\.[^/.]+$/, "").slice(0, 60),
+            }];
+        }
+
         console.log(`[Gemini Summary] ${response.length} characters`);
         const userId = req.user._id;
         let newT;
@@ -93,6 +106,8 @@ export const uploadFile = async (req: Request, res: Response, next: NextFunction
     }
     catch(error){
         const customError = error as CustomError;
+        console.error("[DEBUG] JSON parse failed:", customError.message);
+        console.error("[DEBUG] Error stack:", customError.stack);
         if (customError.status) {
             return next(customError);
         }
