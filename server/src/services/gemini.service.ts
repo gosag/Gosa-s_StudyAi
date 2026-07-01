@@ -145,7 +145,8 @@ async function withRetry<T>(
                 return await fn(currentKey);
             } catch (error: any) {
                 lastError = error;
-                const isRateLimit = error?.status === 429 || error?.message?.includes("429");
+                const isRateLimit = error?.status === 429 || error?.statusCode === 503
+                 || error?.message?.includes("429") || error?.message?.includes("503");
 
                 if (!isRateLimit) {
                     throw error;
@@ -190,6 +191,7 @@ export async function generateResponse(
         };
 
    const chunks: string[] = chunkText(text, CHUNK_SIZE) ?? [];
+   console.log(`[DEBUG] Text length: ${text.length}, Chunk count: ${chunks.length}, Chunk sizes: ${chunks.map(c => c.length).join(", ")}`);
     if (chunks.length === 0) {
         throw new Error("No chunks to process.");
     }
@@ -252,6 +254,68 @@ export async function generateResponse(
         throw err;
     }
 }
+}
+
+export async function generateFlashCards(
+  summary: string,
+  APIKey: string | undefined
+): Promise<{ front: string; back: string }[]> {
+    const userProvidedKey = APIKey;
+    const keyPool = userProvidedKey ? [userProvidedKey] : GEMINI_API_KEYS;
+
+        const generationConfiguration = {
+            temperature: 0.7,
+            maxOutputTokens: 2000,
+        };
+
+        const buildModel = (apiKey: string) => {
+            const genAi = new GoogleGenerativeAI(apiKey);
+            return genAi.getGenerativeModel({
+                model: "gemini-2.5-flash-lite",
+                generationConfig: generationConfiguration,
+            });
+        };
+  const prompt = `
+    You are an expert in cognitive science, learning design, and Spaced Repetition Systems (SRS).
+    
+    YOUR TASK: Generate a highly effective set of flashcards based STRICTLY and ONLY on the provided summary.
+    
+    CRITICAL CONSTRAINT - NO HALLUCINATION:
+    - You MUST NOT include any information, concepts, or facts that are not explicitly mentioned or directly supported by the provided summary.
+    - Do NOT invent facts to reach a certain number of cards. If the summary only has enough material for 5 good cards, only generate 5. Aim for up to 15-25 only if the density of the material supports it.
+    
+    PRINCIPLES FOR PERFECT SRS FLASHCARDS:
+    1. ATOMICITY: Each card must test one, and only one, specific concept (Minimum Information Principle).
+    2. CONTEXTUAL CLARITY: The question (front) should be unambiguous. e.g., Instead of "What is it?", use "What is the primary function of [Concept] in the context of [Topic]?"
+    3. ACTIVE RECALL: Phrase questions to force the brain to retrieve the answer, rather than just recognizing it.
+    4. CONCISE ANSWERS: The answer (back) MUST be extremely brief—ideally 1 short sentence or a few keywords. No paragraphs or fluff.
+    5. TARGET COMPREHENSION: Create a mix of cards:
+       - Definitional (What is X?)
+       - Functional (Why does X happen? How does Y work?)
+       - Relational/Comparative (What is the difference between X and Y?)
+    
+    INPUT DATA:
+    ---
+    SUMMARY: ${summary}
+    ---
+
+    OUTPUT FORMAT: 
+    Return ONLY a valid JSON array of objects. Do NOT include markdown blocks (\`\`\`json), greetings, or explanations.
+    Each object MUST have exactly two keys:
+    - "front": The specific, context-rich question.
+    - "back": The highly concise, accurate answer based entirely on the summary.
+  `;
+
+  try {
+    const result = await withRetry(
+                (apiKey) => buildModel(apiKey).generateContent(prompt),
+                keyPool
+    );
+    return JSON.parse(result.response.text());
+  } catch (error) {
+    console.error("Flashcard Generation Error:", error);
+    return [];
+  }
 }
 interface GeneratedQuiz {
   question: string;
@@ -323,8 +387,10 @@ export async function quizGenerator(
             throw new Error("Failed to generate quizzes.");
         }
 }
+
 export async function regenerateQuizzes(summary: string, existingQuizzes:GeneratedQuiz[], APIKey: string | undefined): Promise<GeneratedQuiz[]> {
     const apiKey = APIKey || process.env.GEMINI_API_KEY;
+    
     if(!apiKey){
         const error = new Error("Gemini Api key is missing") as CustomError;
         error.status = 400;
@@ -384,64 +450,4 @@ export async function regenerateQuizzes(summary: string, existingQuizzes:Generat
             throw new Error("Failed to generate quizzes.");
         }
 }
-export async function generateFlashCards(
-  summary: string,
-  APIKey: string | undefined
-): Promise<{ front: string; back: string }[]> {
-  const apiKey = APIKey || process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    const error = new Error("Gemini Api key is missing") as CustomError;
-    error.status = 400;
-    throw error;
-  }
 
-  const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({
-    model: "gemini-2.5-flash-lite",
-  });
-
-  const prompt = `
-    You are an expert in cognitive science, learning design, and Spaced Repetition Systems (SRS).
-    
-    YOUR TASK: Generate a highly effective set of flashcards based STRICTLY and ONLY on the provided summary.
-    
-    CRITICAL CONSTRAINT - NO HALLUCINATION:
-    - You MUST NOT include any information, concepts, or facts that are not explicitly mentioned or directly supported by the provided summary.
-    - Do NOT invent facts to reach a certain number of cards. If the summary only has enough material for 5 good cards, only generate 5. Aim for up to 15-25 only if the density of the material supports it.
-    
-    PRINCIPLES FOR PERFECT SRS FLASHCARDS:
-    1. ATOMICITY: Each card must test one, and only one, specific concept (Minimum Information Principle).
-    2. CONTEXTUAL CLARITY: The question (front) should be unambiguous. e.g., Instead of "What is it?", use "What is the primary function of [Concept] in the context of [Topic]?"
-    3. ACTIVE RECALL: Phrase questions to force the brain to retrieve the answer, rather than just recognizing it.
-    4. CONCISE ANSWERS: The answer (back) MUST be extremely brief—ideally 1 short sentence or a few keywords. No paragraphs or fluff.
-    5. TARGET COMPREHENSION: Create a mix of cards:
-       - Definitional (What is X?)
-       - Functional (Why does X happen? How does Y work?)
-       - Relational/Comparative (What is the difference between X and Y?)
-    
-    INPUT DATA:
-    ---
-    SUMMARY: ${summary}
-    ---
-
-    OUTPUT FORMAT: 
-    Return ONLY a valid JSON array of objects. Do NOT include markdown blocks (\`\`\`json), greetings, or explanations.
-    Each object MUST have exactly two keys:
-    - "front": The specific, context-rich question.
-    - "back": The highly concise, accurate answer based entirely on the summary.
-  `;
-
-  try {
-    const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: {
-        responseMimeType: "application/json",
-      },
-    });
-
-    return JSON.parse(result.response.text());
-  } catch (error) {
-    console.error("Flashcard Generation Error:", error);
-    throw new Error("Failed to generate SM-2 compatible flashcards.");
-  }
-}

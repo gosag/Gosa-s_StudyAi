@@ -189,6 +189,7 @@ export const uploadLink = async (req: Request, res: Response, next: NextFunction
       throw error
     }
     const flashcardResponse=await generateFlashCards(summary || "", user.apiKey || undefined)
+    if(flashcardResponse && flashcardResponse.length > 0){
     await Flashcard.insertMany(
           flashcardResponse.map((flashcard:any)=>({
             ...flashcard,
@@ -196,6 +197,8 @@ export const uploadLink = async (req: Request, res: Response, next: NextFunction
             materialId:newMatrial._id,
           }))
         )
+        
+    }
         
     user.freeUsageCount += 1;
     await user.save();
